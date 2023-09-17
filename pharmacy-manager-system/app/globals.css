@@ -1,0 +1,67 @@
+/*
+I randomly generate a color pallet online, at least the first 3 colors aren't bad. 
+We can deviate from it if we need, but here's what I got: 
+    Lapis Lauli:   #336699
+    Carolina blue: #86BBD8
+    Charcoal:      #2F4858
+    Light Green:   #9EE493
+    Nyanza:        #DAF7DC
+*/
+
+/*
+General styles
+*/
+html {
+    background-color: #336699;
+} 
+
+body {
+    margin: 0px;
+    padding: 0px;
+    top: 9.6%; 
+    width: 100%;
+    height: 100%;
+    position: absolute; 
+}
+
+/*
+Navbar styles.
+*/
+
+.navbar-container {
+    margin: 0px;
+    padding: 20px;
+    border-bottom: solid 2px black; 
+    background-color:#2F4858;
+    top: 0px; 
+    width: 100%;
+    height: 5%;
+    position: fixed;
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+} 
+
+.navbar-link {
+    margin: 10px;
+    padding: 10px;
+    border: solid 2px black;
+    border-radius: 20px;
+    background-color: #336699;
+    width: 10%;
+    height: 80%;
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 25px;
+} 
+
+a.navbar-link {
+    text-decoration: none;
+    color: black;
+}
+
+/* TODO: Update color scheme */
+.navbar-link:hover {
+    background-color: #2F4866;
+    color: black;
+}
