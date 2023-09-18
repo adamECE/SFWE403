@@ -1,10 +1,10 @@
 import './globals.css'
 import Link from "next/link";
 
-// export const metadata = {
-//   title: 'Pharamcy Management System',
-//   description: 'Fullstack project for SFWE403',
-// }
+export const metadata = {
+  title: 'Pharamcy Management System',
+  description: 'Fullstack project for SFWE403',
+}
 
 /*
 The layout.js page is a page used for general formating of each "page.js". 
@@ -23,7 +23,10 @@ export default function RootLayout({ children }) {
           Login
         </Link>
         <Link href="/login/createAccount" className="navbar-link">
-          Create Account
+          Sign Up
+        </Link>
+        <Link href="/settings" className="navbar-link">
+          Settings
         </Link>
       </head>
 
