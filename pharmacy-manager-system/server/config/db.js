@@ -1,6 +1,6 @@
 //this fils has the code for the db connection
-import mongoose from 'mongoose'
-export const connectDB = async() => {
+const mongoose = require('mongoose')
+const connectDB = async() => {
     try {
         const dbConnection = await mongoose.connect('mongodb://127.0.0.1/Pharmacy-x02', {
             useNewUrlParser: true,
@@ -12,3 +12,4 @@ export const connectDB = async() => {
         process.exit(1)
     }
 }
+module.exports = connectDB
