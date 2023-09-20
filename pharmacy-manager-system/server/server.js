@@ -1,10 +1,10 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import cookieParser from 'cookie-parser';
-import { connectDB } from './config/db.js';
-import morgan from 'morgan';
-import createError from 'http-errors';
-
+const express = require('express')
+const dotenv = require('dotenv')
+const cookieParser = require('cookie-parser')
+const connectDB = require('./config/db')
+const morgan = require('morgan')
+const createError = require('http-errors')
+const authRoutes = require('./routes/auth')
 dotenv.config({ path: './config/.env' })
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -32,10 +32,11 @@ app.use(express.urlencoded({ extended: false })); // Parse incoming URL-encoded 
 app.use(cookieParser()); // Parse and manage cookies
 
 
-//loading routers
+loading routers
 app.use('/', (req, res) => {
     res.send({ 'message': " express server running" })
 });
+//app.use('/api/new-user', authRoutes);
 
 
 // catch 404 and forward to error handler
