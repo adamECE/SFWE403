@@ -32,7 +32,7 @@ app.use(express.urlencoded({ extended: false })); // Parse incoming URL-encoded 
 app.use(cookieParser()); // Parse and manage cookies
 
 
-loading routers
+//loading routers
 app.use('/', (req, res) => {
     res.send({ 'message': " express server running" })
 });
