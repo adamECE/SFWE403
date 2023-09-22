@@ -34,3 +34,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+package-lock.json
+/server/package-lock.json
+/server/node_modules
+
+# Does this work?
+../.DS_Store
+./server/config/.env
