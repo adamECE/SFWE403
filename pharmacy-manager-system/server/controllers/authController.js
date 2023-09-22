@@ -37,7 +37,7 @@ exports.createStaff = asyncHandler(async(req, res) => {
                 const salt = await bcrypt.genSalt(10)
                 const hashedPassword = await bcrypt.hash(password, salt)
 
-                const newStaff = new User({ //cretaes a new patient obj
+                const newStaff = new User({ //cretaes a new staff obj
                     firstName: firstName,
                     lastName: lastName,
                     email: email.toLowerCase(),
@@ -124,8 +124,8 @@ exports.login = asyncHandler(async(req, res) => {
 
     if (user && (await bcrypt.compare(password, user.password))) { //if the user was found and the given password match the saved hash
 
-        console.log(user.isLocked)
-            //check if account is locked
+
+        //check if account is locked
         if (user.isLocked) {
             res.status(400).json({ error: "Your account is locked! Please contact your manager" })
             return
@@ -153,9 +153,34 @@ exports.login = asyncHandler(async(req, res) => {
     }
 })
 
+exports.firstPasswordReset = asyncHandler(async(req, res) => {
+        const { currentpassword, newPassword, confirmPassword } = req.body
+        if (newPassword != confirmPassword) {
+            res.status(400).json({ error: "New Password dont match!" })
+            return
+        }
 
+        // try to find the user for user email
+        const user = await User.findOne({ "email": req.user.email })
 
-//this function uses jwt to generate the user auth token given the email
+        if (user && (await bcrypt.compare(currentpassword, user.password))) {
+
+            //hashing the password
+            const salt = await bcrypt.genSalt(10)
+            const hashedPassword = await bcrypt.hash(newPassword, salt)
+            user.password = hashedPassword
+            user.isActive = true
+            await user.save()
+            res.status(200).json({
+                message: " Password has been reset and your account was activated!"
+            })
+
+        } else {
+
+            res.status(400).json({ error: "Incorrect Current Password" })
+        }
+    })
+    //this function uses jwt to generate the user auth token given the email
 const generateToken = async(email) => {
     return jwt.sign({ email: email }, process.env.JWT_SECRET, { expiresIn: '90d' })
 }
