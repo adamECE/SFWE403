@@ -42,6 +42,7 @@ exports.isStaff = asyncHandler(async(req, res, next) => {
     }
 })
 
+//this function check if the user is a pharmacy manager
 exports.isManager = asyncHandler(async(req, res, next) => {
     if (Object.values(ROLES).includes(req.user.role.toLowerCase()) && req.user.role == ROLES.PHARMACY_MANAGER)
         next()
