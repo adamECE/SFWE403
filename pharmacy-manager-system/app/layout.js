@@ -22,9 +22,6 @@ export default function RootLayout({ children }) {
         <Link href="/login" className="navbar-link">
           Login
         </Link>
-        <Link href="/login/createAccount" className="navbar-link">
-          Sign Up
-        </Link>
         <Link href="/settings" className="navbar-link">
           Settings
         </Link>
