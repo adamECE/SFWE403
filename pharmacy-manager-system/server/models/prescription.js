@@ -13,6 +13,11 @@ const prescriptionSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    deliveredBy: {
+        type: String,
+        enum: ["patient", "doctor's office"],
+        default: "patient"
+    },
     refillPolicy: {
         refills: {
             type: Number,
