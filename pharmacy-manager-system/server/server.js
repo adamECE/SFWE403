@@ -33,10 +33,10 @@ app.use(cookieParser()); // Parse and manage cookies
 
 
 //loading routers
-app.use('/', (req, res) => {
-    res.send({ 'message': " express server running" })
-});
-// app.use('/pharmacy-0x2/api/', authRoutes);
+// app.use('/', (req, res) => {
+//     res.send({ 'message': " express server running" })
+// });
+app.use('/pharmacy-0x2/api/', authRoutes);
 
 
 // catch 404 and forward to error handler

@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
+const nodemailer = require('nodemailer');
 const asyncHandler = require('express-async-handler')
 const User = require('../models/user')
 const { generateApiKey } = require('generate-api-key');
@@ -30,7 +31,7 @@ exports.createStaff = asyncHandler(async(req, res) => {
             //if user already on db... trow an error
             if (findUser) {
                 res.status(400).json({ error: 'User Already exist' })
-                    //throw new Error('User Already exist')
+
             } else {
 
                 //hashing the password
@@ -63,7 +64,7 @@ exports.createStaff = asyncHandler(async(req, res) => {
     }
 })
 
-
+//create and save new patient
 exports.createPatient = asyncHandler(async(req, res) => {
 
     const { firstName, lastName, email, dateOfBirth, phoneNumber, insuranceInformation, address } = req.body
@@ -109,6 +110,8 @@ exports.createPatient = asyncHandler(async(req, res) => {
                 } else {
                     res.status(400).json({ error: 'bad' })
                 }
+            }).catch(error => {
+                res.status(500).json({ error: 'OOOPs something went wrong!' })
             });
 
         }
@@ -123,8 +126,6 @@ exports.login = asyncHandler(async(req, res) => {
     const user = await User.findOne({ email })
 
     if (user && (await bcrypt.compare(password, user.password))) { //if the user was found and the given password match the saved hash
-
-
         //check if account is locked
         if (user.isLocked) {
             res.status(400).json({ error: "Your account is locked! Please contact your manager" })
@@ -142,45 +143,189 @@ exports.login = asyncHandler(async(req, res) => {
             return
         }
     } else {
-        //if the user password is incorrect
+        let message = "Invalid credentials! "
+            //if the user password is incorrect
         if (user && !(await bcrypt.compare(password, user.password))) {
             user.loginAttempts++ //record the incorrect login attemt
-                if (user.loginAttempts >= 5) //if more than 5 incorrect login attempts were recorded
+                if (user.loginAttempts >= 5) { //if more than 5 incorrect login attempts were recorded
                     user.isLocked = true //lock the account
+                    message = message + " Your Account has been Locked"
+                }
+
+
             await user.save() //update user information
         }
-        res.status(400).json({ error: "Invalid credentials" })
+        res.status(400).json({ error: message })
     }
 })
 
+//staff account activation on 1st password reset
 exports.firstPasswordReset = asyncHandler(async(req, res) => {
-        const { currentpassword, newPassword, confirmPassword } = req.body
-        if (newPassword != confirmPassword) {
-            res.status(400).json({ error: "New Password dont match!" })
-            return
-        }
+    const { currentPassword, newPassword, confirmPassword } = req.body
+    if (newPassword != confirmPassword) {
+        res.status(400).json({ error: "New Password dont match!" })
+        return
+    }
 
-        // try to find the user for user email
-        const user = await User.findOne({ "email": req.user.email })
+    // try to find the user for user email
+    const user = await User.findOne({ "email": req.user.email })
 
-        if (user && (await bcrypt.compare(currentpassword, user.password))) {
+    if (user && (await bcrypt.compare(currentPassword, user.password))) {
 
-            //hashing the password
-            const salt = await bcrypt.genSalt(10)
-            const hashedPassword = await bcrypt.hash(newPassword, salt)
-            user.password = hashedPassword
-            user.isActive = true
-            await user.save()
-            res.status(200).json({
-                message: " Password has been reset and your account was activated!"
-            })
+        //hashing the password
+        const salt = await bcrypt.genSalt(10)
+        const hashedPassword = await bcrypt.hash(newPassword, salt)
+        user.password = hashedPassword
+        user.isActive = true
 
-        } else {
+        await user.save().then(updatedDoc => {
+            if (updatedDoc == user) {
+                req.user.isActive = true
+                res.status(200).json({
+                    message: " Password has been reset and your account was activated!"
+                })
+            }
+        }).catch(error => {
+            res.status(500).json({ error: 'OOOPs something went wrong!' })
+        });
+    } else
+        res.status(400).json({ error: "Incorrect Current Password" })
 
-            res.status(400).json({ error: "Incorrect Current Password" })
-        }
-    })
-    //this function uses jwt to generate the user auth token given the email
+})
+
+//staff account unlock
+exports.unlockAccount = asyncHandler(async(req, res) => {
+    const { email } = req.body
+        // try to find the user for the given user email
+    const user = await User.findOne({ email })
+
+    if (user) {
+        //check if the user with account locked is a staff member
+        if (Object.values(ROLES).includes(user.role.toLowerCase()) && user.role != ROLES.PATIENT) {
+            user.isLocked = false //unlock the account
+            user.loginAttempts = 0 //reset the login attempts   
+
+            await user.save().then(updatedDoc => {
+                if (updatedDoc == user)
+                    res.status(200).json({ message: `user account unlocked sucessfully!` })
+
+            }).catch(error => {
+                res.status(500).json({ error: 'OOOPs something went wrong!' })
+            });
+
+        } else
+            res.status(401).json({ error: 'Not authorized: user is not a staff member!' })
+
+
+    } else
+        res.status(404).json({ error: "User not found!" })
+})
+
+
+//send password reset email link
+exports.sendPasswordResetEmail = asyncHandler(async(req, res) => {
+    const { email } = req.body
+        // try to find the user for the given user email
+    const user = await User.findOne({ email })
+
+    if (user) {
+        //check if the user with account locked is a staff member
+        if (Object.values(ROLES).includes(user.role.toLowerCase()) && user.role != ROLES.PATIENT) {
+            if (!user.isActive) {
+                res.status(400).json({ error: "Your account has not been Activated yet! Please contact your manager" })
+                return
+            }
+
+            if (user.isLocked) {
+                res.status(400).json({ error: "Your account is locked! Please contact your manager" })
+                return
+            }
+
+
+            // Generate a JSON Web Token (JWT) containing the user's email
+            const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+
+            const mailOptions = {
+                from: 'pharmacy.x02@gmail.com',
+                to: email,
+                subject: 'Password Reset',
+                html: `
+          <p>You have requested a password reset for your account.</p>
+          <p>Click the following link to reset your password:</p>
+          <a href="https://localhost:3000/reset-password?token=${token}">Reset Password</a>
+          <p>If you did not request this, please ignore this email.</p>
+        `,
+            };
+
+            try {
+                await transporter.sendMail(mailOptions);
+                console.log("Email notification sent successfully.");
+                res.status(200).json({ message: 'Password reset email sent successfully' });
+            } catch (error) {
+                throw ("Error sending email notification:", error);
+            }
+
+
+        } else
+            res.status(401).json({ error: 'Not authorized: user is not a staff member!' })
+
+    } else
+        res.status(404).json({ error: "User not found!" })
+})
+
+//send password reset email link
+exports.passwordReset = asyncHandler(async(req, res) => {
+    const { token, newPassword, confirmPassword } = req.body
+        // try to find the user for the given user email
+    const email = jwt.verify(token, process.env.JWT_SECRET).email
+    console.log(email)
+    const user = await User.findOne({ email })
+
+    if (user) {
+        //check if the user is a staff member
+        if (Object.values(ROLES).includes(user.role.toLowerCase()) && user.role != ROLES.PATIENT) {
+
+            if (newPassword != confirmPassword) {
+                res.status(400).json({ error: "New Password dont match!" })
+                return
+            } else {
+                const salt = await bcrypt.genSalt(10)
+                const hashedPassword = await bcrypt.hash(newPassword, salt)
+                user.password = hashedPassword
+                await user.save().then(updatedDoc => {
+                    if (updatedDoc == user) {
+                        res.status(200).json({
+                            message: " Your password has been reset!"
+                        })
+                    }
+                }).catch(error => {
+                    res.status(500).json({ error: 'OOOPs something went wrong!' })
+                });
+            }
+        } else
+            res.status(401).json({ error: 'Not authorized: user is not a staff member!' })
+    } else
+        res.status(404).json({ error: "User not found!" })
+})
+
+
+//this function uses jwt to generate the user auth token given the email
 const generateToken = async(email) => {
     return jwt.sign({ email: email }, process.env.JWT_SECRET, { expiresIn: '90d' })
 }
+
+
+// Configure Nodemailer with email service credentials
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    port: 465,
+    secure: true,
+    auth: {
+        user: 'pharmacy.x02@gmail.com',
+        pass: 'dlmi ndpe xoru bflk',
+    },
+    tls: {
+        rejectUnauthorized: false, // This allows self-signed certificates
+    },
+});
