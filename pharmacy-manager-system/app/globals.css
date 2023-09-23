@@ -24,6 +24,13 @@ body {
     position: absolute; 
 }
 
+.content-container {
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+    height: 100%;
+} 
+
 /*
 Navbar styles.
 */
@@ -40,6 +47,7 @@ Navbar styles.
     display: inline-flex;
     flex-direction: row;
     align-items: center;
+    z-index: 1;
 } 
 
 .navbar-link {
