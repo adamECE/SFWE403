@@ -15,6 +15,31 @@ html {
     background-color: #336699;
 } 
 
+h1, h2, h3, h4, h5, h6 { 
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700; 
+    color: #222;
+    line-height:120%; 
+}
+
+h1 {
+    padding-left: 1%;
+    font-size: 300%;
+}
+h2 {
+    font-size: 200%;
+}
+h3 {
+    font-size: 150%;
+    line-height:80%; 
+}
+p {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400; 
+    padding-left: 2%;
+    color: #222;
+}
+
 body {
     margin: 0px;
     padding: 0px;
@@ -31,6 +56,118 @@ body {
     height: 100%;
 } 
 
+/*
+Button styles
+*/
+.user-button {
+    transition: all .5s ease;
+    color: #000;
+    border: 3px solid #336699;
+    font-family:'Roboto', sans-serif;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 1;
+    font-size: 150%;
+    font-weight: 700;
+    border-radius: 12px;
+    background-color : transparent;
+    padding: 1%;
+    width: 60%;
+    margin: 1%;
+    outline: none;
+    text-decoration: none;
+}
+.user-button:hover {
+    background-color: #336699;
+    color: black;
+}
+
+/*
+Input styles
+*/
+.input-form { 
+    position: relative;
+    margin: 2%;
+    border-radius: 6px;
+    height: 100%;
+    width: 50%;
+    font-size: 150%;
+    font-weight: 400;
+    outline: none;
+    padding: 15px;
+    border: 1px solid#CACACA;
+}
+.input-form:focus {
+    border-bottom-width: 3px;
+}
+
+.date-form {
+    color: grey;
+    font-family:'Roboto', sans-serif;
+}
+
+/*
+Radio styles
+*/
+
+.radio-form form {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+  }
+  
+.radio-form label {
+    display: flex;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 150%;
+    font-family: "Roboto", sans-serif;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 0.375em;
+}
+.radio-form label input {
+    position: absolute;
+    left: -9999px;
+  }
+.radio-form label input:checked + span {
+    background-color: #336699;
+  }
+.radio-form label input:checked + span:before {
+    box-shadow: inset 0 0 0 0.4375em #2F4858;
+  }
+
+.radio-form label span {
+    display: flex;
+    align-items: center;
+    padding: 0.375em 0.75em 0.375em 0.375em;
+    border-radius: 99em;
+    transition: 0.25s ease;
+}
+.radio-form label span:hover {
+    background-color: #DAF7DC;
+}
+.radio-form label span:before {
+    display: flex;
+    flex-shrink: 0;
+    content: "";
+    background-color: #fff;
+    width: 1.5em;
+    height: 1.5em;
+    border-radius: 50%;
+    margin-right: 0.375em;
+    transition: 0.25s ease;
+    box-shadow: inset 0 0 0 0.125em #2F4858;
+}
+
+.radio-container {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
 /*
 Navbar styles.
 */
