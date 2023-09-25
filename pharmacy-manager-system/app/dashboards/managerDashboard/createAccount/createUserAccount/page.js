@@ -29,8 +29,10 @@ export default function CreateAccount() {
         <div style={blockStyle}>
             <h3>General Information</h3>
             <input type="email" placeholder="Email" className="input-form"/>
+            <input type="text" placeholder="Phone Number" className="input-form"/>
             <input type="text" placeholder="First Name" className="input-form"/>
             <input type="text" placeholder="Last Name" className="input-form"/>
+            <h3>Date of Birth</h3>
             <input type="date" placeholder="Date of Birth" className="input-form date-form"/>
             <h3>Address</h3>
             <input type="text" placeholder="Address Line 1" className="input-form"/>

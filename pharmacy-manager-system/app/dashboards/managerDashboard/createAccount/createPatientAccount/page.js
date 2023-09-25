@@ -25,10 +25,11 @@ export default function CreateAccount() {
   }
     return (
       <div>
-        <h2 style={centerStyle}> Create a User Account</h2>
+        <h2 style={centerStyle}> Create a Patient Account</h2>
         <div style={blockStyle}>
             <h3>General Information</h3>
             <input type="email" placeholder="Email" className="input-form"/>
+            <input type="text" placeholder="Phone Number" className="input-form"/>
             <input type="text" placeholder="First Name" className="input-form"/>
             <input type="text" placeholder="Last Name" className="input-form"/>
             <input type="date" placeholder="Date of Birth" className="input-form date-form"/>
@@ -39,26 +40,10 @@ export default function CreateAccount() {
             <input type="text" placeholder="State" className="input-form" style= {sideBySide}/>
             <input type="text" placeholder="Zip Code" className="input-form" style= {sideBySide}/>
             </div>
-            <h3>Role</h3>
-            <div class="radio-container" className="radio-form">
-                <form className="radio-form">
-                    <label className="radio-form">
-                        <input className="radio-form" type="radio" name="radio"/>
-                        <span className="radio-form">Manager</span>
-                    </label>
-                    <label className="radio-form">
-                        <input type="radio" name="radio" className="radio-form"/>
-                        <span className="radio-form">Pharmacist</span>
-                    </label>
-                    <label className="radio-form">
-                        <input type="radio" name="radio" className="radio-form"/>
-                        <span className="radio-form">Technician</span>
-                    </label>
-                    <label className="radio-form">
-                        <input type="radio" name="radio" className="radio-form"/>
-                        <span className="radio-form">Cashier</span>
-                    </label>
-                </form>
+            <h3>Insurance Information</h3>
+            <div style={sideBySide}>
+            <input type="text" placeholder="Provider" className="input-form" style= {sideBySide}/>
+            <input type="text" placeholder="Policy Number" className="input-form" style= {sideBySide}/>
             </div>
             <CreateAccButton name="Create Account" dst="/"/>
         </div>

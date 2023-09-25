@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation'
 export default function CreateAccButton({name, dst}){
     const router = useRouter()
 
-    const handleBtnClick = (e) => {
+    const handleBtnClick = (e) => {       
+        window.alert("Account Successfully Created: Temporary Password: ");
         e.preventDefault();
         router.push(dst); 
     }
