@@ -1,3 +1,4 @@
+import CreateAccButton from '@/app/functions';'@/app/functions.js'
 import '@/app/globals.css'
 import Link from "next/link";
 
@@ -24,7 +25,6 @@ export default function CreateAccount() {
   }
     return (
       <div>
-        <h1>Create User Account</h1>
         <h2 style={centerStyle}> Create a User Account</h2>
         <div style={blockStyle}>
             <h3>General Information</h3>
@@ -59,7 +59,8 @@ export default function CreateAccount() {
                         <span className="radio-form">Cashier</span>
                     </label>
                 </form>
-                </div>
+            </div>
+            <CreateAccButton name="Create Account" dst="/"/>
         </div>
       </div>
     )
