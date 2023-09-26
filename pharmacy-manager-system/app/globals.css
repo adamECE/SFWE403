@@ -15,12 +15,61 @@ General styles
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/*
+I randomly generate a color pallet online. At least the first 3 colors aren't bad. 
+We can deviate from it if we need, but here's what I got: 
+    Lapis Lauli:   #336699
+    Carolina blue: #86BBD8
+    Charcoal:      #2F4858
+    Light Green:   #9EE493
+    Nyanza:        #DAF7DC
+*/
+
+/*
+General styles
+*/
+
 html {
   background-color: #336699;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  color: #fff;
+  line-height: 120%;
+  text-align: center;
+}
+
+h1 {
+  padding-left: 1%;
+  font-size: 300%;
+}
+
+h2 {
+  font-size: 200%;
+}
+
+h3 {
+  font-size: 150%;
+  line-height: 80%;
+}
+
+p {
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  padding-left: 2%;
+  color: #222;
+}
+
 body {
-  margin: 0px !important;
+  margin: 0px;
   padding: 0px;
   top: 9.6%;
   width: 100%;
@@ -33,6 +82,128 @@ body {
   padding: 0px;
   width: 100%;
   height: 100%;
+}
+
+/*
+Button styles
+*/
+
+.user-button {
+  transition: all 0.5s ease;
+  color: #fff;
+  border: 3px solid #336699;
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 1;
+  font-size: 150%;
+  font-weight: 700;
+  border-radius: 12px;
+  background-color: #86bbd8;
+  padding: 1%;
+  width: 60%;
+  margin: 1%;
+  outline: none;
+  text-decoration: none;
+}
+
+.user-button:hover {
+  background-color: #719ecc;
+  color: black;
+}
+
+/*
+Input styles
+*/
+
+.input-form {
+  position: relative;
+  margin: 2%;
+  border-radius: 6px;
+  height: 100%;
+  width: 50%;
+  font-size: 150%;
+  font-weight: 400;
+  outline: none;
+  padding: 15px;
+  border: 1px solid#CACACA;
+}
+
+.input-form:focus {
+  border-bottom-width: 3px;
+}
+
+.date-form {
+  color: black;
+  font-family: "Roboto", sans-serif;
+}
+
+/*
+Radio styles
+*/
+
+.radio-form {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+}
+
+.radio-form label {
+  display: flex;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 150%;
+  font-family: "Roboto", sans-serif;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 0.375em;
+}
+
+.radio-form label input {
+  position: absolute;
+  left: -9999px;
+}
+
+.radio-form label input:checked + span {
+  background-color: #336699;
+}
+
+.radio-form label input:checked + span:before {
+  box-shadow: inset 0 0 0 0.4375em #2f4858;
+}
+
+.radio-form label span {
+  display: flex;
+  align-items: center;
+  padding: 0.375em 0.75em 0.375em 0.375em;
+  border-radius: 99em;
+  transition: 0.25s ease;
+}
+
+.radio-form label span:hover {
+  background-color: #daf7dc;
+}
+
+.radio-form label span:before {
+  display: flex;
+  flex-shrink: 0;
+  content: "";
+  background-color: #fff;
+  width: 1.5em;
+  height: 1.5em;
+  border-radius: 50%;
+  margin-right: 0.375em;
+  transition: 0.25s ease;
+  box-shadow: inset 0 0 0 0.125em #2f4858;
+}
+
+.radio-container {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
 }
 
 /*
@@ -63,7 +234,7 @@ Navbar styles.
   width: 10%;
   height: 80%;
   text-align: center;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-size: 25px;
 }
 
@@ -77,32 +248,4 @@ a.navbar-link {
 .navbar-link:hover {
   background-color: #2f4866;
   color: black;
-}
-
-.form-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-}
-
-.input {
-  padding: 10px;
-  width: 400px;
-  font-size: 16px;
-}
-
-.button {
-  margin: 10px;
-  padding: 10px;
-  border: solid 2px black;
-  border-radius: 10px;
-  background-color: black;
-  width: 10%;
-  height: 10%;
-  text-align: center;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 25px;
-  color: #336699;
 }
