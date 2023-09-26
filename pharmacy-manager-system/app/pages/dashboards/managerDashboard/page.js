@@ -16,9 +16,12 @@ export default function ManagerDashboard() {
     <div>
       <div style={blockStyle}>
         <Link className="user-button" href="./managerDashboard/createAccount">
-          Create User Accounts
-        </Link>
-      </div>
+          Create User Accounts{" "}
+        </Link>{" "}
+        <Link className="user-button" href="../inventory">
+          Inventory{" "}
+        </Link>{" "}
+      </div>{" "}
     </div>
   );
 }

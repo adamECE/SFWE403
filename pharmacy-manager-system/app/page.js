@@ -10,7 +10,6 @@ export default function Login() {
       </div>{" "}
       <div className=" flex flex-col justify-center">
         <form className="max-w-[400px] w-full mx-auto bg-transparent p-4 rounded border border-sky-400">
-          <h2 classNameName="text-4xl font-bold text-center py-6"> </h2>{" "}
           <div className="mb-4">
             <label className="block text-white text-sm font-bold mb-2">
               Email{" "}

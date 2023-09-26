@@ -122,6 +122,12 @@ Input styles
   margin-bottom: 5rem;
 }
 
+.trBg {
+  background-color: #86bbd8;
+  color: #fff;
+  font-weight: 700;
+}
+
 .resetLogin {
   margin-top: -3.6rem !important;
   margin-bottom: 0px;
