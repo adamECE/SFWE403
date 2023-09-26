@@ -17,7 +17,7 @@ export default function MainPage() {
       <div style={blockStyle}>
         <Link
           className="user-button"
-          href="./pages/dashboards/managerDashboard/createAccount"
+          href="./pages/dashboards/managerDashboard/"
         >
           My Dashboard{" "}
         </Link>{" "}
