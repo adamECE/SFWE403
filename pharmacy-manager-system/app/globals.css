@@ -122,6 +122,11 @@ Input styles
   margin-bottom: 5rem;
 }
 
+.resetLogin {
+  margin-top: -3.6rem !important;
+  margin-bottom: 0px;
+}
+
 .input-form {
   position: relative;
   margin: 2%;
