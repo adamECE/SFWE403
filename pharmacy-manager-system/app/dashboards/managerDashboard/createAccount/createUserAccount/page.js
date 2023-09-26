@@ -27,6 +27,7 @@ export default function CreateAccount() {
       <div>
         <h2 style={centerStyle}> Create a User Account</h2>
         <div style={blockStyle}>
+          <form>
             <h3>General Information</h3>
             <input type="email" placeholder="Email" className="input-form"/>
             <input type="text" placeholder="Phone Number" className="input-form"/>
@@ -45,24 +46,25 @@ export default function CreateAccount() {
             <div class="radio-container" className="radio-form">
                 <form className="radio-form">
                     <label className="radio-form">
-                        <input className="radio-form" type="radio" name="radio"/>
+                        <input className="radio-form" value="Manager" type="radio" name="radio"/>
                         <span className="radio-form">Manager</span>
                     </label>
                     <label className="radio-form">
-                        <input type="radio" name="radio" className="radio-form"/>
+                        <input type="radio" value="Pharmacist" name="radio" className="radio-form"/>
                         <span className="radio-form">Pharmacist</span>
                     </label>
                     <label className="radio-form">
-                        <input type="radio" name="radio" className="radio-form"/>
+                        <input type="radio" value="Technician" name="radio" className="radio-form"/>
                         <span className="radio-form">Technician</span>
                     </label>
                     <label className="radio-form">
-                        <input type="radio" name="radio" className="radio-form"/>
+                        <input type="radio" value="Cashier" name="radio" className="radio-form"/>
                         <span className="radio-form">Cashier</span>
                     </label>
                 </form>
             </div>
             <CreateAccButton name="Create Account" dst="/"/>
+          </form>
         </div>
       </div>
     )
