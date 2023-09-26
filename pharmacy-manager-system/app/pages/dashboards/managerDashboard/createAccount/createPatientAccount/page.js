@@ -21,7 +21,7 @@ export default function CreateAccount() {
     firstName: "",
     lastName: "",
     dateOfBirth: "",
-    addressLine1: "",
+    streetName: "",
     city: "",
     state: "",
     zipCode: "",
@@ -116,11 +116,11 @@ export default function CreateAccount() {
               <label className={labelSyle}>Address Line 1</label>
               <input
                 type="text"
-                placeholder="Address Line 1"
+                placeholder="Address Line "
                 className={inputStyle}
-                id="addressLine1"
-                name="addressLine1"
-                value={formData.addressLine1}
+                id="streetName"
+                name="streetName"
+                value={formData.streetName}
                 onChange={handleChange}
                 required
               />

@@ -22,7 +22,7 @@ export default function CreateAccount() {
     firstName: "",
     lastName: "",
     dateOfBirth: "",
-    addressLine1: "",
+    streetName: "",
     city: "",
     state: "",
     zipCode: "",
@@ -118,9 +118,9 @@ export default function CreateAccount() {
                 type="text"
                 placeholder="Address Line 1"
                 className={inputStyle}
-                id="addressLine1"
-                name="addressLine1"
-                value={formData.addressLine1}
+                id="streetName"
+                name="streetName"
+                value={formData.streetName}
                 onChange={handleChange}
                 required
               />
