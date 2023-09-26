@@ -1,5 +1,5 @@
 import Link from "next/link";
-export default function ManagerDashboard() {
+export default function MainPage() {
   const blockStyle = {
     margin: "10 auto",
     border: "0 ",
@@ -15,10 +15,16 @@ export default function ManagerDashboard() {
   return (
     <div>
       <div style={blockStyle}>
-        <Link className="user-button" href="./managerDashboard/createAccount">
-          Create User Accounts
-        </Link>
-      </div>
+        <Link
+          className="user-button"
+          href="./pages/dashboards/managerDashboard/createAccount"
+        >
+          My Dashboard{" "}
+        </Link>{" "}
+        <Link className="user-button" href="./pages/settings">
+          My Account Settings{" "}
+        </Link>{" "}
+      </div>{" "}
     </div>
   );
 }

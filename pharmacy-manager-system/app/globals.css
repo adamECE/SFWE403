@@ -116,6 +116,12 @@ Button styles
 Input styles
 */
 
+.resetNav {
+  margin-top: -3.6rem !important;
+  background-color: #86bbd8;
+  margin-bottom: 5rem;
+}
+
 .input-form {
   position: relative;
   margin: 2%;
@@ -248,4 +254,8 @@ a.navbar-link {
 .navbar-link:hover {
   background-color: #2f4866;
   color: black;
+}
+
+.navbar-linkr_ {
+  background-color: #2f4866;
 }

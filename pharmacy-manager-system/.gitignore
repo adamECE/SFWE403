@@ -38,6 +38,7 @@ package-lock.json
 /server/package-lock.json
 /server/node_modules
 
+
 # Does this work?
 ../.DS_Store
 ./server/config/.env

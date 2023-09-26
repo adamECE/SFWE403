@@ -5,7 +5,6 @@ export default function CreateAccount() {
     margin: "10 auto",
     border: "0 ",
     padding: "20px",
-
     width: "80%",
     justifyContent: "space-between",
     alignItems: "center",
