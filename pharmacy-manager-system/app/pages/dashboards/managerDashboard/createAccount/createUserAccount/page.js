@@ -56,7 +56,7 @@ export default function CreateAccount() {
         >
           <div className="w-full  md:flex flex-1">
             <div className="w-full mx-2">
-              <label className={labelSyle}>Firts Name</label>
+              <label className={labelSyle}>First Name</label>
               <input
                 type="text"
                 placeholder="First Name"
