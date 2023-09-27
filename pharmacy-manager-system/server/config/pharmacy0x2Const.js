@@ -7,3 +7,12 @@ exports.ROLES = {
     'CASHIER': "cashier"
 
 };
+
+exports.ORDER_STATUS = {
+    'PLACED': "placed",
+    'INPROGRESS': "in progress",
+    'CANCELLED': "cancelled",
+    'RECEIVED': "received"
+
+
+};
