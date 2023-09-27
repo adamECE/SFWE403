@@ -1,33 +1,50 @@
-import '../globals.css';
+"use client";
+import "../globals.css";
+import { AiFillHome } from "react-icons/ai";
 
-import Link from 'next/link';
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+export default function RootLayout({ children }) {
+  const router = useRouter();
 
-export const metadata = {
-  title: 'Pharamcy Management System',
-  description: 'Fullstack project for SFWE403',
-};
+  if (usePathname().endsWith("/pages/dashboards")) {
+    router.push("/pages/");
+    return null;
+  }
 
-/*
-The layout.js page is a page used for general formating of each "page.js". 
-This page will be used to setup the navbar that will be displayed on each page. 
-*/
+  const navLinkStyle =
+    "inline-block text-sm px-4 py-2  leading-none  rounded text-white border-white hover:border-transparent hover:text-sky-700 hover:bg-blue-200 mt-4 lg:mt-0";
+  const logoStyle =
+    "font-semibold text-sky-700 text-xl tracking-tight hover:border-transparent hover:text-sky-700";
 
-export default function RootLayout({children}) {
   return (
     <html lang="en">
-      {/* Navbar displayed here */}
-
       {/* All page.js pages are displayed in the body within "children" */}
       <body>
-        <header className="navbar-container">
-          <Link href="../" className="navbar-link">
-            Home
-          </Link>
+        {/* Navbar displayed here */}
+        <nav className="flex items-center justify-between flex-wrap p-2 resetNav">
+          <div className="flex items-center flex-shrink-0 text-white mr-6">
+            <Link href="./" className={logoStyle}>
+              PHARMACY-X02
+            </Link>
+          </div>
 
-          <Link href="./settings" className="navbar-link">
-            Settings
-          </Link>
-        </header>
+          <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
+            <div className="text-sm lg:flex-grow"></div>
+            <div className="mx-2">
+              {" "}
+              <Link href="./" className={navLinkStyle}>
+                <AiFillHome size={25} />
+              </Link>
+            </div>
+            <div>
+              <a href="#" className={navLinkStyle}>
+                Logout
+              </a>
+            </div>
+          </div>
+        </nav>
         {children}
       </body>
     </html>
