@@ -5,6 +5,8 @@ import InventoryRow from "./InventoryRow";
 export default function Inventory() {
   // not sure how I'm actually gonna store this stuff
   const [inventoryItems, setInventoryItems] = useState([]);
+  const [popupWindow,        setPopupWindow]        = useState(true); 
+  const [popupWindowContent, setPopupWindowContent] = useState({}); 
 
   // Sample inventory data (to be replace with actual data from API)
   const sampleInventoryData = [
@@ -12,6 +14,7 @@ export default function Inventory() {
       id: 1,
       name: "Item 1",
       category: "Category 1",
+      description: "This is a sample desc",
       price: 10.0,
       quantityInStock: 20,
       manufacturer: "Manufacturer 1",
@@ -22,6 +25,7 @@ export default function Inventory() {
       id: 2,
       name: "Item 2",
       category: "Category 2",
+      description: "This is a sample desc",
       price: 15.0,
       quantityInStock: 15,
       manufacturer: "Manufacturer 2",
@@ -35,21 +39,17 @@ export default function Inventory() {
     setInventoryItems(sampleInventoryData);
   }, []);
 
-  const inventoryStyles = {
-    marign: "10 auto",
-    border: "solid 2px black",
-    padding: "20px",
-    backgroundColor: "#86BBD8",
-    width: "100%",
-    position: "absolute",
-    left: "0px",
-  };
-
   const thStyle = " px-6 py-4";
   const blockStyle = "m-5  p-5 flex flex-col justify-center items-center ";
   return (
     <div className={blockStyle}>
       <h3>Current Inventory </h3>
+      {/* Only show if an item is clicked */}
+      {popupWindow && 
+      <div className="border">
+        hello
+      </div>
+      }
       <table className="border-collapse border border-sky-700 md:table-fixed  font-light mx-4 my-4">
         <thead className="border-b bg-neutral-50 font-medium dark:border-neutral-500 dark:text-neutral-800">
           <tr>
@@ -63,7 +63,7 @@ export default function Inventory() {
               Price
             </th>
             <th scope="col" className={thStyle}>
-              Quantity In Stock
+              Quantity
             </th>
             <th scope="col" className={thStyle}>
               Manufacturer
@@ -73,9 +73,6 @@ export default function Inventory() {
             </th>
             <th scope="col" className={thStyle}>
               Location
-            </th>
-            <th scope="col" className={thStyle}>
-              Action
             </th>
           </tr>
         </thead>
