@@ -1,7 +1,7 @@
 "use client";
-
-import Link from "next/link";
 import { useState } from "react";
+import connectDB from "server/config/db";
+import "server/controllers/authController"
 
 export default function CreateAccount() {
   const [role, setRole] = useState("");
@@ -32,9 +32,10 @@ export default function CreateAccount() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    //implement from submission to db he
+    //implement from submission to db here
+    
     setTimeout(() => {
-      alert(" account create!!");
+      alert(" account created!!");
       setFormData(initialState); // Clear form fields
     }, 1000);
   };
