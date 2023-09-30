@@ -1,23 +1,45 @@
-"use client";
-import React, {useState} from 'react';
+"use client"
+import React, { useState } from "react";
+import { useContext } from "react";
+import { AuthContext } from "./contexts/authContext";
+import { useRouter } from "next/navigation";
 
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(true); // Initially show the password field
-  const [email, setEmail] = useState('');//stores the entered email
+  const [email, setEmail] = useState(""); // stores the entered email
+  const { signIn,sendResetEmail } = useContext(AuthContext);
+  const router = useRouter();
+
   const handleForgotPasswordClick = () => {
-    console.log("Forgot Password link clicked: use client");
     setShowPassword(!showPassword);
-    // Add the logic for handling the "Forgot Password?" action here
+   
   };
-  const handleEmailSubmit = (e) => {
+
+  const handleEmailSubmit = async (e) => {
     e.preventDefault();
-    console.log('Reset Password email sent to: ${email}');
-    //more potential logic or api call
-  }
+    try {
+      if (showPassword) {
+        // Login
+        await signIn({ email: email, password: e.target.password.value });
+      } else {
+        // Reset Password
+        console.log(email)
+        const resp = await sendResetEmail({ email }) // call API endpoint to send email
+        alert(resp);
+        setShowPassword(!showPassword)
+        setEmail("")
+        
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
-  }
+  };
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 h-screen w-full resetLogin">
       <div className="hidden sm:block">
@@ -27,8 +49,8 @@ export default function Login() {
           alt="pharmacist and a patient"
         />
       </div>{" "}
-      <div className=" flex flex-col justify-center">
-      <form
+      <div className="flex flex-col justify-center">
+        <form
           onSubmit={handleEmailSubmit}
           className="max-w-[400px] w-full mx-auto bg-transparent p-4 rounded border border-sky-400"
         >
@@ -41,7 +63,7 @@ export default function Login() {
               id="email"
               name="email"
               type="email"
-              placeholder="insert email"
+              placeholder="Insert email"
               required
               value={email} // Bind the email value to the state
               onChange={handleEmailChange} // Update the email state
@@ -55,8 +77,9 @@ export default function Login() {
               <input
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                 id="password"
+                name="password"
                 type="password"
-                placeholder="insert password"
+                placeholder="Insert password"
               />
               <button
                 className="bg-blue-500 hover:bg-blue-700 rounded w-full my-2 py-2 text-white appearance-none focus:outline-none focus:shadow-outline"
