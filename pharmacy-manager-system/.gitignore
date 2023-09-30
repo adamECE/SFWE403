@@ -41,4 +41,3 @@ package-lock.json
 
 # Does this work?
 ../.DS_Store
-./server/config/.env

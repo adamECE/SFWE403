@@ -1,5 +1,12 @@
+"use client";
+import {useEffect} from 'react';
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+
 export default function ManagerDashboard() {
+ const router = useRouter();
+ 
   const blockStyle = {
     margin: "10 auto",
     border: "0 ",
@@ -12,16 +19,26 @@ export default function ManagerDashboard() {
     flexDirection: "column",
     left: "10%",
   };
-  return (
-    <div>
-      <div style={blockStyle}>
-        <Link className="user-button" href="./managerDashboard/createAccount">
-          Create User Accounts{" "}
-        </Link>{" "}
-        <Link className="user-button" href="../inventory">
-          Inventory{" "}
-        </Link>{" "}
-      </div>{" "}
-    </div>
-  );
-}
+  useEffect(() => {
+    if (localStorage.getItem('role') != "pharmacy manager") {
+     router.push ("/pages/");
+  }
+  })
+      return (
+        <div>
+          <div style={blockStyle}>
+            <Link className="user-button" href="./managerDashboard/createAccount">
+              Create User Accounts{" "}
+            </Link>{" "}
+            <Link className="user-button" href="../inventory">
+              Inventory{" "}
+            </Link>{" "}
+          </div>{" "}
+        </div>
+      );
+    }
+    
+  
+
+
+
