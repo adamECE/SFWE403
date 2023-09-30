@@ -41,7 +41,7 @@ export default function Inventory() {
   ];
 
   useEffect(() => {
-    fetch('/inventory/')
+    fetch('http://127.0.0.1:3030/pharmacy-0x2/api/inventory/')
     .then((res) => {
       if (!res.ok) {
         throw new Error('Network response error');
@@ -49,14 +49,14 @@ export default function Inventory() {
       return res.json();
     })
     .then((data) => {
+      setInventoryItems(data); 
       console.log(data); 
     }) 
     .catch((error) => {
       console.error('Fetch error:', error);
+      setInventoryItems(sampleInventoryData);
     });
     
-
-    setInventoryItems(sampleInventoryData);
   }, []);
 
   const handleCloseModalBtn = (e) => {
