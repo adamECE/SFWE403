@@ -71,3 +71,22 @@ exports.getAll = asyncHandler(async(req, res) => {
         res.status(500).json({ error: 'OOOps something went wrong!' });
     }
 });
+
+//remove item from inventory
+exports.deleteItem = asyncHandler(async(req, res) => {
+
+    try {
+        console.log('MY ID IS: ',req.body.id);//TODO: remove me 
+        // Use the `findOneAndDelete` method to remove the item by its _id
+        const result = await Inventory.findOneAndDelete({ _id: req.body.id });
+    
+        if (result.deletedCount === 1) {
+          console.log("Item removed successfully.");
+        } else {
+          console.log("Item not found or not removed.");
+        }
+    } catch (error) {
+        console.error("Error deleting item: ", error);
+        res.status(500).json({ error: 'OOOps something went wrong!' });
+    } 
+});

@@ -5,6 +5,7 @@ export default function Inventory({
   setPopupWindow,
   setPopupWindowContent, 
   name,
+  _id, 
   description, 
   category,
   price,
@@ -24,6 +25,7 @@ export default function Inventory({
 
     setPopupWindowContent({
       name: name,
+      _id: _id, 
       description: description, 
       category: category, 
       price: price,

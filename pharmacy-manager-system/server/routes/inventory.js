@@ -12,8 +12,10 @@ const {
 router.post("/add-item", protect, isManager, isAccountActive, inventoryController.addItem); // route to create inventory item
 router.post("/place-order", protect, isManager, isAccountActive, orderController.placeOrder); // route to place inventory order
 router.put("/update-order", protect, isManager, isAccountActive, orderController.updateOrderStatus); // route to update inventory order
-router.get("/", protect, isAccountActive, inventoryController.getAll); // route to get list of inventory
+//router.get("/", protect, isAccountActive, inventoryController.getAll); // route to get list of inventory
+router.get("/", inventoryController.getAll);
 router.get("/order-list", protect, isAccountActive, orderController.getAll); //  route to get list of inventory orders
-
+//router.get("/delete-item", protect, isAccountActive, inventoryController.deleteItem); // route to delete inventory item (ideally an expired item)
+router.delete("/delete-item", inventoryController.deleteItem);
 
 module.exports = router;
