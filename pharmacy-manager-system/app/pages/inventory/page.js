@@ -8,40 +8,8 @@ export default function Inventory() {
   const [popupWindow,        setPopupWindow]        = useState(false); 
   const [popupWindowContent, setPopupWindowContent] = useState({}); 
 
-  // Sample inventory data (to be replace with actual data from API)
-  const sampleInventoryData = [
-    {
-      id: 1,
-      name: "Item 1",
-      category: "Category 1",
-      description: "This is a sample desc words words words words words words words words words words words words",
-      price: 10.0,
-      quantityInStock: 20,
-      manufacturer: "Manufacturer 1",
-      barcode: "12345",
-      expirationDate: "2023-12-31",
-      location: "Location 1",
-      created_at: new Date(),
-      updated_at: new Date(),
-    },
-    {
-      id: 2,
-      name: "Item 2",
-      category: "Category 2",
-      description: "This is a sample desc",
-      price: 15.0,
-      quantityInStock: 15,
-      manufacturer: "Manufacturer 2",
-      barcode: "12345",
-      expirationDate: "2024-06-30",
-      location: "Location 2",
-      created_at: new Date(),
-      updated_at: new Date(),
-    },
-  ];
-
   useEffect(() => {
-    fetch('/inventory/')
+    fetch('http://127.0.0.1:3030/pharmacy-0x2/api/inventory/')
     .then((res) => {
       if (!res.ok) {
         throw new Error('Network response error');
@@ -49,14 +17,13 @@ export default function Inventory() {
       return res.json();
     })
     .then((data) => {
+      setInventoryItems(data); 
       console.log(data); 
     }) 
     .catch((error) => {
       console.error('Fetch error:', error);
     });
     
-
-    setInventoryItems(sampleInventoryData);
   }, []);
 
   const handleCloseModalBtn = (e) => {
