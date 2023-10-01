@@ -9,22 +9,30 @@ export default function Inventory() {
   const [popupWindowContent, setPopupWindowContent] = useState({}); 
 
   useEffect(() => {
-    fetch('http://127.0.0.1:3030/pharmacy-0x2/api/inventory/')
-    .then((res) => {
-      if (!res.ok) {
-        throw new Error('Network response error');
-      }
-      return res.json();
+    const token = localStorage.getItem("token"); // get auth token from localStorage
+
+    fetch("http://127.0.0.1:3030/pharmacy-0x2/api/inventory/", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`, // include bearer token in the Autho header
+      },
     })
-    .then((data) => {
-      setInventoryItems(data); 
-      console.log(data); 
-    }) 
-    .catch((error) => {
-      console.error('Fetch error:', error);
-    });
-    
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Network response error");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setInventoryItems(data);
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error("Fetch error:", error);
+      });
   }, []);
+
 
   const handleCloseModalBtn = (e) => {
     e.preventDefault(); 
