@@ -1,18 +1,21 @@
-import './globals.css';
+"use client";
 
-export const metadata = {
-  title: 'Pharamcy Management System',
-  description: 'Fullstack project for SFWE403',
-};
+import './globals.css';
+import { AuthProvider } from './contexts/authContext'
+
+// export const metadata = {
+//   title: 'Pharamcy Management System',
+//   description: 'Fullstack project for SFWE403',
+// };
 
 export default function RootLayout({children}) {
   return (
-    <html lang="en">
+    <html>
       <body>
-        {children}
-
-        {/* All page.js pages are displayed in the body within "children" */}
+        <AuthProvider >{children}</AuthProvider>
       </body>
     </html>
-  );
+  )
 }
+   
+

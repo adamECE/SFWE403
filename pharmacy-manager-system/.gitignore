@@ -17,7 +17,7 @@
 
 # misc
 .DS_Store
-*.pem
+
 
 # debug
 npm-debug.log*
@@ -41,4 +41,3 @@ package-lock.json
 
 # Does this work?
 ../.DS_Store
-./server/config/.env
