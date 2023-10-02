@@ -39,7 +39,7 @@ export default function Inventory() {
   }, [inventoryUpdated]);
 
   const thStyle = " px-6 py-4";
-  const blockStyle = "m-5  p-5 flex flex-col justify-center items-center ";
+  const blockStyle = "m-5 p-5 flex flex-col justify-center items-center ";
   return (
     <div className={blockStyle}>
       <h3>Current Inventory </h3>

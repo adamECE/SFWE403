@@ -9,10 +9,14 @@ export default function PopupInvenotryItemWindow({
 }) {
 
     const [confirmDeleteWindow, setConfirmDeleteWindow] = useState(false); 
+    const [itemNotExpired, setItemNotExpired] = useState(false); 
 
     const handleCloseModalBtn = (e) => {
         e.preventDefault(); 
         setPopupWindow(false); 
+        // make sure everything else is closed 
+        setItemNotExpired(false); 
+        setConfirmDeleteWindow(false); 
     } 
 
     const handleDeleteItem = async (e) => {
@@ -25,28 +29,25 @@ export default function PopupInvenotryItemWindow({
         } else {
             // delete item from inventory after user confirms deletion 
             await fetch('http://127.0.0.1:3030/pharmacy-0x2/api/inventory/remove-item', {
-                method: 'POST', 
+                method: 'DELETE', 
                 headers: {
                     'Content-Type': 'application/json', // Specify the content type as JSON
                     "Authorization": `Bearer ${token}`, // include bearer token in the Autho header
                 },
-                body: {
+                body: JSON.stringify({
                     medicationID: popupWindowContent._id 
+                })
+            })
+            .then((res) => {
+                if (res.status == 401) {
+                    // let user know item is not expired
+                    setItemNotExpired(true);
+                    setConfirmDeleteWindow(false); 
+                } else {
+                    setInventoryUpdated(!inventoryUpdated)    
+                    setPopupWindow(false); 
                 }
             })
-                .then((res) => {
-                    if (res.status === 500) {
-                        console.log('Error: ', res.error)
-                    }
-                })
-                .then(()=>{
-                    setInventoryUpdated(!inventoryUpdated)
-                }) 
-                .catch((err) => {
-                    console.log("error:", err); 
-                })
-                    
-            setConfirmDeleteWindow(false);
         }
     }
 
@@ -95,7 +96,11 @@ export default function PopupInvenotryItemWindow({
             </div>
             {confirmDeleteWindow && 
             <div className="text-red-500">
-                Click again to confirm item deletion. This deletion cannot be undone. 
+                Click again to confirm item deletion. 
+            </div>}
+            {itemNotExpired && 
+            <div className="text-red-500 font-bold">
+                Cannot delete, item is not expired. 
             </div>}
             <button className="bottom-0 right-0 m-2 px-4 py-2 bg-blue-500 text-white rounded"
                     onClick={handleDeleteItem}>
