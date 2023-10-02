@@ -1,12 +1,17 @@
 "use client";
 import { useEffect, useState } from "react";
 import InventoryRow from "./InventoryRow";
+import PopupInvenotryItemWindow from "./PopupInventoryItemWindow"
 
 export default function Inventory() {
-  // not sure how I'm actually gonna store this stuff
   const [inventoryItems,     setInventoryItems] = useState([]);
   const [popupWindow,        setPopupWindow]        = useState(false); 
   const [popupWindowContent, setPopupWindowContent] = useState({}); 
+  const [inventoryUpdated, setInventoryUpdated]     = useState(false);
+ 
+  useEffect(() => {
+    setInventoryUpdated(!inventoryUpdated); 
+  }, [])
 
   useEffect(() => {
     const token = localStorage.getItem("token"); // get auth token from localStorage
@@ -18,79 +23,33 @@ export default function Inventory() {
         "Authorization": `Bearer ${token}`, // include bearer token in the Autho header
       },
     })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Network response error");
-        }
-        return res.json();
-      })
-      .then((data) => {
-        setInventoryItems(data);
-        console.log(data);
-      })
-      .catch((error) => {
-        console.error("Fetch error:", error);
-      });
-  }, []);
-
-
-  const handleCloseModalBtn = (e) => {
-    e.preventDefault(); 
-    setPopupWindow(false); 
-  } 
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error('Network response error');
+      }
+      return res.json();
+    })
+    .then((data) => {
+      setInventoryItems(data); 
+      console.log(data); 
+    }) 
+    .catch((error) => {
+      console.error('Fetch error:', error);
+    }); 
+  }, [inventoryUpdated]);
 
   const thStyle = " px-6 py-4";
-  const blockStyle = "m-5  p-5 flex flex-col justify-center items-center ";
+  const blockStyle = "m-5 p-5 flex flex-col justify-center items-center ";
   return (
     <div className={blockStyle}>
       <h3>Current Inventory </h3>
 
       {/* Only show modal if an item is clicked */}
-      {popupWindow && 
-      <div id="myModal" class="modal p-10px fixed w-full h-full top-0 left-0 flex items-center justify-center">
-        <div class="modal-content border-2 border-gray-800 border-opacity-100 bg-white p-8 rounded shadow-lg relative">
-            <button class="top-0 right-0 m-2 px-4 py-2 bg-blue-500 text-white rounded absolute"
-                    onClick={handleCloseModalBtn}>
-              &times;
-            </button>
-            <h3 className="text-black">
-              {popupWindowContent.name}
-            </h3>
-            <div className="font-bold">
-               Description: 
-            </div>
-            <div className="border-2 px-4 py-2">
-                {popupWindowContent.description}
-            </div>
-            <div className="px-4 py-2">
-               <b>Category:</b> {popupWindowContent.category} 
-            </div>
-            <div className="px-4 py-2">
-               <b>Price:</b> ${popupWindowContent.price} 
-            </div>
-            <div className="px-4 py-2">
-               <b>Quantity:</b> {popupWindowContent.quantityInStock} 
-            </div>
-            <div className="px-4 py-2">
-               <b>Manufacturer:</b> {popupWindowContent.manufacturer} 
-            </div>
-            <div className="px-4 py-2">
-               <b>Expiration Date:</b> {popupWindowContent.expirationDate} 
-            </div>
-            <div className="px-4 py-2">
-               <b>Barcode:</b> {popupWindowContent.barcode} 
-            </div>
-            <div className="px-4 py-2">
-               <b>Location:</b> {popupWindowContent.location} 
-            </div>
-            <div className="px-4 py-2">
-               <b>Created At:</b> {popupWindowContent.created_at.toDateString()} 
-            </div>
-            <div className="px-4 py-2">
-               <b>Updated At:</b> {popupWindowContent.updated_at.toDateString()} 
-            </div>
-        </div>
-      </div>
+      {popupWindow && <PopupInvenotryItemWindow 
+                        popupWindowContent={popupWindowContent} 
+                        setPopupWindow={setPopupWindow}
+                        inventoryUpdated={inventoryUpdated}
+                        setInventoryUpdated={setInventoryUpdated}/>
       }
 
       <table className="border-collapse border border-sky-700 md:table-fixed  font-light mx-4 my-4">
@@ -122,7 +81,8 @@ export default function Inventory() {
         <tbody>
           {inventoryItems.map((item) => (
             <InventoryRow
-              key={item.id}
+              key={item._id}
+              _id={item._id}
               popupWindow={popupWindow}
               setPopupWindow={setPopupWindow}
               setPopupWindowContent={setPopupWindowContent}
