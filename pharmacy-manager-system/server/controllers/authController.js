@@ -261,7 +261,7 @@ exports.sendPasswordResetEmail = asyncHandler(async(req, res) => {
             try {
                 await transporter.sendMail(mailOptions);
                 console.log("Email notification sent successfully.");
-                res.status(200).json({ message: 'Password reset email sent successfully' });
+                res.status(200).json({ message: `Password reset email sent to ${email}` });
             } catch (error) {
                 throw ("Error sending email notification:", error);
             }
