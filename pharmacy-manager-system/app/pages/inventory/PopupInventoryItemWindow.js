@@ -1,7 +1,12 @@
 'use client'
 import { useState } from "react";
 
-export default function PopupInvenotryItemWindow({popupWindowContent, setPopupWindow, setInventoryItems}) {
+export default function PopupInvenotryItemWindow({
+    popupWindowContent, 
+    setPopupWindow, 
+    inventoryUpdated,
+    setInventoryUpdated
+}) {
 
     const [confirmDeleteWindow, setConfirmDeleteWindow] = useState(false); 
 
@@ -12,20 +17,34 @@ export default function PopupInvenotryItemWindow({popupWindowContent, setPopupWi
 
     const handleDeleteItem = async (e) => {
         e.preventDefault(); 
-        
+
+        const token = localStorage.getItem("token"); // get auth token from localStorage
+
         if (!confirmDeleteWindow) {
             setConfirmDeleteWindow(true);
         } else {
             // delete item from inventory after user confirms deletion 
-            await fetch('http://127.0.0.1:3030/pharmacy-0x2/api/inventory/delete-item', {
-                method: 'DELETE', 
+            await fetch('http://127.0.0.1:3030/pharmacy-0x2/api/inventory/remove-item', {
+                method: 'POST', 
                 headers: {
                     'Content-Type': 'application/json', // Specify the content type as JSON
-                  },
+                    "Authorization": `Bearer ${token}`, // include bearer token in the Autho header
+                },
                 body: {
-                    id: popupWindowContent._id 
+                    medicationID: popupWindowContent._id 
                 }
             })
+                .then((res) => {
+                    if (res.status === 500) {
+                        console.log('Error: ', res.error)
+                    }
+                })
+                .then(()=>{
+                    setInventoryUpdated(!inventoryUpdated)
+                }) 
+                .catch((err) => {
+                    console.log("error:", err); 
+                })
                     
             setConfirmDeleteWindow(false);
         }
@@ -78,7 +97,7 @@ export default function PopupInvenotryItemWindow({popupWindowContent, setPopupWi
             <div className="text-red-500">
                 Click again to confirm item deletion. This deletion cannot be undone. 
             </div>}
-            <button class="bottom-0 right-0 m-2 px-4 py-2 bg-blue-500 text-white rounded"
+            <button className="bottom-0 right-0 m-2 px-4 py-2 bg-blue-500 text-white rounded"
                     onClick={handleDeleteItem}>
                 Delete Item
             </button>
@@ -86,12 +105,3 @@ export default function PopupInvenotryItemWindow({popupWindowContent, setPopupWi
         </div>
     );
   }
-  
-  /*
-  
-      {/* Only show modal if an item is clicked */}
-      {popupWindow && <PopupInvenotryItemWindow 
-        popupWindowContent={popupWindowContent} 
-        setPopupWindow={setPopupWindow}/>
-}
-  */

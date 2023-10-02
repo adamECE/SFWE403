@@ -4,13 +4,25 @@ import InventoryRow from "./InventoryRow";
 import PopupInvenotryItemWindow from "./PopupInventoryItemWindow"
 
 export default function Inventory() {
-  // not sure how I'm actually gonna store this stuff
   const [inventoryItems,     setInventoryItems] = useState([]);
   const [popupWindow,        setPopupWindow]        = useState(false); 
   const [popupWindowContent, setPopupWindowContent] = useState({}); 
+  const [inventoryUpdated, setInventoryUpdated]     = useState(false);
+ 
+  useEffect(() => {
+    setInventoryUpdated(!inventoryUpdated); 
+  }, [])
 
   useEffect(() => {
-    fetch('http://127.0.0.1:3030/pharmacy-0x2/api/inventory/')
+    const token = localStorage.getItem("token"); // get auth token from localStorage
+
+    fetch("http://127.0.0.1:3030/pharmacy-0x2/api/inventory/", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`, // include bearer token in the Autho header
+      },
+    })
     .then((res) => {
       if (!res.ok) {
         throw new Error('Network response error');
@@ -24,7 +36,7 @@ export default function Inventory() {
     .catch((error) => {
       console.error('Fetch error:', error);
     }); 
-  }, []);
+  }, [inventoryUpdated]);
 
   const thStyle = " px-6 py-4";
   const blockStyle = "m-5  p-5 flex flex-col justify-center items-center ";
@@ -35,7 +47,9 @@ export default function Inventory() {
       {/* Only show modal if an item is clicked */}
       {popupWindow && <PopupInvenotryItemWindow 
                         popupWindowContent={popupWindowContent} 
-                        setPopupWindow={setPopupWindow}/>
+                        setPopupWindow={setPopupWindow}
+                        inventoryUpdated={inventoryUpdated}
+                        setInventoryUpdated={setInventoryUpdated}/>
       }
 
       <table className="border-collapse border border-sky-700 md:table-fixed  font-light mx-4 my-4">

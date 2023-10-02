@@ -72,21 +72,33 @@ exports.getAll = asyncHandler(async(req, res) => {
     }
 });
 
-//remove item from inventory
-exports.deleteItem = asyncHandler(async(req, res) => {
-
+exports.removeItem = asyncHandler(async(req, res) => {
     try {
-        console.log('MY ID IS: ',req.body.id);//TODO: remove me 
-        // Use the `findOneAndDelete` method to remove the item by its _id
-        const result = await Inventory.findOneAndDelete({ _id: req.body.id });
-    
-        if (result.deletedCount === 1) {
-          console.log("Item removed successfully.");
-        } else {
-          console.log("Item not found or not removed.");
+        // Extract item details from the request body
+        const { medicationID } = req.body;
+        console.log("ID: ", medicationID); 
+        //check if all the required inputs are given
+        if (!medicationID) {
+            res.status(400).json({ error: "Please add all Fields" });
+            return;
         }
+
+        const inventoryItem = await Inventory.findById(medicationID) //attempt to find the item on the db
+        if (!inventoryItem) {
+            // If the medicationID is not found in the Inventory
+            res.status(404).json({ error: 'Medication not found in inventory' });
+            return
+        }
+        if (inventoryItem.expirationDate <= new Date()) {
+            await inventoryItem.deleteOne({ _id: medicationID })
+            res.status(200).json({ error: 'Medication removed from inventory' });
+            return
+        } else
+            res.status(401).json("this item is not expired");
     } catch (error) {
-        console.error("Error deleting item: ", error);
+        const { medicationID } = req.body;
+        console.log("ID: ", medicationID); 
+        console.error(error);
         res.status(500).json({ error: 'OOOps something went wrong!' });
-    } 
+    }
 });
