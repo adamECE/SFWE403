@@ -57,11 +57,41 @@ export function AuthProvider({ children }) {
     } catch (error) {
       console.error('Login error:', error);
     }
-console.log(user)
+  }
+
+
+async function sendResetEmail({ email}) {
+   try {
+      // Make a POST request to your login endpoint
+      const response = await fetch('http://127.0.0.1:3030/pharmacy-0x2/api/pw-reset-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({email}),
+      });
+
+      if (response.ok) {
+        
+        const responseText = await response.text();
+        return( JSON.parse(responseText). message)
+    
+      } else {
+      
+        const errorText = await response.text();
+      return(JSON.parse(errorText).error);
+        
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+    }
+
   }
     
+
+    
     return (
-    <AuthContext.Provider value={{ user, isAuthenticated, signIn,signOut }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, signIn,signOut,sendResetEmail }}>
       {children}
     </AuthContext.Provider>
   )
