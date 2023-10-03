@@ -253,7 +253,7 @@ exports.sendPasswordResetEmail = asyncHandler(async(req, res) => {
                 html: `
           <p>You have requested a password reset for your account.</p>
           <p>Click the following link to reset your password:</p>
-          <a href="https://localhost:3000/reset-password?token=${token}">Reset Password</a>
+          <a href="http://localhost:3000/reset-password?token=${token}">Reset Password</a>
           <p>If you did not request this, please ignore this email.</p>
         `,
             };
