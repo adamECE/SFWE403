@@ -110,12 +110,37 @@ async function activateAccount({ currentPassword,newPassword,confirmPassword}) {
       }
     } catch (error) {
       console.error('Login error:', error);
+    }
+  }
+  
+   
+  
+  async function resetPassword({newPassword,confirmPassword,token}) {
+   try {
+         
+      const response = await fetch('http://127.0.0.1:3030/pharmacy-0x2/api/reset-password', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',   
+        },
+        body: JSON.stringify({token,newPassword,confirmPassword}),
+      });
+
+     if (response.ok) {
+        
+        const responseText = await response.text();
+        return( JSON.parse(responseText). message)
+      } else {
+        const errorText = await response.text();
+        return(JSON.parse(errorText).error);  
+      }
+    } catch (error) {
+      console.error('Login error:', error);
     }}
-    
 
     
     return (
-    <AuthContext.Provider value={{ user, isAuthenticated, signIn,signOut,sendResetEmail,activateAccount }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, signIn,signOut,sendResetEmail,activateAccount,resetPassword }}>
       {children}
     </AuthContext.Provider>
   )
