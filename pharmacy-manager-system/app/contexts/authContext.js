@@ -10,11 +10,12 @@ export function AuthProvider({ children }) {
 
     const router = useRouter();
     const [user, setUser] = useState(null)
-    const isAuthenticated=!!user
+    let isAuthenticated
 
     async function signOut() {
         setUser(null)
-        destroyCookie(null, 'pharmacyauth.token')
+      destroyCookie(null, 'pharmacyauth.token')
+       isAuthenticated=false
         router.push('/');
     }
  async function signIn({ email, password }) {
@@ -36,6 +37,7 @@ export function AuthProvider({ children }) {
         isACCountActive: data.isACCountActive,
         role: data.role,
       });
+       isAuthenticated=data.isACCountActive
 
         setCookie(undefined, 'pharmacyauth.token', data.token, {
             maxAge: 60 * 60 * 1, // 1 hour
@@ -62,7 +64,7 @@ export function AuthProvider({ children }) {
 
 async function sendResetEmail({ email}) {
    try {
-      // Make a POST request to your login endpoint
+      // Make a POST request to the login endpoint
       const response = await fetch('http://127.0.0.1:3030/pharmacy-0x2/api/pw-reset-email', {
         method: 'POST',
         headers: {
@@ -70,28 +72,50 @@ async function sendResetEmail({ email}) {
         },
         body: JSON.stringify({email}),
       });
-
-      if (response.ok) {
-        
-        const responseText = await response.text();
-        return( JSON.parse(responseText). message)
-    
-      } else {
+     if (response.ok) {
       
+        const responseText = await response.text();
+        return( JSON.parse(responseText). message) 
+      } else {
         const errorText = await response.text();
-      return(JSON.parse(errorText).error);
-        
+        return(JSON.parse(errorText).error);  
       }
     } catch (error) {
       console.error('Login error:', error);
     }
 
   }
+
+
+async function activateAccount({ currentPassword,newPassword,confirmPassword}) {
+   try {
+          const token = localStorage.getItem('token');
+      const response = await fetch('http://127.0.0.1:3030/pharmacy-0x2/api/account-activation', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+           'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({currentPassword,newPassword,confirmPassword}),
+      });
+
+     if (response.ok) {
+         localStorage.setItem('isACCountActive', true);
+       isAuthenticated=true
+        const responseText = await response.text();
+        return( JSON.parse(responseText). message)
+      } else {
+        const errorText = await response.text();
+        return(JSON.parse(errorText).error);  
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+    }}
     
 
     
     return (
-    <AuthContext.Provider value={{ user, isAuthenticated, signIn,signOut,sendResetEmail }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, signIn,signOut,sendResetEmail,activateAccount }}>
       {children}
     </AuthContext.Provider>
   )
