@@ -1,12 +1,17 @@
 "use client"
-import React, { useState } from "react";
+import React, { useState,useContext } from "react";
 import { useRouter } from "next/navigation";
+import { useSearchParams } from 'next/navigation'
+import { AuthContext } from "../contexts/authContext";
 
 export default function ResetPassword() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const {  resetPassword} = useContext(AuthContext);
   const router = useRouter();
-
+  const searchParams = useSearchParams()
+ 
+  
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
@@ -21,12 +26,16 @@ export default function ResetPassword() {
       alert("Passwords do not match.");
       return;
     }
-
-    // Perform password reset logic here
-    // ...
-
-    // Redirect back to the login page
-    router.push("/#"); // Replace with the actual route for the login page
+    const token = searchParams.get('token')
+      try {
+        const response = await  resetPassword({newPassword:password, confirmPassword,token });
+        alert(response)
+        // Redirect back to the login page
+        router.push("/#"); // Replace with the actual route for the login page
+    } catch (error) {
+      console.error('Error:', error) }
+   
+    
   };
 
   return (

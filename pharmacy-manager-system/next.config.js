@@ -15,6 +15,16 @@ const nextConfig = {
                 permanent: false,
             },
             {
+                source: '/reset-password',
+                has: [{
+                    type: 'cookie',
+                    key: 'pharmacyauth.token',
+                    value: undefined
+                }, ],
+                destination: '/pages/',
+                permanent: false,
+            },
+            {
                 source: '/pages/:slug*',
                 missing: [{
                     type: 'cookie',
