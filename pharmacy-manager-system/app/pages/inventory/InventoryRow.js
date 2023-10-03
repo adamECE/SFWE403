@@ -1,5 +1,3 @@
-
-
 export default function Inventory({
   popupWindow, 
   setPopupWindow,
