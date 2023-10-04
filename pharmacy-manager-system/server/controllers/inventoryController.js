@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Inventory = require("../models/inventory");
+const batchSchema = require("../models/inventory");
 const { ROLES } = require("../config/pharmacy0x2Const");
 var dotenv = require("dotenv");
 dotenv.config({ path: "../config/.env" });
@@ -13,22 +14,15 @@ exports.addItem = asyncHandler(async(req, res) => {
             description,
             category,
             price,
-            quantityInStock,
             manufacturer,
-            expirationDate,
-            barcode,
-            location,
+            location
         } = req.body;
         //check if all the required inputs are given
         if (!name ||
             !description ||
             !category ||
             !price ||
-            !quantityInStock ||
-            !manufacturer ||
-            !expirationDate ||
-            !barcode ||
-            !location
+            !manufacturer || !location
         ) {
             res.status(400).json({ error: "Please add all Fields" });
             return;
@@ -39,11 +33,8 @@ exports.addItem = asyncHandler(async(req, res) => {
             description,
             category,
             price,
-            quantityInStock,
             manufacturer,
-            expirationDate,
-            barcode,
-            location,
+            location
         });
 
         // Save the new item to the database
@@ -58,13 +49,77 @@ exports.addItem = asyncHandler(async(req, res) => {
 });
 
 
+//create and save new inventory item
+exports.addBatch = asyncHandler(async(req, res) => {
+    try {
+        // Extract item details from the request body
+        const {
+            quantity,
+            expirationDate,
+            medicationID,
+
+        } = req.body;
+        //check if all the required inputs are given
+        if (!quantity ||
+            !expirationDate || !medicationID
+        ) {
+            res.status(400).json({ error: "Please add all Fields" });
+            return;
+        }
+
+        const inventoryItem = await Inventory.findById(medicationID);
+
+        if (!inventoryItem) {
+            return res.status(404).json({ error: 'Inventory item not found' });
+        }
+
+        // Create a new Inventory item
+        const newBatch = {
+            quantity,
+            "expirationDate": new Date(expirationDate),
+        };
+
+        // Add the batch to the inventory item's batches array
+        inventoryItem.batches.push(newBatch);
+        inventoryItem.quantityInStock += newBatch.quantity
+
+        // Save the updated inventory item
+        await inventoryItem.save();
+
+        return res.status(201).json({ message: 'Batch added to inventory item' });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'OOOps something went wrong!' });
+    }
+});
+
+
 //return inventory list
 exports.getAll = asyncHandler(async(req, res) => {
 
     try {
 
         const inventoryItems = await Inventory.find();
-        res.json(inventoryItems);
+        // Map the inventory items to remane the _id as barcode in batches array
+        const updatedInventoryItems = inventoryItems.map((inventoryItem) => {
+            // Map the batches array and replace _id with barcode
+            const modifiedBatches = inventoryItem.batches.map((batch) => ({
+                quantity: batch.quantity,
+                expirationDate: batch.expirationDate,
+                created_at: batch.created_at,
+                updated_at: batch.updated_at,
+                barcode: batch._id, // Replace _id with barcode
+            }));
+
+            // keep other inventory item properties and replace batches with modifiedBatches
+            return {
+                ...inventoryItem._doc,
+                batches: modifiedBatches,
+            };
+        });
+
+        res.json(updatedInventoryItems);
     } catch (error) {
 
         console.error(error);
@@ -75,10 +130,9 @@ exports.getAll = asyncHandler(async(req, res) => {
 exports.removeItem = asyncHandler(async(req, res) => {
     try {
         // Extract item details from the request body
-        const { medicationID } = req.body;
-        console.log("ID: ", medicationID); 
+        const { medicationID, barcode } = req.body;
         //check if all the required inputs are given
-        if (!medicationID) {
+        if (!medicationID || !barcode) {
             res.status(400).json({ error: "Please add all Fields" });
             return;
         }
@@ -86,18 +140,28 @@ exports.removeItem = asyncHandler(async(req, res) => {
         const inventoryItem = await Inventory.findById(medicationID) //attempt to find the item on the db
         if (!inventoryItem) {
             // If the medicationID is not found in the Inventory
-            res.status(404).json({ error: 'Medication not found in inventory' });
+            res.status(404).json({ error: 'Medication not found in inventory' })
             return
         }
-        if (inventoryItem.expirationDate <= new Date()) {
-            await inventoryItem.deleteOne({ _id: medicationID })
-            res.status(200).json({ error: 'Medication removed from inventory' });
+        // Find the index of the batch matching batchId
+        const batchIndex = inventoryItem.batches.findIndex((batch) => batch._id == barcode)
+
+        if (batchIndex === -1) {
+            res.status(404).json({ message: 'Batch not found in inventory' })
             return
+        }
+
+        // Check the expiration date of the batch
+        if (inventoryItem.batches[batchIndex].expirationDate <= new Date()) {
+            inventoryItem.quantityInStock -= inventoryItem.batches[batchIndex].quantity
+            inventoryItem.batches.splice(batchIndex, 1); // Remove the batch 
+
+            await inventoryItem.save() // Save the updated inventory item
+            res.status(200).json({ message: "expired bacth removed from inventory" });
         } else
-            res.status(401).json("this item is not expired");
+            res.status(401).json({ message: "this item is not expired" });
     } catch (error) {
-        const { medicationID } = req.body;
-        console.log("ID: ", medicationID); 
+
         console.error(error);
         res.status(500).json({ error: 'OOOps something went wrong!' });
     }
