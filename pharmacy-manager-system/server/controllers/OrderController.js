@@ -42,8 +42,29 @@ exports.placeOrder = asyncHandler(async(req, res) => {
 //return order list
 exports.getAll = asyncHandler(async(req, res) => {
     try {
-        const orderItems = await Order.find();
-        res.json(orderItems);
+        // const orderItems = await Order.find();
+        // res.json(orderItems);
+
+
+        // Fetch the order items and populate the "medicationID" field with inventory details
+        const orderItems = await Order.find()
+            .populate('medicationID')
+            .exec();
+
+        //Map the order items to format the response data
+        const updatedOrderItems = orderItems.map((orderItem) => ({
+            _id: orderItem._id,
+            medicationName: orderItem.medicationID.name,
+            medicationID: orderItem.medicationID._id,
+            quantity: orderItem.quantity,
+            supplier: orderItem.supplier,
+            orderDate: orderItem.orderDate,
+            receptionDate: orderItem.receptionDate,
+            status: orderItem.status,
+        }));
+
+        res.status(200).json(updatedOrderItems);
+
     } catch (error) {
 
         console.error(error);
@@ -55,7 +76,7 @@ exports.getAll = asyncHandler(async(req, res) => {
 exports.updateOrderStatus = asyncHandler(async(req, res) => {
     try {
         // Extract item details from the request body
-        const { orderID, status } = req.body;
+        const { orderID, status, expirationDate } = req.body;
         //check if all the required inputs are given
         if (!orderID || !status) {
             res.status(400).json({ error: "Please add all Fields" });
@@ -78,7 +99,11 @@ exports.updateOrderStatus = asyncHandler(async(req, res) => {
         if (status == ORDER_STATUS.RECEIVED && orderItem.status != ORDER_STATUS.RECEIVED) {
             orderItem.receptionDate = new Date(); //update the reception date
             const inventoryItem = await Inventory.findById(orderItem.medicationID); //find the related inventory item
-            inventoryItem.quantityInStock += orderItem.quantity
+            inventoryItem.quantityInStock += orderItem.quantity //update ths total stock quantity
+            inventoryItem.batches.push({ //add the new bacth
+                quantity: orderItem.quantity,
+                "expirationDate": new Date(expirationDate)
+            })
             inventoryItem.updated_at = new Date();
             await inventoryItem.save()
 
