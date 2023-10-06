@@ -31,7 +31,7 @@ export default function PharmacistDashboard() {
       <div>
         <div style={blockStyle}>
           <Link className="user-button" href="./pharmacistDashboard/fillPrescription">
-            Fill Prescriptions{" "}
+            Fill Presctions{" "}
           </Link>{" "}
         </div>{" "}
     </div>
