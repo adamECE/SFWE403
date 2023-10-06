@@ -28,7 +28,7 @@ export default function PharmacistDashboard() {
     >
       <h1 style={{ textAlign: "center" }}>Pharmacist Dashboard</h1>
       <div style={dashboardStyles}>
-        <DashboardBtn name="Test 1" dst="/" />
+        <DashboardBtn name="CheckTest" dst="./pharmacistDashboard/testingPage" />
         <DashboardBtn name="Test 2" dst="/" />
         <DashboardBtn name="Test 3" dst="/" />
         <DashboardBtn name="Test 4" dst="/" />

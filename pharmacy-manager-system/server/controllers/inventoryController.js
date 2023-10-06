@@ -94,7 +94,6 @@ exports.addBatch = asyncHandler(async(req, res) => {
     }
 });
 
-
 //return inventory list
 exports.getAll = asyncHandler(async(req, res) => {
 
@@ -163,6 +162,58 @@ exports.removeItem = asyncHandler(async(req, res) => {
     } catch (error) {
 
         console.error(error);
+        res.status(500).json({ error: 'OOOps something went wrong!' });
+    }
+});
+
+exports.getItem = asyncHandler(async(req, res) => {
+    try {
+        // Extract item details from the request body
+        const { medicationName } = req.body;
+        //check if all the required inputs are given
+        if (!medicationName ) {
+            res.status(400).json({ error: "Please add Medication Name" });
+            print("3rd issue")
+            console.log("3rd issue")
+            return;
+        }
+
+        const inventoryItems = await Inventory.find({name: String(medicationName)}) //attempt to find the item on the db
+        console.log("adsfasfd")
+
+        console.log(inventoryItems)
+        const updatedInventoryItems = inventoryItems.map((inventoryItem) => {
+            // Map the batches array and replace _id with barcode
+            const modifiedBatches = inventoryItem.batches.map((batch) => ({
+                quantity: batch.quantity,
+                expirationDate: batch.expirationDate,
+                created_at: batch.created_at,
+                updated_at: batch.updated_at,
+                barcode: batch._id, // Replace _id with barcode
+            }));
+
+            // keep other inventory item properties and replace batches with modifiedBatches
+            return {
+                ...inventoryItem._doc,
+                batches: modifiedBatches,
+            };
+        });
+        console.log(" fgdsngf ")
+        if (!inventoryItems) {
+            // If the medicationName is not found in the Inventory
+            res.status(404).json({ error: 'Medication not found in inventory' })
+            console.log("1st issue")
+            print("1sst issue")
+            return
+        }
+        else{
+            res.json(updatedInventoryItems);
+        }
+    } catch (error) {
+
+        console.error(error);
+        print("2nd issue")
+        console.log("2nd issue")
         res.status(500).json({ error: 'OOOps something went wrong!' });
     }
 });
