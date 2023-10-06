@@ -1,5 +1,5 @@
 "use client"
-import DashboardBtn from "@/pages/components/DashboardBtn";
+
 import {useEffect} from 'react';
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -33,6 +33,9 @@ export default function PharmacistDashboard() {
           <Link className="user-button" href="./pharmacistDashboard/fillPrescription">
             Fill Prescriptions{" "}
           </Link>{" "}
+           <Link className="user-button" href="./pharmacistDashboard/createPatientAccount">
+              Create Patient Accounts{" "}
+            </Link>{" "}
         </div>{" "}
     </div>
   );
