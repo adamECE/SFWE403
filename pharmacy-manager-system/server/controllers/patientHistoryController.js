@@ -67,3 +67,22 @@ exports.addPerscription = asyncHandler(async(req, res) => {
         res.status(500).json({ error: 'OOOps something went wrong!' });
     }
 });
+
+exports.getPerscription = asyncHandler(async(req, res) => {
+    try {
+        const {userId} = req.body;
+
+        if (!userId) {
+            // If the userId is not found in the Inventory
+            res.status(404).json({ error: 'User not found in database' });
+            return
+        }
+
+        const userInfo = await User.findById(userId);
+
+        res.json(userInfo.prescriptions);
+    } catch {
+        console.error(error);
+        res.status(500).json({ error: 'OOOps something went wrong!' });
+    }
+})
