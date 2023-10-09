@@ -157,9 +157,51 @@ exports.removeItem = asyncHandler(async(req, res) => {
             inventoryItem.batches.splice(batchIndex, 1); // Remove the batch 
 
             await inventoryItem.save() // Save the updated inventory item
-            res.status(200).json({ message: "expired bacth removed from inventory" });
+            res.status(200).json({ message: "expired batch removed from inventory" });
         } else
             res.status(401).json({ message: "this item is not expired" });
+    } catch (error) {
+
+        console.error(error);
+        res.status(500).json({ error: 'OOOps something went wrong!' });
+    }
+});
+
+exports.getItem = asyncHandler(async(req, res) => {
+    try {
+        // Extract item details from the request body
+        const { medicationID } = req.body;
+        //check if all the required inputs are given
+        if (!medicationID ) {
+            res.status(400).json({ error: "Please add Medication ID" });
+            return;
+        }
+
+        const inventoryItems = await Inventory.find({_id: medicationID}) //attempt to find the item on the db
+        const updatedInventoryItems = inventoryItems.map((inventoryItem) => {
+            // Map the batches array and replace _id with barcode
+            const modifiedBatches = inventoryItem.batches.map((batch) => ({
+                quantity: batch.quantity,
+                expirationDate: batch.expirationDate,
+                created_at: batch.created_at,
+                updated_at: batch.updated_at,
+                barcode: batch._id, // Replace _id with barcode
+            }));
+
+            // keep other inventory item properties and replace batches with modifiedBatches
+            return {
+                ...inventoryItem._doc,
+                batches: modifiedBatches,
+            };
+        });
+        if (!inventoryItems) {
+            // If the medicationName is not found in the Inventory
+            res.status(404).json({ error: 'Medication not found in inventory' })
+            return
+        }
+        else{
+            res.json(updatedInventoryItems);
+        }
     } catch (error) {
 
         console.error(error);
