@@ -47,6 +47,17 @@ const prescriptionSchema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
+    batchInfo: {
+        batchID: {
+            type: String,
+            default: null
+        },
+        expirationDate: {
+            type: Date,
+            default: null
+        },
+
+    },
 });
 
 module.exports = prescriptionSchema;

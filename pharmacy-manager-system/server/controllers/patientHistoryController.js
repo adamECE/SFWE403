@@ -78,6 +78,26 @@ exports.addPrescription = asyncHandler(async(req, res) => {
     }
 });
 
+// exports.getPrescription = asyncHandler(async(req, res) => {
+//     try {
+//         const { userId } = req.body;
+
+//         if (!userId) {
+//             // If the userId is not found in the Inventory
+//             res.status(404).json({ error: 'User not found in database' });
+//             return
+//         }
+
+//         const userInfo = await User.findById(userId);
+
+//         res.json(userInfo.prescriptions);
+//     } catch {
+//         console.error(error);
+//         res.status(500).json({ error: 'OOOps something went wrong!' });
+//     }
+// })
+
+
 exports.getPrescription = asyncHandler(async(req, res) => {
     try {
         const { userId } = req.body;
@@ -85,14 +105,33 @@ exports.getPrescription = asyncHandler(async(req, res) => {
         if (!userId) {
             // If the userId is not found in the Inventory
             res.status(404).json({ error: 'User not found in database' });
-            return
+            return;
         }
 
-        const userInfo = await User.findById(userId);
+        const userInfo = await User.findById(userId).populate({
+            path: 'prescriptions',
+            populate: {
+                path: 'medicationID',
+                model: 'Inventory',
+                select: '_id name description manufacturer price location',
+            },
+        });
 
-        res.json(userInfo.prescriptions);
-    } catch {
+        if (!userInfo) {
+            res.status(404).json({ error: 'User not found in database' });
+            return;
+        }
+        // renaming medicationID field into medicationInfo
+        const prescriptionsWithMedicationInfo = userInfo.prescriptions.map(prescription => {
+            prescription = prescription.toObject();
+            prescription["medicationInfo"] = prescription.medicationID;
+            delete prescription.medicationID;
+            return prescription;
+        });
+
+        res.status(200).json(prescriptionsWithMedicationInfo);
+    } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'OOOps something went wrong!' });
     }
-})
+});
