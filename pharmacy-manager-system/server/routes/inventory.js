@@ -18,6 +18,7 @@ router.get("/", protect, isAccountActive, inventoryController.getAll); // route 
 router.get("/order-list", protect, isAccountActive, orderController.getAll); //  route to get list of inventory orders
 router.delete("/remove-item", protect, isAccountActive, inventoryController.removeItem); // route to delete inventory item (ideally an expired item)
 router.post("/exp-check", inventoryController.expDateCheck);
+router.post("/quant-check", inventoryController.lowQuantCheck);
 router.get("/get-notis", inventoryController.getNotifications);
 
 

@@ -213,6 +213,41 @@ exports.getNotifications = asyncHandler(async(req, res) => {
     }
 });
 
+exports.lowQuantCheck = asyncHandler(async(req, res) => {
+    try {
+        const inventoryItems = await Inventory.find();
+        for ( let i = 0; i < inventoryItems.length; i++ ){
+            if (inventoryItems[i].quantityInStock <= 120) {
+                medID          = inventoryItems[i]._id;
+                medName        = inventoryItems[i].name;
+                totalQuant     = inventoryItems[i].quantityInStock;
+
+                message = JSON.stringify(medName + "(" + medID + "), has a quantity of less than 120 left in the inventory");
+                const findNoti = await notification.findOne({ medID: medID, notiType: "quantLow" });
+                if (findNoti) {
+                    console.log("notification already exists")
+                    continue;
+                }
+                const newNotification = notification({
+                    medID: medID,
+                    medName: medName,
+                    totalQuant: totalQuant,
+                    message: message,
+                    notiType: "quantLow"
+                });
+        
+                // Save the new notification to the database
+                await newNotification.save();
+            }
+        }
+        res.status(200).json({ message: "Notifications Generated" });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'OOOps something went wrong!' });
+    }
+})
+
 exports.expDateCheck = asyncHandler(async(req, res) => {
     try {
         let dt = new Date();
@@ -221,7 +256,6 @@ exports.expDateCheck = asyncHandler(async(req, res) => {
         const inventoryItems = await Inventory.find();
         for ( let i = 0; i < inventoryItems.length; i++ ){
             for ( let j = 0; j < inventoryItems[i].batches.length; j++){
-                console.log(inventoryItems[i].batches.length + "length")
                 if (inventoryItems[i].batches[j].expirationDate <= dt) {
                     medID          = inventoryItems[i]._id;
                     medName        = inventoryItems[i].name;
@@ -231,22 +265,21 @@ exports.expDateCheck = asyncHandler(async(req, res) => {
                     message = JSON.stringify(medName + "(" + medID + "), Batch " + batchID + " expires on " + expirationDate);
                     const findNoti = await notification.findOne({ batchID })
                     if (findNoti) {
-                        res.status(400).json({ error: 'Notification Already exists' })
+                        console.log("notification already exists")
+                        continue;
             
                     } else {
                         const newNotification = notification({
-                            medID,
-                            medName,
-                            batchID,
-                            expirationDate,
-                            message,
+                            medID: medID,
+                            medName: medName,
+                            batchID: batchID,
+                            expirationDate: expirationDate,
+                            message: message,
+                            notiType: "expSoon",
                         });
             
                         // Save the new item to the database
                         await newNotification.save();
-            
-                        // Return the newly created item as the response
-                        res.status(201).json("new notification added");
                     }
                 }
             }
