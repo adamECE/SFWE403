@@ -287,5 +287,14 @@ a.navbar-link {
 }
 
 .navbar-linkr_ {
+
     background-color: #2f4866;
+
+  background-color: #2f4866;
+}
+
+/* There is no z-axis option in tailwind, make a custom z-axis class if needed*/
+.custom-z-pos-index {
+  z-index: 1; /* Your desired z-index value */
+
 }
