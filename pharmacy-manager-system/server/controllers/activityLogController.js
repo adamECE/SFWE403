@@ -8,6 +8,8 @@ exports.addToLog = asyncHandler(async(req, res) => {
     try { 
         const {activityType, activityText, created_at} = req.body; 
 
+        console.log(req); 
+
         if (!activityType || !activityText || !created_at) {
             res.status(400).json({ error: "Please add all Fields" });
             return;

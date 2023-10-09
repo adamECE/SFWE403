@@ -10,7 +10,7 @@ const {
 } = require("../middleware/auth");
 
 // route to add to activity log
-//router.post("/add-log", protect, isManager || isStaff, 
+// router.post("/add-log", protect, isManager || isStaff, 
 //            isAccountActive, activityLogController.addToLog); 
 router.post("/add-log", activityLogController.addToLog); 
 

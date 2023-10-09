@@ -4,6 +4,7 @@ const User = require("../models/user");
 const { ROLES } = require("../config/pharmacy0x2Const");
 var dotenv = require("dotenv");
 dotenv.config({ path: "../config/.env" });
+const mongoose = require('mongoose')
 
 exports.addPerscription = asyncHandler(async(req, res) => {
     try {
@@ -41,7 +42,8 @@ exports.addPerscription = asyncHandler(async(req, res) => {
             return
         } else {
             // Create a new Inventory item
-            const newPerscription = new prescriptionSchema({
+            const Prescription = mongoose.model('Prescription', prescriptionSchema);
+            const newPerscription = new Prescription({
                 doctorName,
                 medicationName,
                 dosage,
