@@ -10,7 +10,7 @@ const {
 } = require("../middleware/auth");
 
 // route to add to activity log
-router.put("/add-perscription", protect, isStaff, isAccountActive, patientHistoryController.addPerscription);
-router.post("/get-patient-perscription-info", protect, isAccountActive, isStaff, patientHistoryController.getPerscription);
+router.put("/add-prescription", protect, isStaff, isAccountActive, patientHistoryController.addPrescription);
+router.post("/get-patient-prescription-info", protect, isAccountActive, isStaff, patientHistoryController.getPrescription);
 
 module.exports = router;

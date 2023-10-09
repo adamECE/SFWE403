@@ -6,7 +6,7 @@ var dotenv = require("dotenv");
 dotenv.config({ path: "../config/.env" });
 
 
-exports.addPerscription = asyncHandler(async(req, res) => {
+exports.addPrescription = asyncHandler(async(req, res) => {
     try {
         // Extract item details from the request body
         const {
@@ -78,7 +78,7 @@ exports.addPerscription = asyncHandler(async(req, res) => {
     }
 });
 
-exports.getPerscription = asyncHandler(async(req, res) => {
+exports.getPrescription = asyncHandler(async(req, res) => {
     try {
         const { userId } = req.body;
 
