@@ -1,5 +1,5 @@
 const asyncHandler = require("express-async-handler");
-const prescriptionSchema = require("../models/perscription")
+const prescriptionSchema = require("../models/prescription")
 const User = require("../models/user");
 const { ROLES } = require("../config/pharmacy0x2Const");
 var dotenv = require("dotenv");
