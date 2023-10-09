@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const activityLogController = require("../controllers/inventoryController");
+const activityLogController = require("../controllers/activityLogController");
 
 const {
     protect,
@@ -10,7 +10,8 @@ const {
 } = require("../middleware/auth");
 
 // route to add to activity log
-router.post("/", protect, isManager || isStaff, 
-            isAccountActive, activityLogController.addToLog); 
+//router.post("/add-log", protect, isManager || isStaff, 
+//            isAccountActive, activityLogController.addToLog); 
+router.post("/add-log", activityLogController.addToLog); 
 
 module.exports = router;
