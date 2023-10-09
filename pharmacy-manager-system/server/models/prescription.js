@@ -5,8 +5,12 @@ const prescriptionSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    medicationName: {
+    medicationID: {
         type: String,
+        required: true,
+    },
+    quantity: {
+        type: Number,
         required: true,
     },
     dosage: {

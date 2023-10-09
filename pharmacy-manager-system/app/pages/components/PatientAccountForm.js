@@ -67,7 +67,7 @@ export default function PatientAccountForm() {
 
       if (response.ok) {
          setFormData(initialState);
-          const responseText = await await response.text();
+          const responseText = await response.text();
           alert(JSON.parse(responseText).message)
       } else {
        setFormData(initialState);
