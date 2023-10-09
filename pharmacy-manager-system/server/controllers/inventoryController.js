@@ -166,3 +166,47 @@ exports.removeItem = asyncHandler(async(req, res) => {
         res.status(500).json({ error: 'OOOps something went wrong!' });
     }
 });
+
+exports.getItem = asyncHandler(async(req, res) => {
+    try {
+        // Extract item details from the request body
+        const { medicationName } = req.body;
+        //check if all the required inputs are given
+        if (!medicationName ) {
+            res.status(400).json({ error: "Please add Medication Name" });
+            print("3rd issue")
+            console.log("3rd issue")
+            return;
+        }
+
+        const inventoryItems = await Inventory.find({name: String(medicationName)}) //attempt to find the item on the db
+        const updatedInventoryItems = inventoryItems.map((inventoryItem) => {
+            // Map the batches array and replace _id with barcode
+            const modifiedBatches = inventoryItem.batches.map((batch) => ({
+                quantity: batch.quantity,
+                expirationDate: batch.expirationDate,
+                created_at: batch.created_at,
+                updated_at: batch.updated_at,
+                barcode: batch._id, // Replace _id with barcode
+            }));
+
+            // keep other inventory item properties and replace batches with modifiedBatches
+            return {
+                ...inventoryItem._doc,
+                batches: modifiedBatches,
+            };
+        });
+        if (!inventoryItems) {
+            // If the medicationName is not found in the Inventory
+            res.status(404).json({ error: 'Medication not found in inventory' })
+            return
+        }
+        else{
+            res.json(updatedInventoryItems);
+        }
+    } catch (error) {
+
+        console.error(error);
+        res.status(500).json({ error: 'OOOps something went wrong!' });
+    }
+});

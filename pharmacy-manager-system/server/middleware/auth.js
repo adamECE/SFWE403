@@ -60,3 +60,12 @@ exports.isAccountActive = asyncHandler(async(req, res, next) => {
 
     }
 })
+
+exports.isPharmacist = asyncHandler(async(req, res, next) => {
+    if (Object.values(ROLES).includes(req.user.role.toLowerCase()) && req.user.role == ROLES.PHARMACIST)
+        next()
+    else {
+        res.status(401).json({ error: 'Not authorized: user is not a pharmacy manager' })
+
+    }
+})
