@@ -63,6 +63,9 @@ const [dashboardLink, setDashboardLink] = useState("")
         <Link className="user-button" href="./pages/settings">
           My Account Settings{" "}
         </Link>{" "}
+        <Link className="user-button" href="./pages/pharmacy">
+          Pharmacy Info{" "}
+        </Link>{" "}
       </div>{" "}
     </div>
   );

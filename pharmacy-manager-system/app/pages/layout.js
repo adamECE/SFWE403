@@ -37,6 +37,7 @@ const { signOut } = useContext(AuthContext)
 
   return (
     <>
+   
        {/* <AuthProvider > */}
      
         <nav className="flex items-center justify-between flex-wrap p-2 resetNav">
@@ -65,6 +66,6 @@ const { signOut } = useContext(AuthContext)
         {children}
       
         {/* </AuthProvider> */}
-    </>
+      </>
    );
    }
