@@ -1,7 +1,10 @@
 const mongoose = require('mongoose');
 
 const activityLogSchema = new mongoose.Schema({
-    route: { type: String, required: true },
+    httpMethod: { type: String, required: true },
+    url: { type: String, required: true },
+    statusCode: { type: String, required: true },
+    statusMessage: { type: String, required: true },
     timestamp: { type: Date, default: Date.now },
 });
 

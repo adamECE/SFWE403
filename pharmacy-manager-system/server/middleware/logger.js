@@ -3,18 +3,28 @@ const ActivityLog = require('../models/activityLog')
 var dotenv = require('dotenv')
 dotenv.config({ path: '../config/.env' })
 
-exports.logger = asyncHandler(async(req, res, next) => {
-    try {
-        const {
-            route, 
-            _startTime,
-        } = req; 
+const logger = asyncHandler(async(req, res, next) => {
+    res.on("finish", function() {
+        console.log('Log: ',req.method, decodeURI(req.url), res.statusCode, res.statusMessage);
+        const httpMethod = req.method;
+        const url = decodeURI(req.url);
+        const statusCode = res.statusCode; 
+        const statusMessage = res.statusMessage; 
+        const created_at = new Date(); 
 
-        console.log(route);
-        console.log(_startTime);
+        // Create a new activity log item
+        const newActivityLogItem = new ActivityLog({
+            httpMethod,
+            url,
+            statusCode,
+            statusMessage,
+            created_at
+        })
 
-    } catch {
-        console.error(error);
-        res.status(500).json({ error: 'Logging error!' });
-    }
+        // Save the new item to the database
+        newActivityLogItem.save();
+      });
+    next();
 })
+
+module.exports = logger;

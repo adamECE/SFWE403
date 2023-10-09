@@ -48,7 +48,7 @@ app.use(express.json()); // Parse incoming JSON data
 app.use(express.urlencoded({ extended: false })); // Parse incoming URL-encoded data with extended mode disabled
 app.use(cookieParser()); // Parse and manage cookies
 
-//app.use(logger);
+app.use(logger);
 
 //loading routers
 // app.use('/', (req, res) => {
