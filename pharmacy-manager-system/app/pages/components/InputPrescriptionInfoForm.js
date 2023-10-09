@@ -1,8 +1,68 @@
 "use client";
 
 
+
+
 import { useState, useEffect } from "react";
 export default function InputPrescriptionInfo() {
+  const [inventoryItems,     setInventoryItems] = useState([]);
+
+  const [inventoryUpdated, setInventoryUpdated]     = useState(false);
+ 
+  useEffect(() => {
+    setInventoryUpdated(!inventoryUpdated); 
+  }, [])
+
+  useEffect(() => {
+    const token = localStorage.getItem("token"); // get auth token from localStorage
+
+    fetch("http://127.0.0.1:3030/pharmacy-0x2/api/inventory/", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`, // include bearer token in the Autho header
+      },
+    })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error('Network response error');
+      }
+      return res.json();
+    })
+    .then((data) => {
+      setInventoryItems(data); 
+      console.log(data); 
+    }) 
+    .catch((error) => {
+      console.error('Fetch error:', error);
+    });
+  }, [inventoryUpdated]);
+
+
+  let selectMedication = document.getElementById("medicationID");
+
+  console.log(selectMedication);
+
+  // let opt = document.createElement("option");
+  // opt.style="display:none";
+  // opt.value = 0;
+  // opt.innerHTML = "-- select an option --";
+  // selectMedication.appendChild(opt);
+
+  for (let i = 0; i < inventoryItems.length; i++) {
+    if (i == 0) {
+      let opt = document.createElement("option");
+      opt.value = 0;
+      opt.innerHTML = "-- select an option --"
+      opt.style ="display:none;"
+      selectMedication.appendChild(opt);
+    }
+    let opt = document.createElement("option");
+    opt.value = inventoryItems[i]._id;
+    opt.innerHTML = inventoryItems[i].name;
+    selectMedication.appendChild(opt);
+  }
+
   const blockStyle = "m-5  p-5 flex flex-col justify-center items-center";
   const centerStyle = "text-center text-white";
   const inputStyle =
@@ -16,13 +76,14 @@ export default function InputPrescriptionInfo() {
     phoneNumber: "",
     firstName: "",
     lastName: "",
-    dateOfBirth: "",
-    streetName: "",
-    city: "",
-    state: "",
-    zipCode: "",
-    policyNumber: "",
-    provider: "",
+    doctorName: "",
+    medicationID: "",
+    quantity: "",
+    dosage: "",
+    deliveredBy: "",
+    refills: "",
+    allowRefill: "",
+    dueDate: ""
   };
   const [formData, setFormData] = useState(initialState);
 
@@ -48,17 +109,15 @@ export default function InputPrescriptionInfo() {
           "firstName": formData.firstName,
           "lastName": formData.lastName,
           "email": formData.email,
-          "dateOfBirth": formData.dateOfBirth,
           "phoneNumber": formData.phoneNumber,
-          "insuranceInformation": {
-            "provider": formData.provider,
-            "policyNumber": formData.formData
-          },
-          "address": {
-            "streetName": formData.streetName,
-            "city": formData.city,
-            "state": formData.state,
-            "zipCode": formData.zipCode
+          "doctorName": formData.doctorName,
+          "medicationID": formData.medicationID,
+          "quantity": formData.quantity,
+          "deliveredBy": formData.deliveredBy,
+          "refillPolicy": {
+            "refills": formData.refills,
+            "allowRefill": formData.allowRefill,
+            "dueDate": formData.dueDate
           }
         }),
       });
@@ -82,6 +141,7 @@ export default function InputPrescriptionInfo() {
       router.push("/pages/");
     }
   })
+  
 
   return (
     <div>
@@ -91,7 +151,7 @@ export default function InputPrescriptionInfo() {
           onSubmit={handleSubmit}
           className="max-w-[800px] w-full mx-auto bg-transparent p-4 rounded border border-blue-500"
         >
-          <h3> General Info</h3>
+          <h3> Patient Info</h3>
           <hr className="mb-2" />
           <div className="w-full  md:flex flex-1">
             <div className="w-full mx-2">
@@ -148,101 +208,123 @@ export default function InputPrescriptionInfo() {
                 required
               />
             </div>
-            <div className="w-full mx-2">
-              <label className={labelSyle}>Date of Birth</label>
-              <input
-                type="date"
-                placeholder="Date of Birth"
-                className={`${inputStyle} date-form`}
-                id="dateOfBirth"
-                name="dateOfBirth"
-                value={formData.dateOfBirth}
-                onChange={handleChange}
-                required
-              />
-            </div>
           </div>
-          <h3> Address </h3>
+          <h3> Prescription Info </h3>
           <hr className="mb-2" />
           <div className="w-full md:flex">
             <div className="w-full mx-2">
-              <label className={labelSyle}>Address Line 1</label>
+              <label className={labelSyle}>Doctor Name</label>
               <input
                 type="text"
-                placeholder="Address Line "
+                placeholder="Doctor Name"
                 className={inputStyle}
-                id="streetName"
-                name="streetName"
-                value={formData.streetName}
+                id="doctorName"
+                name="doctorName"
+                value={formData.doctorName}
                 onChange={handleChange}
                 required
               />
             </div>
             <div className="w-full mx-2">
-              <label className={labelSyle}>City</label>
-              <input
-                type="text"
-                placeholder="City"
+              <label className={labelSyle}>Medication ID</label>
+              <select
                 className={inputStyle}
-                id="city"
-                name="city"
-                value={formData.city}
+                id="medicationID"
+                name="medicationID"
+                value={formData.medicationID}
                 onChange={handleChange}
                 required
-              />
+              >
+              </select>
             </div>
           </div>
           <div className="w-full md:flex">
             <div className="w-full mx-2">
-              <label className={labelSyle}>State</label>
+              <label className={labelSyle}>Quantity</label>
               <input
                 type="text"
-                placeholder="State"
+                placeholder="Quantity"
                 className={inputStyle}
-                id="state"
-                name="state"
-                value={formData.state}
+                id="quantity"
+                name="quantity"
+                value={formData.quantity}
                 onChange={handleChange}
                 required
               />
             </div>
             <div className="w-full mx-2">
-              <label className={labelSyle}>Zip</label>
+              <label className={labelSyle}>Dosage</label>
               <input
                 type="text"
-                placeholder="Zip Code"
+                placeholder="Dosage"
                 className={inputStyle}
-                id="zipCode"
-                name="zipCode"
+                id="dosage"
+                name="dosage"
                 value={formData.zipCode}
                 onChange={handleChange}
                 required
               />
             </div>
+            <div className="w-full mx-2">
+              <label className={labelSyle}>Delivered By</label>
+              <input
+                type="text"
+                placeholder="Delivered By"
+                className={inputStyle}
+                id="deliveredBy"
+                name="deliveredBy"
+                value={formData.deliveredBy}
+                onChange={handleChange}
+                required
+              />
+            </div>
           </div>
-          <h3> Insurance Info </h3>
+          <h3> Refill Policy </h3>
           <hr className="mb-2" />
           <div className="w-full flex-1 md:flex ">
             <div className="w-full mx-2">
-              <label className={labelSyle}>Provider</label>
+              <label className={labelSyle}>Refills</label>
               <input
                 type="text"
-                placeholder="Provider"
-                id="provider"
-                name="provider"
-                value={formData.provider}
+                placeholder="Refills"
+                id="refills"
+                name="refills"
+                value={formData.refills}
                 onChange={handleChange}
                 className={inputStyle}
               />
             </div>
             <div className="w-full mx-2">
-              <label className={labelSyle}>Policy Number</label>
+              <label className={labelSyle}> Allow Refill </label>
+              <div style={{background:"white", border:"3px solid white", padding:"4.1px", borderRadius:"5px", display:"flex", justifyContent:"space-around"}}>
+              <label for="allowRefillYes" style={{color:"gray", fontSize:"1.1em"}}>Yes</label>
               <input
-                type="text"
-                placeholder="Policy Number"
-                id="policyNumber"
-                name="policyNumber"
-                value={formData.policyNumber}
+                type="radio"
+                id="allowRefillYes"
+                name="allowRefill"
+                value={formData.allowRefill}
+                onChange={handleChange}
+                style={{width:"2em"}}
+              />
+              <label for="allowRefillNo" style={{color:"gray", fontSize:"1.1em"}}>No</label>
+              <input
+                type="radio"
+                id="allowRefillNo"
+                name="allowRefill"
+                value={formData.allowRefill}
+                onChange={handleChange}
+                style={{width:"2em"}}
+              />
+              <br></br>
+              </div>
+            </div>
+            <div className="w-full mx-2">
+              <label className={labelSyle}> Due Date </label>
+              <input
+                type="date"
+                id="dueDate"
+                name="dueDate"
+                value={formData.dueDate}
                 onChange={handleChange}
                 className={inputStyle}
               />
