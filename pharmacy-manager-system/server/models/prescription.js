@@ -5,8 +5,13 @@ const prescriptionSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    medicationName: {
-        type: String,
+    medicationID: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Inventory", // Reference to the medication in the Inventory collection
+        required: true,
+    },
+    quantity: {
+        type: Number,
         required: true,
     },
     dosage: {
@@ -40,8 +45,18 @@ const prescriptionSchema = new mongoose.Schema({
     }],
     isValid: {
         type: Boolean,
-        default: true,
-        required: true,
+        default: true
+    },
+    batchInfo: {
+        batchID: {
+            type: String,
+            default: null
+        },
+        expirationDate: {
+            type: Date,
+            default: null
+        },
+
     },
 });
 

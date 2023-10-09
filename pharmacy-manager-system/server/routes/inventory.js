@@ -6,6 +6,7 @@ const {
     protect,
     isManager,
     isStaff,
+    isPharmacist,
     isAccountActive,
 } = require("../middleware/auth");
 
@@ -20,6 +21,7 @@ router.delete("/remove-item", protect, isAccountActive, inventoryController.remo
 router.post("/exp-check", inventoryController.expDateCheck);
 router.post("/quant-check", inventoryController.lowQuantCheck);
 router.get("/get-notis", inventoryController.getNotifications);
+router.post("/get-item", protect, isAccountActive, isPharmacist, inventoryController.getItem);
 
 
 module.exports = router;

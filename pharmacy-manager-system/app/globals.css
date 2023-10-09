@@ -8,6 +8,7 @@ We can deviate from it if we need, but here's what I got:
     Nyanza:        #DAF7DC
 */
 
+
 /*
 General styles
 */
@@ -26,12 +27,13 @@ We can deviate from it if we need, but here's what I got:
     Nyanza:        #DAF7DC
 */
 
+
 /*
 General styles
 */
 
 html {
-  background-color: #336699;
+    background-color: #336699;
 }
 
 h1,
@@ -40,233 +42,259 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "Roboto", sans-serif;
-  font-weight: 700;
-  color: #fff;
-  line-height: 120%;
-  text-align: center;
+    font-family: "Roboto", sans-serif;
+    font-weight: 700;
+    color: #fff;
+    line-height: 120%;
+    text-align: center;
 }
 
 h1 {
-  padding-left: 1%;
-  font-size: 300%;
+    padding-left: 1%;
+    font-size: 300%;
 }
 
 h2 {
-  font-size: 200%;
+    font-size: 200%;
 }
 
 h3 {
-  font-size: 150%;
-  line-height: 80%;
+    font-size: 150%;
+    line-height: 80%;
 }
 
 p {
-  font-family: "Roboto", sans-serif;
-  font-weight: 400;
-  padding-left: 2%;
-  color: #222;
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    padding-left: 2%;
+    color: #222;
 }
 
 body {
-  margin: 0px;
-  padding: 0px;
-  top: 9.6%;
-  width: 100%;
-  height: 100%;
-  position: absolute;
+    margin: 0px;
+    padding: 0px;
+    top: 9.6%;
+    width: 100%;
+    height: 100%;
+    position: absolute;
 }
 
 .content-container {
-  margin: 0px;
-  padding: 0px;
-  width: 100%;
-  height: 100%;
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+    height: 100%;
 }
+
+input[disabled] {
+    color: white;
+}
+
 
 /*
 Button styles
 */
 
 .user-button {
-  transition: all 0.5s ease;
-  color: #fff;
-  border: 3px solid #336699;
-  font-family: "Roboto", sans-serif;
-  text-transform: uppercase;
-  text-align: center;
-  line-height: 1;
-  font-size: 150%;
-  font-weight: 700;
-  border-radius: 12px;
-  background-color: #86bbd8;
-  padding: 1%;
-  width: 60%;
-  margin: 1%;
-  outline: none;
-  text-decoration: none;
+    transition: all 0.5s ease;
+    color: #fff;
+    border: 3px solid #336699;
+    font-family: "Roboto", sans-serif;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 1;
+    font-size: 150%;
+    font-weight: 700;
+    border-radius: 12px;
+    background-color: #86bbd8;
+    padding: 1%;
+    width: 60%;
+    margin: 1%;
+    outline: none;
+    text-decoration: none;
 }
 
 .user-button:hover {
-  background-color: #719ecc;
-  color: black;
+    background-color: #719ecc;
+    color: black;
 }
+
 
 /*
 Input styles
 */
 
 .resetNav {
-  margin-top: -3.6rem !important;
-  background-color: #86bbd8;
-  margin-bottom: 5rem;
+    margin-top: -3.6rem !important;
+    background-color: #86bbd8;
+    margin-bottom: 5rem;
+}
+
+.bgCor {
+    background-color: #86bbd8 !important;
+}
+
+.bgCor:hover {
+    background-color: #68a6c7 !important;
 }
 
 .trBg {
-  background-color: #86bbd8;
-  color: #fff;
-  font-weight: 700;
+    background-color: #86bbd8;
+    color: #fff;
+    font-weight: 700;
 }
 
 .resetLogin {
-  margin-top: -3.6rem !important;
-  margin-bottom: 0px;
+    margin-top: -3.6rem !important;
+    margin-bottom: 0px;
 }
 
 .input-form {
-  position: relative;
-  margin: 2%;
-  border-radius: 6px;
-  height: 100%;
-  width: 50%;
-  font-size: 150%;
-  font-weight: 400;
-  outline: none;
-  padding: 15px;
-  border: 1px solid#CACACA;
+    position: relative;
+    margin: 2%;
+    border-radius: 6px;
+    height: 100%;
+    width: 50%;
+    font-size: 150%;
+    font-weight: 400;
+    outline: none;
+    padding: 15px;
+    border: 1px solid#CACACA;
 }
 
 .input-form:focus {
-  border-bottom-width: 3px;
+    border-bottom-width: 3px;
 }
 
 .date-form {
-  color: black;
-  font-family: "Roboto", sans-serif;
+    color: black;
+    font-family: "Roboto", sans-serif;
 }
+
 
 /*
 Radio styles
 */
 
 .radio-form {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: column;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
 }
 
 .radio-form label {
-  display: flex;
-  cursor: pointer;
-  font-weight: 500;
-  font-size: 150%;
-  font-family: "Roboto", sans-serif;
-  position: relative;
-  overflow: hidden;
-  margin-bottom: 0.375em;
+    display: flex;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 150%;
+    font-family: "Roboto", sans-serif;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 0.375em;
 }
 
 .radio-form label input {
-  position: absolute;
-  left: -9999px;
+    position: absolute;
+    left: -9999px;
 }
 
-.radio-form label input:checked + span {
-  background-color: #336699;
+.radio-form label input:checked+span {
+    background-color: #336699;
 }
 
-.radio-form label input:checked + span:before {
-  box-shadow: inset 0 0 0 0.4375em #2f4858;
+.radio-form label input:checked+span:before {
+    box-shadow: inset 0 0 0 0.4375em #2f4858;
 }
 
 .radio-form label span {
-  display: flex;
-  align-items: center;
-  padding: 0.375em 0.75em 0.375em 0.375em;
-  border-radius: 99em;
-  transition: 0.25s ease;
+    display: flex;
+    align-items: center;
+    padding: 0.375em 0.75em 0.375em 0.375em;
+    border-radius: 99em;
+    transition: 0.25s ease;
 }
 
 .radio-form label span:hover {
-  background-color: #daf7dc;
+    background-color: #daf7dc;
 }
 
 .radio-form label span:before {
-  display: flex;
-  flex-shrink: 0;
-  content: "";
-  background-color: #fff;
-  width: 1.5em;
-  height: 1.5em;
-  border-radius: 50%;
-  margin-right: 0.375em;
-  transition: 0.25s ease;
-  box-shadow: inset 0 0 0 0.125em #2f4858;
+    display: flex;
+    flex-shrink: 0;
+    content: "";
+    background-color: #fff;
+    width: 1.5em;
+    height: 1.5em;
+    border-radius: 50%;
+    margin-right: 0.375em;
+    transition: 0.25s ease;
+    box-shadow: inset 0 0 0 0.125em #2f4858;
 }
 
 .radio-container {
-  position: relative;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
 }
+
 
 /*
 Navbar styles.
 */
 
 .navbar-container {
-  margin: 0px;
-  padding: 20px;
-  border-bottom: solid 2px black;
-  background-color: #2f4858;
-  top: 0px;
-  width: 100%;
-  height: 5%;
-  position: fixed;
-  display: inline-flex;
-  flex-direction: row;
-  align-items: center;
-  z-index: 1;
+    margin: 0px;
+    padding: 20px;
+    border-bottom: solid 2px black;
+    background-color: #2f4858;
+    top: 0px;
+    width: 100%;
+    height: 5%;
+    position: fixed;
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    z-index: 1;
 }
 
 .navbar-link {
-  margin: 10px;
-  padding: 10px;
-  border: solid 2px black;
-  border-radius: 20px;
-  background-color: #336699;
-  width: 10%;
-  height: 80%;
-  text-align: center;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 25px;
+    margin: 10px;
+    padding: 10px;
+    border: solid 2px black;
+    border-radius: 20px;
+    background-color: #336699;
+    width: 10%;
+    height: 80%;
+    text-align: center;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 25px;
 }
 
 a.navbar-link {
-  text-decoration: none;
-  color: black;
+    text-decoration: none;
+    color: black;
 }
+
 
 /* TODO: Update color scheme */
 
 .navbar-link:hover {
-  background-color: #2f4866;
-  color: black;
+    background-color: #2f4866;
+    color: black;
 }
 
 .navbar-linkr_ {
+
+    background-color: #2f4866;
+
   background-color: #2f4866;
+}
+
+/* There is no z-axis option in tailwind, make a custom z-axis class if needed*/
+.custom-z-pos-index {
+  z-index: 1; /* Your desired z-index value */
+
 }
