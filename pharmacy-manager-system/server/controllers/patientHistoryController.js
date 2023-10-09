@@ -1,66 +1,72 @@
 const asyncHandler = require("express-async-handler");
-const prescriptionSchema = require("../models/prescription")
 const User = require("../models/user");
 const { ROLES } = require("../config/pharmacy0x2Const");
+const Inventory = require("../models/inventory");
 var dotenv = require("dotenv");
 dotenv.config({ path: "../config/.env" });
-const mongoose = require('mongoose')
+
 
 exports.addPerscription = asyncHandler(async(req, res) => {
     try {
         // Extract item details from the request body
         const {
-            userId, 
+            userID,
             doctorName,
-            medicationName,
+            medicationID,
+            quantity,
             dosage,
             deliveredBy,
             refillPolicy,
-            filledDate,
-            isValid,
         } = req.body;
 
 
         //check if all the required inputs are given
-        if (!userId ||
+        if (!userID ||
             !doctorName ||
-            !medicationName ||
+            !medicationID ||
+            !quantity ||
             !dosage ||
-            !deliveredBy || 
-            !refillPolicy ||
-            !filledDate || !isValid
+            !deliveredBy ||
+            !refillPolicy
+
         ) {
             res.status(400).json({ error: "Please add all Fields" });
             return;
         }
 
-       const userData = await User.findById(userId);
+        const userData = await User.findById(userID);
+
 
         if (!userData) {
             // If the userId is not found in the Inventory
             res.status(404).json({ error: 'User not found in database' });
             return
         } else {
-            // Create a new Inventory item
-            const Prescription = mongoose.model('Prescription', prescriptionSchema);
-            const newPerscription = new Prescription({
+
+            if (userData.role != ROLES.PATIENT) { //check if user is not a patient
+                res.status(401).json({ error: 'User is not a patient' });
+                return
+            }
+            const inventoryItem = await Inventory.findById(medicationID);
+            if (!inventoryItem) { //check if medication is available
+                res.status(404).json({ error: 'Medication not found in inventory' });
+                return
+            }
+
+            const newPerscription = {
                 doctorName,
-                medicationName,
+                medicationID,
+                quantity,
                 dosage,
                 deliveredBy,
                 refillPolicy,
-                filledDate,
-                isValid,
-            });
-
-            // not sure if we need this: 
-            //await newPerscription.save();
+            };
 
             userData.prescriptions.push(newPerscription);
             await userData.save()
 
             // Return the newly created item as the response
-            res.status(201).json("new perscription item added");
+            res.status(200).json({ message: "new perscription item added" });
         }
     } catch (error) {
         console.error(error);
