@@ -157,7 +157,7 @@ exports.removeItem = asyncHandler(async(req, res) => {
             inventoryItem.batches.splice(batchIndex, 1); // Remove the batch 
 
             await inventoryItem.save() // Save the updated inventory item
-            res.status(200).json({ message: "expired bacth removed from inventory" });
+            res.status(200).json({ message: "expired batch removed from inventory" });
         } else
             res.status(401).json({ message: "this item is not expired" });
     } catch (error) {
@@ -170,16 +170,14 @@ exports.removeItem = asyncHandler(async(req, res) => {
 exports.getItem = asyncHandler(async(req, res) => {
     try {
         // Extract item details from the request body
-        const { medicationName } = req.body;
+        const { medicationID } = req.body;
         //check if all the required inputs are given
-        if (!medicationName ) {
-            res.status(400).json({ error: "Please add Medication Name" });
-            print("3rd issue")
-            console.log("3rd issue")
+        if (!medicationID ) {
+            res.status(400).json({ error: "Please add Medication ID" });
             return;
         }
 
-        const inventoryItems = await Inventory.find({name: String(medicationName)}) //attempt to find the item on the db
+        const inventoryItems = await Inventory.find({_id: medicationID}) //attempt to find the item on the db
         const updatedInventoryItems = inventoryItems.map((inventoryItem) => {
             // Map the batches array and replace _id with barcode
             const modifiedBatches = inventoryItem.batches.map((batch) => ({
