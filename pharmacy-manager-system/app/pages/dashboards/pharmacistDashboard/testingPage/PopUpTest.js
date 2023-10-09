@@ -43,9 +43,6 @@ export default function PopUpTest({
                 <b>Expiration Date:</b> {popupWindowContent.expirationDate} 
             </div>
             <div className="px-4 py-2">
-                <b>Barcode:</b> {popupWindowContent.barcode} 
-            </div>
-            <div className="px-4 py-2">
                 <b>Location:</b> {popupWindowContent.location} 
             </div>
             <div className="px-4 py-2">

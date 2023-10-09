@@ -58,7 +58,6 @@ export default function Inventory() {
       price: item.price,
       quantityInStock: item.quantityInStock,
       manufacturer: item.manufacturer,
-      barcode: item.barcode, 
       expirationDate: item.expirationDate,
       location: item.location,
       created_at: item.created_at,

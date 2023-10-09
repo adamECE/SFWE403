@@ -179,9 +179,6 @@ exports.getItem = asyncHandler(async(req, res) => {
         }
 
         const inventoryItems = await Inventory.find({name: String(medicationName)}) //attempt to find the item on the db
-        console.log("adsfasfd")
-
-        console.log(inventoryItems)
         const updatedInventoryItems = inventoryItems.map((inventoryItem) => {
             // Map the batches array and replace _id with barcode
             const modifiedBatches = inventoryItem.batches.map((batch) => ({
@@ -198,12 +195,9 @@ exports.getItem = asyncHandler(async(req, res) => {
                 batches: modifiedBatches,
             };
         });
-        console.log(" fgdsngf ")
         if (!inventoryItems) {
             // If the medicationName is not found in the Inventory
             res.status(404).json({ error: 'Medication not found in inventory' })
-            console.log("1st issue")
-            print("1sst issue")
             return
         }
         else{
@@ -212,8 +206,6 @@ exports.getItem = asyncHandler(async(req, res) => {
     } catch (error) {
 
         console.error(error);
-        print("2nd issue")
-        console.log("2nd issue")
         res.status(500).json({ error: 'OOOps something went wrong!' });
     }
 });
