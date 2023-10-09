@@ -17,17 +17,22 @@ exports.fillPrescription = asyncHandler(async(req, res, next) => {
             res.status(400).json({ error: "Please add all Fields" });
             return;
         }
-        //check if user exists and if it is patient
-        //check if prescriptionID is on user's prescription List
-        //check if prescription is still valid to be filled(still has refillis left and due date is still valid)
-        //check if medicationID is in the prescription
-        //check if medicationID is on the inventory
-        //check if batchID is on the medication's batches
-        //check if batch is not expired
-        //check if batch has enough medication to fill the prescription
-        //check if prescription requires refill, if so, decrease the number of refills
-        //update the filled Date
-        //update the inventory and batch by decreasing the quantity
+        /*
+        check if user exists and if it is patient
+        check if prescriptionID is on user's prescription List
+        check if prescription is still valid to be filled(still has refillis left and due date is still valid)
+        check if medicationID is in the prescription
+        check if medicationID is on the inventory
+        check if batchID is on the medication's batches
+        check if batch is not expired
+        check if batch has enough medication to fill the prescription
+        check if prescription requires refill, if so, decrease the number of refills
+        update the prescription batchInfo field
+        update the filled Date
+        update the inventory and batch by decreasing the quantity
+        save  user data updates
+        save inventory data updates
+        */
 
         const userData = await User.findById(userID); //attempt to find user
         if (!userData) { //check if user was found
@@ -68,7 +73,7 @@ exports.fillPrescription = asyncHandler(async(req, res, next) => {
         }
 
         const inventoryItem = await Inventory.findById(medicationID);
-        if (!inventoryItem) { //check if medication is available
+        if (!inventoryItem) { //check if medication is in the inventory
             res.status(404).json({ error: 'Medication not found in inventory' });
             return
         }
@@ -92,7 +97,7 @@ exports.fillPrescription = asyncHandler(async(req, res, next) => {
             return
         }
         if (prescriptionToBeFilled.refillPolicy.allowRefill) {
-            if (prescriptionToBeFilled.refillPolicy.refills >= 1 && prescriptionToBeFilled.filledDate.length != 0)
+            if (prescriptionToBeFilled.refillPolicy.refills >= 1 && prescriptionToBeFilled.filledInfo.length != 0)
                 prescriptionToBeFilled.refillPolicy.refills -= 1
             if (prescriptionToBeFilled.refillPolicy.refills == 0) {
                 prescriptionToBeFilled.refillPolicy.allowRefill = false
@@ -101,27 +106,32 @@ exports.fillPrescription = asyncHandler(async(req, res, next) => {
         } else if (!prescriptionToBeFilled.refillPolicy.allowRefill || (prescriptionToBeFilled.refillPolicy.dueDate <= new Date())) {
             prescriptionToBeFilled.isValid = false
         }
-        prescriptionToBeFilled.filledDate.push(new Date())
+        prescriptionToBeFilled.filledInfo.push({
+            filledDate: new Date(),
+            batchInfo: {
+                barcode: barcode,
+                expirationDate: selectedBatch.expirationDate,
+            },
+        })
         selectedBatch.quantity -= prescriptionToBeFilled.quantity
+        selectedBatch.updated_at = new Date()
         inventoryItem.quantityInStock -= prescriptionToBeFilled.quantity
-        inventoryItem.batches[selectedBatchIndex] = selectedBatch //save bacth chnages
-        userData.prescriptions[prescriptionToBeFilledIndex] = prescriptionToBeFilled //save prescription chnages
-        inventoryItem.save() //save inventory chnages
-        userData.save()
-            //pharmacist name, prescription number, patient name, date, time, type and quantity of drugs
-        req.logger = {
+        inventoryItem.updated_at = new Date()
+        inventoryItem.batches[selectedBatchIndex] = selectedBatch //save bacth changes
+        userData.prescriptions[prescriptionToBeFilledIndex] = prescriptionToBeFilled //save prescription changes
+        inventoryItem.save() //save inventory changes
+        userData.save() // save user info changes
+
+        req.logger = { // record the following to the tracked on logger: pharmacist name, prescription number, patient name, date, time, type and quantity of drugs
             pharmacistEmail: req.user.email,
             prescriptionID: prescriptionID,
             patientName: `${userData.firstName} ${userData.lastName}`,
             filledDateTime: new Date(),
             itemType: "prescription",
             quantity: prescriptionToBeFilled.quantity
-
         }
-        next()
+        next() //go to next middleware
 
-
-        //res.status(200).json("Your Prescription has been filled");
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'OOOps something went wrong!' });

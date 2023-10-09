@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const inventoryController = require("../controllers/inventoryController");
 const orderController = require("../controllers/OrderController");
-const prescriptionController = require("../controllers/prescriptionController");
+
 const {
     protect,
     isManager,
@@ -11,9 +11,6 @@ const {
     isAccountActive,
 } = require("../middleware/auth");
 
-const {
-    logPrescription
-} = require("../middleware/log");
 
 router.post("/add-item", protect, isManager, isAccountActive, inventoryController.addItem); // route to create inventory item
 router.put("/add-batch", protect, isManager, isAccountActive, inventoryController.addBatch); // route to create inventory item
@@ -23,7 +20,6 @@ router.put("/update-order", protect, isManager, isAccountActive, orderController
 router.get("/", protect, isAccountActive, inventoryController.getAll); // route to get list of inventory
 router.get("/order-list", protect, isAccountActive, isStaff, orderController.getAll); //  route to get list of inventory orders
 router.delete("/remove-item", protect, isAccountActive, inventoryController.removeItem); // route to delete inventory item (ideally an expired item)
-router.put("/fill-prescription", protect, isAccountActive, isStaff, prescriptionController.fillPrescription, logPrescription); // route to get list of inventory
 router.post("/get-item", protect, isAccountActive, isPharmacist, inventoryController.getItem);
 
 
