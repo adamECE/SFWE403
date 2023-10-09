@@ -1,6 +1,6 @@
 "use client"
 
-import {useEffect} from 'react';
+import { useEffect } from 'react';
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -24,19 +24,22 @@ export default function PharmacistDashboard() {
   };
   useEffect(() => {
     if (localStorage.getItem('role') != "pharmacist") {
-     router.push ("/pages/");
-  }
+      router.push("/pages/");
+    }
   })
-    return (
-      <div>
-        <div style={blockStyle}>
-          <Link className="user-button" href="./pharmacistDashboard/fillPrescription">
-            Fill Prescriptions{" "}
-          </Link>{" "}
-           <Link className="user-button" href="./pharmacistDashboard/createPatientAccount">
-              Create Patient Accounts{" "}
-            </Link>{" "}
-        </div>{" "}
+  return (
+    <div>
+      <div style={blockStyle}>
+        <Link className="user-button" href="./pharmacistDashboard/fillPrescription">
+          Fill Prescriptions{" "}
+        </Link>{" "}
+        <Link className="user-button" href="./pharmacistDashboard/createPatientAccount">
+          Create Patient Accounts{" "}
+        </Link>{" "}
+        <Link className="user-button" href="./pharmacistDashboard/inputPrescriptionInfo">
+          Input Prescription Info{" "}
+        </Link>{" "}
+      </div>{" "}
     </div>
   );
 }
