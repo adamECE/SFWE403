@@ -48,7 +48,7 @@ app.use(express.json()); // Parse incoming JSON data
 app.use(express.urlencoded({ extended: false })); // Parse incoming URL-encoded data with extended mode disabled
 app.use(cookieParser()); // Parse and manage cookies
 
-app.use(logger);
+//app.use(logger);
 
 //loading routers
 // app.use('/', (req, res) => {
@@ -57,7 +57,6 @@ app.use(logger);
 app.use("/pharmacy-0x2/api/", authRoutes);
 app.use("/pharmacy-0x2/api/inventory/", require("./routes/inventory"));
 app.use("/pharmacy-0x2/api/patientHistory/", require("./routes/patientHistory"));
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

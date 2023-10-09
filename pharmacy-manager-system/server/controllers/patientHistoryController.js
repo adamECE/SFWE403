@@ -53,6 +53,11 @@ exports.addPerscription = asyncHandler(async(req, res) => {
                 return
             }
 
+            if (inventoryItem.category != "prescription") { //check if medication requires precription
+                res.status(401).json({ error: 'Medication does not require prescription' });
+                return
+            }
+
             const newPerscription = {
                 doctorName,
                 medicationID,
@@ -65,7 +70,6 @@ exports.addPerscription = asyncHandler(async(req, res) => {
             userData.prescriptions.push(newPerscription);
             await userData.save()
 
-            // Return the newly created item as the response
             res.status(200).json({ message: "new perscription item added" });
         }
     } catch (error) {
@@ -73,3 +77,22 @@ exports.addPerscription = asyncHandler(async(req, res) => {
         res.status(500).json({ error: 'OOOps something went wrong!' });
     }
 });
+
+exports.getPerscription = asyncHandler(async(req, res) => {
+    try {
+        const { userId } = req.body;
+
+        if (!userId) {
+            // If the userId is not found in the Inventory
+            res.status(404).json({ error: 'User not found in database' });
+            return
+        }
+
+        const userInfo = await User.findById(userId);
+
+        res.json(userInfo.prescriptions);
+    } catch {
+        console.error(error);
+        res.status(500).json({ error: 'OOOps something went wrong!' });
+    }
+})
