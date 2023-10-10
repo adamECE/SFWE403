@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const inventoryController = require("../controllers/inventoryController");
 const orderController = require("../controllers/OrderController");
+
 const {
     expDateCheck,
     lowQuantCheck,
@@ -13,6 +14,7 @@ const {
     isPharmacist,
     isAccountActive,
 } = require("../middleware/auth");
+
 
 router.post("/add-item", protect, isManager, isAccountActive, inventoryController.addItem); // route to create inventory item
 router.put("/add-batch", protect, isManager, isAccountActive, inventoryController.addBatch); // route to create inventory item
