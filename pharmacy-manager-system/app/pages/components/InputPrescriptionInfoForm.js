@@ -41,23 +41,16 @@ export default function InputPrescriptionInfo() {
 
   let selectMedication = document.getElementById("medicationID");
 
-  console.log(selectMedication);
 
-  // let opt = document.createElement("option");
-  // opt.style="display:none";
-  // opt.value = 0;
-  // opt.innerHTML = "-- select an option --";
-  // selectMedication.appendChild(opt);
 
   for (let i = 0; i < inventoryItems.length; i++) {
+    let opt = document.createElement("option");
     if (i == 0) {
-      let opt = document.createElement("option");
-      opt.value = 0;
+      opt.value = "0";
       opt.innerHTML = "-- select an option --"
       opt.style ="display:none;"
       selectMedication.appendChild(opt);
     }
-    let opt = document.createElement("option");
     opt.value = inventoryItems[i]._id;
     opt.innerHTML = inventoryItems[i].name;
     selectMedication.appendChild(opt);
@@ -73,9 +66,6 @@ export default function InputPrescriptionInfo() {
 
   const initialState = {
     email: "",
-    phoneNumber: "",
-    firstName: "",
-    lastName: "",
     doctorName: "",
     medicationID: "",
     quantity: "",
@@ -106,10 +96,7 @@ export default function InputPrescriptionInfo() {
         },
 
         body: JSON.stringify({
-          "firstName": formData.firstName,
-          "lastName": formData.lastName,
           "email": formData.email,
-          "phoneNumber": formData.phoneNumber,
           "doctorName": formData.doctorName,
           "medicationID": formData.medicationID,
           "quantity": formData.quantity,
@@ -151,36 +138,8 @@ export default function InputPrescriptionInfo() {
           onSubmit={handleSubmit}
           className="max-w-[800px] w-full mx-auto bg-transparent p-4 rounded border border-blue-500"
         >
-          <h3> Patient Info</h3>
+          <h3> Patient Email</h3>
           <hr className="mb-2" />
-          <div className="w-full  md:flex flex-1">
-            <div className="w-full mx-2">
-              <label className={labelSyle}>First Name</label>
-              <input
-                type="text"
-                placeholder="First Name"
-                className={inputStyle}
-                id="firstName"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div className="w-full mx-2">
-              <label className={labelSyle}>Last Name</label>
-              <input
-                type="text"
-                placeholder="Last Name"
-                className={inputStyle}
-                id="lastName"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-                required
-              />
-            </div>
-          </div>
           <div className="w-full  md:flex flex-1">
             <div className="w-full mx-2">
               <label className={labelSyle}>Email</label>
@@ -191,19 +150,6 @@ export default function InputPrescriptionInfo() {
                 id="email"
                 name="email"
                 value={formData.email}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div className="w-full mx-2">
-              <label className={labelSyle}>Phone Number</label>
-              <input
-                type="text"
-                placeholder="Phone Number"
-                className={inputStyle}
-                id="phoneNumber"
-                name="phoneNumber"
-                value={formData.phoneNumber}
                 onChange={handleChange}
                 required
               />
@@ -235,6 +181,7 @@ export default function InputPrescriptionInfo() {
                 onChange={handleChange}
                 required
               >
+                <option style={{display:"none"}}> -- select an option -- </option>
               </select>
             </div>
           </div>
@@ -242,7 +189,8 @@ export default function InputPrescriptionInfo() {
             <div className="w-full mx-2">
               <label className={labelSyle}>Quantity</label>
               <input
-                type="text"
+                type="number"
+                min="1"
                 placeholder="Quantity"
                 className={inputStyle}
                 id="quantity"
@@ -267,8 +215,7 @@ export default function InputPrescriptionInfo() {
             </div>
             <div className="w-full mx-2">
               <label className={labelSyle}>Delivered By</label>
-              <input
-                type="text"
+              <select
                 placeholder="Delivered By"
                 className={inputStyle}
                 id="deliveredBy"
@@ -276,7 +223,11 @@ export default function InputPrescriptionInfo() {
                 value={formData.deliveredBy}
                 onChange={handleChange}
                 required
-              />
+              >
+                <option style={{display:"none"}}> -- select an option -- </option>
+                <option value="patient">Patient</option>
+                <option value="doctorsOffice">Doctor's Office</option>
+              </select>
             </div>
           </div>
           <h3> Refill Policy </h3>
@@ -285,7 +236,8 @@ export default function InputPrescriptionInfo() {
             <div className="w-full mx-2">
               <label className={labelSyle}>Refills</label>
               <input
-                type="text"
+                type="number"
+                min="0"
                 placeholder="Refills"
                 id="refills"
                 name="refills"
