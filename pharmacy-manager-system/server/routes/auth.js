@@ -9,5 +9,8 @@ router.put('/account-activation', protect, isStaff, authController.firstPassword
 router.put('/unlock-account', protect, isManager, isAccountActive, authController.unlockAccount) // route for manager unlock staff accounts
 router.post('/pw-reset-email', authController.sendPasswordResetEmail) // route for sending pw reset emails
 router.put('/reset-password', authController.passwordReset) // route for resting password
-
+router.get('/patient-list', protect, isAccountActive, isStaff, authController.getPatientList) // route for list of patients
+router.get('/staff-list', protect, isAccountActive, isManager, authController.getStaffList) // route for list off staff
+router.get('/staff-member/:email', protect, isAccountActive, isStaff, authController.getStaffMember) // route for getting one staff given the email
+router.get('/a-patient/:email', protect, isAccountActive, isStaff, authController.getAPatient) // route for getting one patient given the email
 module.exports = router;
