@@ -309,6 +309,59 @@ exports.passwordReset = asyncHandler(async(req, res) => {
         res.status(404).json({ error: "User not found!" })
 })
 
+exports.getPatientList = asyncHandler(async(req, res) => {
+
+    const filter = { role: 'patient' }
+
+    const userList = await User.find(filter).select('-password -prescriptions -insuranceInformation ')
+    if (!userList) {
+        res.status(404).json({ message: 'No Patients found' })
+    } else {
+        res.status(200).json(userList);
+    }
+})
+
+exports.getStaffList = asyncHandler(async(req, res) => {
+
+    const filter = { role: { $ne: 'patient' } }
+
+    const staffList = await User.find(filter).select('-password -prescriptions -insuranceInformation ')
+    if (!staffList) {
+        res.status(404).json({ message: 'No staff found' })
+    } else {
+        res.status(200).json(staffList);
+    }
+
+})
+
+exports.getStaffMember = asyncHandler(async(req, res) => {
+
+    const filter = req.params
+    console.log(filter)
+
+    const staffList = await User.findOne(filter).select('-password -prescriptions -insuranceInformation ')
+    if (!staffList) {
+        res.status(404).json({ message: 'No staff found' })
+    } else {
+        res.status(200).json(staffList);
+    }
+})
+
+exports.getAPatient = asyncHandler(async(req, res) => {
+
+    const filter = { "email": req.params.email, role: "patient" }
+
+    console.log(filter)
+
+    const patientInfo = await User.findOne(filter).select('-password -prescriptions -insuranceInformation ')
+    if (!patientInfo) {
+        res.status(404).json({ error: 'No Patient found! Add Patient Account' })
+    } else {
+        res.status(200).json(patientInfo);
+    }
+
+})
+
 
 //this function uses jwt to generate the user auth token given the email
 const generateToken = async(email) => {
