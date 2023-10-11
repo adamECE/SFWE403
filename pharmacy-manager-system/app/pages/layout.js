@@ -20,7 +20,7 @@ const { signOut } = useContext(AuthContext)
   }
 
   const { ['pharmacyauth.token']: token } = parseCookies()
-  console.log(token)
+
 
   const handleLogout = async () => {
     localStorage.removeItem('token');

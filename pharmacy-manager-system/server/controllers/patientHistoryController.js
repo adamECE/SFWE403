@@ -18,7 +18,7 @@ exports.addPrescription = asyncHandler(async(req, res) => {
             deliveredBy,
             refillPolicy,
         } = req.body;
-
+        console.log(req.body)
 
         //check if all the required inputs are given
         if (!userID ||
