@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import OrdersRow from "./OrdersRow";
 import PopupOrdersItemWindow from "./PopupOrdersItemWindow"
 
@@ -7,6 +8,8 @@ export default function Orders() {
   const [orderListItems,     setOrderListItems]     = useState([]);
   const [popupWindow,        setPopupWindow]        = useState(false); 
   const [popupWindowContent, setPopupWindowContent] = useState({}); 
+
+  const router = useRouter();
 
   const thStyle = " px-6 py-4";
   const blockStyle = "m-5 p-5 flex flex-col justify-center items-center ";
@@ -35,8 +38,17 @@ export default function Orders() {
     setOrderListItems(tempOrderListItems); 
   }, []);
 
+  const handleGoToOrderPage = (e) => {
+    e.preventDefault(); 
+    router.push ("/pages/orders/placeNewOrder");
+  }
+
   return (
     <div className={blockStyle}>
+      <button className="top-5 left-0 m-2 px-4 py-2 bg-blue-500 text-white rounded absolute"
+                onClick={handleGoToOrderPage}>
+        Place a new order
+      </button>
       <h3>Order List </h3>
 
       {/* Only show modal if an item is clicked */}
