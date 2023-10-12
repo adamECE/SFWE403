@@ -4,6 +4,7 @@ const { ROLES } = require("../config/pharmacy0x2Const");
 const Inventory = require("../models/inventory");
 var dotenv = require("dotenv");
 dotenv.config({ path: "../config/.env" });
+const PrescritpionLog = require("../models/activityLog");
 
 exports.addPrescription = asyncHandler(async (req, res) => {
   try {
@@ -79,24 +80,37 @@ exports.addPrescription = asyncHandler(async (req, res) => {
   }
 });
 
-// exports.getPrescription = asyncHandler(async(req, res) => {
-//     try {
-//         const { userId } = req.body;
+exports.getPrescriptionLogs = asyncHandler(async (req, res) => {
+  try {
+    const prescriptionLogs = await PrescritpionLog.find();
 
-//         if (!userId) {
-//             // If the userId is not found in the Inventory
-//             res.status(404).json({ error: 'User not found in database' });
-//             return
-//         }
+    // Format the date and time for each log entry
+    const formattedLogs = prescriptionLogs.map((log) => ({
+      pharmacistEmail: log.pharmacistEmail,
+      pharmacistName: log.pharmacistName,
+      prescriptionID: log.prescriptionID,
+      patientName: log.patientName,
+      patientEmail: log.patientEmail,
+      itemType: log.itemType,
+      quantity: log.quantity,
+      date: new Date(log.timestamp).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      }),
+      time: new Date(log.timestamp).toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      }),
+    }));
 
-//         const userInfo = await User.findById(userId);
-
-//         res.json(userInfo.prescriptions);
-//     } catch {
-//         console.error(error);
-//         res.status(500).json({ error: 'OOOps something went wrong!' });
-//     }
-// })
+    res.json(formattedLogs);
+  } catch {
+    console.error(error);
+    res.status(500).json({ error: "OOOps something went wrong!" });
+  }
+});
 
 exports.getPrescription = asyncHandler(async (req, res) => {
   try {
