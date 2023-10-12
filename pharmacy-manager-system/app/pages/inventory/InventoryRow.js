@@ -22,6 +22,7 @@ export default function InventoryRow({
   const handleRowOnClick = (e) => {
     e.preventDefault(); 
     let updatedInventoryItems = [...inventoryItems]; 
+    
 
     if (!batchDropDown) {
       updatedInventoryItems.splice(rowIndex+1, 0, ...batches)
@@ -31,7 +32,6 @@ export default function InventoryRow({
       let tempArr = []; 
       for (const obj of updatedInventoryItems) {
         if (obj.hasOwnProperty('name')) {
-          //obj['parentId'] = _id;
           tempArr.push(obj);
         }
       }
@@ -41,20 +41,27 @@ export default function InventoryRow({
     setBatchDropDown(!batchDropDown); 
   } 
 
+  const tdStyle = "px-6 py-4 text-base sm:text-sm md:text-md"
+  
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  const created_at_date = new Date(created_at);
+  const created_at_str  = new Intl.DateTimeFormat('en-US', options).format(created_at_date);
+  const updated_at_date = new Date(updated_at);
+  const updated_at_str  = new Intl.DateTimeFormat('en-US', options).format(updated_at_date);
 
   return (
       <tr className={popupWindow ? 
         "border-b dark:border-neutral-500 trBg" : 
         "border-b dark:border-neutral-500 trBg hover:scale-105" } 
         onClick={handleRowOnClick}>
-        <td className="whitespace-nowrap  px-6 py-4">  {name}             </td>
-        <td className="whitespace-nowrap  px-6 py-4">  {category}         </td>
-        <td className="whitespace-nowrap  px-6 py-4">  {price}            </td>
-        <td className="whitespace-nowrap  px-6 py-4">  {quantityInStock}  </td>
-        <td className="whitespace-nowrap  px-6 py-4">  {manufacturer}     </td>
-        <td className="whitespace-nowrap  px-6 py-4">  {location}         </td>
-        <td className="whitespace-nowrap  px-6 py-4">  {created_at}         </td>
-        <td className="whitespace-nowrap  px-6 py-4">  {updated_at}         </td>
+        <td className={tdStyle}>  {name}             </td>
+        <td className={tdStyle}>  {category}         </td>
+        <td className={tdStyle}>  ${price}            </td>
+        <td className={tdStyle}>  {quantityInStock}  </td>
+        <td className={tdStyle}>  {manufacturer}     </td>
+        <td className={tdStyle}>  {location}         </td>
+        <td className={tdStyle}>  {created_at_str}   </td>
+        <td className={tdStyle}>  {updated_at_str}   </td>
       </tr>
   );
 }
