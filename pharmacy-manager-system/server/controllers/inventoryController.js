@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Inventory = require("../models/inventory");
+const notification = require("../models/notification");
 const batchSchema = require("../models/inventory");
 const { ROLES } = require("../config/pharmacy0x2Const");
 var dotenv = require("dotenv");
@@ -160,6 +161,51 @@ exports.removeItem = asyncHandler(async(req, res) => {
             res.status(200).json({ message: "expired batch removed from inventory" });
         } else
             res.status(401).json({ message: "this item is not expired" });
+    } catch (error) {
+
+        console.error(error);
+        res.status(500).json({ error: 'OOOps something went wrong!' });
+    }
+});
+
+exports.addNotification = asyncHandler(async(req, res) => {
+    try {
+        const {
+            medID,
+            medName,
+            batchID,
+            expirationDate,
+        } = req.body;
+        const message = medName + "(" + medID + "), Batch " + batchID + " erxpires on " + expirationDate;
+        const findNoti = await notification.findOne({ batchID })
+        if (findNoti) {
+            res.status(400).json({ error: 'User Already exist' })
+
+        } else {
+            const newNotification = notification({
+                medID,
+                medName,
+                batchID,
+                expirationDate,
+                message,
+            });
+
+            // Save the new item to the database
+            await newNotification.save();
+
+            // Return the newly created item as the response
+            res.status(201).json("new notification added");
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'OOOps something went wrong!' });
+    }
+});
+
+exports.getNotifications = asyncHandler(async(req, res) => {
+    try {
+        const notificationList = await notification.find();
+        res.json(notificationList);
     } catch (error) {
 
         console.error(error);
