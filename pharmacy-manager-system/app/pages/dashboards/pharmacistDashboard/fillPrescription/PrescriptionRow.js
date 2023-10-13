@@ -17,7 +17,7 @@ export default function PrescriptionRow({
   location,
   created_at,
   updated_at,
-  batches,
+  filledInfo,
   doctorName,
   deliveredBy,
   isValid,
@@ -26,7 +26,7 @@ export default function PrescriptionRow({
   refillDueDate,
   refills,
   medicationID,
-  patient
+  patient,
 }) {
   const handleRowOnClick = (e) => {
     e.preventDefault();
@@ -46,14 +46,14 @@ export default function PrescriptionRow({
       location: location,
       created_at: created_at,
       updated_at: updated_at,
-      batches: batches,
+      filledInfo: filledInfo,
       medicationID: medicationID,
       deliveredBy: deliveredBy,
       doctorName: doctorName,
       dosage: dosage,
       medicationName: medicationName,
       refills: refills,
-      patient: patient
+      patient: patient,
     });
   };
 
@@ -66,15 +66,12 @@ export default function PrescriptionRow({
       }
       onClick={handleRowOnClick}
     >
-      <td className="whitespace-nowrap px-6 py-4"> {deliveredBy} </td>
-      <td className="whitespace-nowrap px-6 py-4"> {doctorName} </td>
-      <td className="whitespace-nowrap px-6 py-4"> {_id} </td>
-      <td className="whitespace-nowrap px-6 py-4"> {dosage} </td>
-      <td className="whitespace-nowrap px-6 py-4"> {refillDueDate} </td>
-      <td className="whitespace-nowrap px-6 py-4"> {refills} </td>
-      
-        
-      
+      <td className="whitespace-nowrap px-6 py-4"> {deliveredBy} </td>{" "}
+      <td className="whitespace-nowrap px-6 py-4"> {doctorName} </td>{" "}
+      <td className="whitespace-nowrap px-6 py-4"> {_id} </td>{" "}
+      <td className="whitespace-nowrap px-6 py-4"> {dosage} </td>{" "}
+      <td className="whitespace-nowrap px-6 py-4"> {refillDueDate} </td>{" "}
+      <td className="whitespace-nowrap px-6 py-4"> {refills} </td>{" "}
     </tr>
   );
 }
