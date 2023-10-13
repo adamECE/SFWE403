@@ -4,8 +4,8 @@ import { useState } from "react";
 export default function PopupInvenotryItemWindow({
     popupWindowContent, 
     setPopupWindow, 
-    inventoryUpdated,
-    setInventoryUpdated
+    notificationsUpdated,
+    setNotificationsUpdated
 }) {
 
     const [confirmDeleteWindow, setConfirmDeleteWindow] = useState(false); 

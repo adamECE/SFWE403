@@ -6,6 +6,7 @@ const orderController = require("../controllers/OrderController");
 const {
     expDateCheck,
     lowQuantCheck,
+    aboveQuantThresholdCheck,
 } = require("../middleware/notifications");
 const {
     protect,
@@ -25,7 +26,7 @@ router.put("/update-order", protect, isManager, isAccountActive, orderController
 router.get("/", protect, isAccountActive, expDateCheck, lowQuantCheck, inventoryController.getAll); // route to get list of inventory
 router.get("/order-list", protect, isAccountActive,isManager, orderController.getAll); //  route to get list of inventory orders
 router.delete("/remove-item", protect, lowQuantCheck, isAccountActive,isManager, inventoryController.removeItem); // route to delete inventory item (ideally an expired item)
-router.get("/get-notis", inventoryController.getNotifications);
+router.get("/get-notis", aboveQuantThresholdCheck, inventoryController.getNotifications);
 
 router.post("/get-item", protect, isAccountActive, isPharmacist, inventoryController.getItem);
 

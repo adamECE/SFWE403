@@ -38,6 +38,12 @@ export default function ManagerDashboard() {
         >
           Input Prescription Info{' '}
         </Link>{' '}
+        <Link
+          className="user-button"
+          href="./managerDashboard/notifications"
+        >
+          Notifications{' '}
+        </Link>{' '}
       </div>{' '}
     </div>
   );

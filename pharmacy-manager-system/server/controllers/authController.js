@@ -348,8 +348,9 @@ exports.getStaffMember = asyncHandler(async(req, res) => {
 })
 
 exports.getAPatient = asyncHandler(async(req, res) => {
-
+    
     const filter = { "email": req.params.email, role: "patient" }
+    console.log(req.params.email)
 
     console.log(filter)
 
@@ -357,6 +358,7 @@ exports.getAPatient = asyncHandler(async(req, res) => {
     if (!patientInfo) {
         res.status(404).json({ error: 'No Patient found! Add Patient Account' })
     } else {
+        console.log(patientInfo)
         res.status(200).json(patientInfo);
     }
 

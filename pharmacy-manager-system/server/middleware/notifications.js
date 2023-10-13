@@ -35,10 +35,30 @@ exports.lowQuantCheck = asyncHandler(async(req, res, next) => {
                 await newNotification.save();
             }
         }
-        //res.status(200).json({ message: "Notifications Generated" });
         next()
 
     } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'OOOps something went wrong!' });
+    }
+})
+
+exports.aboveQuantThresholdCheck = asyncHandler(async(req, res, next) => {
+    try {
+        const inventoryItems = await Inventory.find();
+        for ( let i = 0; i < inventoryItems.length; i++ ){
+            const findNoti = await notification.findOne({ medID: inventoryItems[i]._id, notiType: "quantLow" });
+            if (findNoti) {
+                if (inventoryItems[i].quantityInStock <= 120) {
+                    console.log("inventory still below 120")
+                    continue;
+                }
+                await notification.deleteOne({medID: inventoryItems[i]._id, notiType: "quantLow"});
+            }
+        }
+        next()
+    } catch (error) {
+
         console.error(error);
         res.status(500).json({ error: 'OOOps something went wrong!' });
     }
