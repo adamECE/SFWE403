@@ -56,7 +56,7 @@ export default function PopupPrescriptionItemWindow({
         console.log(item);
       })
       .then((response) => {
-        if (item.quantity <= popupWindowContent.quantity) {
+        if (item.quantityInStock <= popupWindowContent.quantity) {
           setItemNotAvailable(true);
         } else {
           setItemAvailable(true);
@@ -103,23 +103,6 @@ export default function PopupPrescriptionItemWindow({
         const errorText = await response.text();
         alert(JSON.parse(errorText).error);
       }
-
-      // .then((res) => {
-      //   console.log(res);
-      //   if (res.status === 401 || res.status === 404) {
-      //     alert(res.text);
-      //     // Let the user know the item is not expired
-      //     setItemExpired(true);
-      //     setConfirmFillWindow(false);
-      //   } else {
-      //     alert(res.statusText);
-      //     setPrescriptionUpdated(!prescriptionUpdated);
-      //     setPopupWindow(false);
-      //   }
-      // })
-      // .catch((error) => {
-      //   console.error("Fill error:", error);
-      // });
     }
   };
 
@@ -134,7 +117,7 @@ export default function PopupPrescriptionItemWindow({
             className="top-0 right-0 m-2 px-4 py-2 bg-blue-500 text-white rounded absolute"
             onClick={handleCloseModalBtn}
           >
-            & times;{" "}
+            &times;{" "}
           </button>{" "}
           <h3 className="text-black"> {popupWindowContent.name} </h3>{" "}
           <div className="font-bold"> Description: </div>{" "}
