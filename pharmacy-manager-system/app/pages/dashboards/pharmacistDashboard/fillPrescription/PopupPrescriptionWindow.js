@@ -7,7 +7,7 @@ export default function PopupPrescriptionItemWindow({
   prescriptionUpdated,
   setPrescriptionUpdated,
 }) {
-  const [confirmDeleteWindow, setConfirmDeleteWindow] = useState(false);
+  const [confirmDeleteWindow, setConfirmFillWindow] = useState(false);
   const [itemNotExpired, setItemNotExpired] = useState(false);
 
   const handleCloseModalBtn = (e) => {
@@ -15,7 +15,7 @@ export default function PopupPrescriptionItemWindow({
     setPopupWindow(false);
     // Make sure everything else is closed
     setItemNotExpired(false);
-    setConfirmDeleteWindow(false);
+    setConfirmFillWindow(false);
   };
 
   const handleFillItem = async (e) => {
@@ -24,11 +24,11 @@ export default function PopupPrescriptionItemWindow({
     const token = localStorage.getItem("token"); // Get auth token from localStorage
 
     if (!confirmDeleteWindow) {
-      setConfirmDeleteWindow(true);
+      setConfirmFillWindow(true);
     } else {
       // Delete item from prescription after user confirms deletion
-      await fetch("http://127.0.0.1:3030/pharmacy-0x2/api/inventory/remove-item", {
-        method: "DELETE",
+      await fetch("http://127.0.0.1:3030/pharmacy-0x2/api/patientHistory/fill-prescription", {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json", // Specify the content type as JSON
           Authorization: `Bearer ${token}`, // Include bearer token in the Autho header
@@ -41,7 +41,7 @@ export default function PopupPrescriptionItemWindow({
           if (res.status === 401) {
             // Let the user know the item is not expired
             setItemNotExpired(true);
-            setConfirmDeleteWindow(false);
+            setConfirmFillWindow(false);
           } else {
             setPrescriptionUpdated(!prescriptionUpdated);
             setPopupWindow(false);
@@ -101,7 +101,7 @@ export default function PopupPrescriptionItemWindow({
         
         {confirmDeleteWindow && (
           <div className="text-red-500">
-            Click again to confirm item deletion.
+            Click again to confirm perscription fill.
           </div>
         )}
         {itemNotExpired && (
