@@ -6,6 +6,7 @@ export default function PrescriptionRow({
   setPopupWindowContent,
   name,
   _id,
+  medicationName,
   medicationDescription,
   medicationManufacturer,
   price,
@@ -16,7 +17,7 @@ export default function PrescriptionRow({
   location,
   created_at,
   updated_at,
-  batches,
+  filledInfo,
   doctorName,
   deliveredBy,
   isValid,
@@ -24,7 +25,8 @@ export default function PrescriptionRow({
   dosage,
   refillDueDate,
   refills,
-  medicationID
+  medicationID,
+  patient,
 }) {
   const handleRowOnClick = (e) => {
     e.preventDefault();
@@ -44,8 +46,14 @@ export default function PrescriptionRow({
       location: location,
       created_at: created_at,
       updated_at: updated_at,
-      batches: batches,
-      medicationID: medicationID
+      filledInfo: filledInfo,
+      medicationID: medicationID,
+      deliveredBy: deliveredBy,
+      doctorName: doctorName,
+      dosage: dosage,
+      medicationName: medicationName,
+      refills: refills,
+      patient: patient,
     });
   };
 
@@ -58,15 +66,12 @@ export default function PrescriptionRow({
       }
       onClick={handleRowOnClick}
     >
-      <td className="whitespace-nowrap px-6 py-4"> {deliveredBy} </td>
-      <td className="whitespace-nowrap px-6 py-4"> {doctorName} </td>
-      <td className="whitespace-nowrap px-6 py-4"> {_id} </td>
-      <td className="whitespace-nowrap px-6 py-4"> {dosage} </td>
-      <td className="whitespace-nowrap px-6 py-4"> {refillDueDate} </td>
-      <td className="whitespace-nowrap px-6 py-4"> {refills} </td>
-      
-        
-      
+      <td className="whitespace-nowrap px-6 py-4"> {deliveredBy} </td>{" "}
+      <td className="whitespace-nowrap px-6 py-4"> {doctorName} </td>{" "}
+      <td className="whitespace-nowrap px-6 py-4"> {_id} </td>{" "}
+      <td className="whitespace-nowrap px-6 py-4"> {dosage} </td>{" "}
+      <td className="whitespace-nowrap px-6 py-4"> {refillDueDate} </td>{" "}
+      <td className="whitespace-nowrap px-6 py-4"> {refills} </td>{" "}
     </tr>
   );
 }
