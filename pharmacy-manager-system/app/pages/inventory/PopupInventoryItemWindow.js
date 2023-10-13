@@ -12,6 +12,7 @@ export default function PopupInvenotryItemWindow({
     const [itemNotExpired, setItemNotExpired] = useState(false); 
     const [orderQuantityOption, setOrderQuantityOption] = useState(false); 
     const [inputText, setInputText] = useState('');
+    const [manuInputText, setManuInputText] = useState('');
     const [warningText, setWarningText] = useState('');
     const [sucessfulSubmit, setSucessfulSubmit] = useState('');
 
@@ -86,7 +87,11 @@ export default function PopupInvenotryItemWindow({
     const handleInputChange = (e) => {
         // Step 3: Update the state variable with the input value
         setInputText(e.target.value);
-      };
+    };
+    const handleManuInputChange = (e) => {
+        // Step 3: Update the state variable with the input value
+        setManuInputText(e.target.value);
+    };
 
     return (
         <div id="myModal" className="modal p-10px fixed w-full h-full top-0 left-0 flex items-center justify-center custom-z-pos-index">
@@ -95,7 +100,7 @@ export default function PopupInvenotryItemWindow({
                     onClick={handleCloseModalBtn}>
                 &times;
             </button>
-            <h3 className="text-black">
+            <h3 className="text-black my-5">
                 {popupWindowContent.name}
             </h3>
             <div className="font-bold">
@@ -111,19 +116,51 @@ export default function PopupInvenotryItemWindow({
                 <b>Price:</b> ${popupWindowContent.price} 
             </div>
             <div className="px-4 py-2">
-                <b>Quantity:</b> {popupWindowContent.quantity} 
+                <b>Manufacturer:</b> {popupWindowContent.manufacturer} 
             </div>
             <div className="px-4 py-2">
-                <b>Manufacturer:</b> {popupWindowContent.manufacturer} 
+                <b>Location:</b> {popupWindowContent.location} 
+            </div>
+            {(sucessfulSubmit.length != 0) && <div className="text-blue-500">
+                {sucessfulSubmit} 
+            </div>}
+            {!orderQuantityOption &&<button className="bottom-0 right-0 m-2 px-4 py-2 bg-blue-500 text-white rounded"
+                    onClick={handlePlaceOrder}>
+                Order New Batch
+            </button>}
+            {orderQuantityOption && 
+            <div>
+                <div className="border-2 m-2 px-4 py-4">
+                    {(warningText.length != 0) && <div className="text-red-500">{warningText}</div>}
+                    <b>Enter Quantity:</b> 
+                    <input className="border-4 m-2" type="text" name="example" id="example"
+                                        onChange={handleInputChange}></input>
+                </div>
+                <div className="border-2 m-2 px-4 py-4">
+                    <b>Enter Manufacturer:</b> 
+                    <input className="border-4 m-2" type="text" name="example" id="example"
+                                        onChange={handleManuInputChange}></input>
+                </div>
+                <button className="bottom-0 right-0 m-2 px-4 py-2 bg-blue-500 text-white rounded"
+                        onClick={handleSubmitOrder}>
+                    Submit Order
+                </button> 
+                <button className="bottom-0 right-0 m-2 px-4 py-2 bg-blue-500 text-white rounded"
+                        onClick={handleCancelSubmitOrder}>
+                    Cancel Order
+                </button> 
+            </div>}
+            <div className="px-4 py-2 underline">
+                <b>Batch Info</b>  
             </div>
             <div className="px-4 py-2">
                 <b>Expiration Date:</b> {popupWindowContent.expirationDate} 
             </div>
             <div className="px-4 py-2">
-                <b>Barcode:</b> {popupWindowContent.barcode} 
+                <b>Quantity:</b> {popupWindowContent.quantity} 
             </div>
             <div className="px-4 py-2">
-                <b>Location:</b> {popupWindowContent.location} 
+                <b>Barcode:</b> {popupWindowContent.barcode} 
             </div>
             <div className="px-4 py-2">
                 <b>Created At:</b> {popupWindowContent.created_at} 
@@ -139,35 +176,10 @@ export default function PopupInvenotryItemWindow({
             <div className="text-red-500 font-bold">
                 Cannot delete, item is not expired. 
             </div>}
-            {(sucessfulSubmit.length != 0) && <div className="text-blue-500">
-                {sucessfulSubmit} 
-            </div>}
-            {!orderQuantityOption &&<button className="bottom-0 right-0 m-2 px-4 py-2 bg-blue-500 text-white rounded"
-                    onClick={handlePlaceOrder}>
-                Place Order
-            </button>}
             {!orderQuantityOption && <button className="bottom-0 right-0 m-2 px-4 py-2 bg-blue-500 text-white rounded"
                     onClick={handleDeleteItem}>
-                Delete Item
+                Delete Batch
             </button> }
-            {orderQuantityOption && 
-            <div>
-                <div className="border-2 m-2 px-4 py-4">
-                    {(warningText.length != 0) && <div className="text-red-500">{warningText}</div>}
-                    <b>Enter Quantity:</b> 
-                    <input className="border-4 m-2" type="text" name="example" id="example"
-                                        onChange={handleInputChange}></input>
-                </div>
-                <button className="bottom-0 right-0 m-2 px-4 py-2 bg-blue-500 text-white rounded"
-                        onClick={handleSubmitOrder}>
-                    Submit Order
-                </button> 
-                <button className="bottom-0 right-0 m-2 px-4 py-2 bg-blue-500 text-white rounded"
-                        onClick={handleCancelSubmitOrder}>
-                    Cancel Order
-                </button> 
-            </div>}
-            
         </div>
         </div>
     );

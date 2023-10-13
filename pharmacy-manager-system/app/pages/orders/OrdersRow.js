@@ -5,6 +5,7 @@ export default function OrdersRow({
     setPopupWindow,
     setPopupWindowContent, 
     medicationID,
+    name,
     quantity,
     supplier,
     orderDate,
@@ -33,12 +34,13 @@ export default function OrdersRow({
         "border-b dark:border-neutral-500 trBg" : 
         "border-b dark:border-neutral-500 trBg hover:scale-105" } 
         onClick={handleRowOnClick}>
-        <td className="whitespace-nowrap  px-6 py-4">  {quantity}      </td>
-        <td className="whitespace-nowrap  px-6 py-4">  {supplier}      </td>
+        <td className="px-6 py-4">  {name}      </td>
+        <td className="px-6 py-4">  {quantity}      </td>
+        <td className="px-6 py-4">  {supplier}      </td>
         {/* Assuming these two should will be updated as date strings but not sure */}
-        <td className="whitespace-nowrap  px-6 py-4">  {orderDate}     </td>
-        <td className="whitespace-nowrap  px-6 py-4">  {receptionDate} </td>
-        <td className="whitespace-nowrap  px-6 py-4">  {status}        </td>
+        <td className="px-6 py-4">  {orderDate}     </td>
+        <td className="px-6 py-4">  {receptionDate} </td>
+        <td className="px-6 py-4">  {status}        </td>
 
       </tr>
     );

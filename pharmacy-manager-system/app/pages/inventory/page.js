@@ -60,6 +60,11 @@ export default function Inventory() {
     router.push ("/pages/orders");
   }
 
+  const handleGoToAddInvItem = (e) => {
+    e.preventDefault(); 
+    router.push ("/pages/inventory/addInventoryItem");
+  }
+
   const thStyle = " px-6 py-4 text-base sm:text-sm md:text-md lg:text-lg";
   const blockStyle = "m-5 p-5 flex flex-col justify-center items-center";
 
@@ -68,6 +73,10 @@ export default function Inventory() {
       <button className="top-5 left-0 m-2 px-4 py-2 bg-blue-500 text-white rounded absolute"
                 onClick={handleGoToOrderPage}>
         Go to order page
+      </button>
+      <button className="top-20 left-0 m-2 px-4 py-2 bg-blue-500 text-white rounded absolute"
+                onClick={handleGoToAddInvItem}>
+        Add Inventory Item
       </button>
       <h3>Current Inventory </h3>
       

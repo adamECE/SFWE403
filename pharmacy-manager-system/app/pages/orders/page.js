@@ -8,6 +8,7 @@ export default function Orders() {
   const [orderListItems,     setOrderListItems]     = useState([]);
   const [popupWindow,        setPopupWindow]        = useState(false); 
   const [popupWindowContent, setPopupWindowContent] = useState({}); 
+  const [itemFoundInInv,     setItemFoundInInv]     = useState(false); 
 
   const router = useRouter();
 
@@ -38,16 +39,16 @@ export default function Orders() {
     setOrderListItems(tempOrderListItems); 
   }, []);
 
-  const handleGoToOrderPage = (e) => {
+  const handleGoToInvPage = (e) => {
     e.preventDefault(); 
-    router.push ("/pages/orders/placeNewOrder");
+    router.push ("/pages/inventory");
   }
 
   return (
     <div className={blockStyle}>
       <button className="top-5 left-0 m-2 px-4 py-2 bg-blue-500 text-white rounded absolute"
-                onClick={handleGoToOrderPage}>
-        Place a new order
+                onClick={handleGoToInvPage}>
+        Go to Inventory
       </button>
       <h3>Order List </h3>
 
@@ -60,6 +61,9 @@ export default function Orders() {
       <table className="border-collapse border border-sky-700 md:table-fixed  font-light mx-4 my-4">
         <thead className="border-b bg-neutral-50 font-medium dark:border-neutral-500 dark:text-neutral-800">
           <tr>
+            <th scope="col" className={thStyle}>
+                Name
+            </th>
             <th scope="col" className={thStyle}>
                 Quantity
             </th>
@@ -87,6 +91,7 @@ export default function Orders() {
               setPopupWindowContent={setPopupWindowContent}
               quantity={item.quantity}
               supplier={item.supplier}
+              name = {itemFoundInInv ? item.name : "Name not found"}
               orderDate={item.orderDate.toDateString()}
               receptionDate={item.receptionDate.toDateString()}
               status={item.status}
