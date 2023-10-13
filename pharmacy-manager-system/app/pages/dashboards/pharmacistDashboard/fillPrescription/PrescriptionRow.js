@@ -6,6 +6,7 @@ export default function PrescriptionRow({
   setPopupWindowContent,
   name,
   _id,
+  medicationName,
   medicationDescription,
   medicationManufacturer,
   price,
@@ -24,7 +25,8 @@ export default function PrescriptionRow({
   dosage,
   refillDueDate,
   refills,
-  medicationID
+  medicationID,
+  patient
 }) {
   const handleRowOnClick = (e) => {
     e.preventDefault();
@@ -45,7 +47,13 @@ export default function PrescriptionRow({
       created_at: created_at,
       updated_at: updated_at,
       batches: batches,
-      medicationID: medicationID
+      medicationID: medicationID,
+      deliveredBy: deliveredBy,
+      doctorName: doctorName,
+      dosage: dosage,
+      medicationName: medicationName,
+      refills: refills,
+      patient: patient
     });
   };
 

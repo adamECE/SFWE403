@@ -22,45 +22,6 @@ export default function Prescription() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  /*seEffect(() => {
-    setPrescriptionUpdated(!prescriptionUpdated);
-  }, []);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token"); // get auth token from localStorage
-    
-    
-    fetch("http://127.0.0.1:3030/pharmacy-0x2/api/patientHistory/get-patient-prescription-info", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`, // include bearer token in the Autho header
-      },
-      body: JSON.stringify({
-        "userId":"65206dcfee249d4cdc42eb20"
-      })
-    })
-      .then((res) => {
-        if (!res.ok) {
-          console.log("Here1");
-          throw new Error('Network response error');
-        }
-        return res.json();
-      })
-      .then((data) => {
-        //filter to only prescriptions
-        //const prescriptionItems = data.filter((item)=> item.category === "prescription");
-        setPrescriptionItems(data);
-        console.log(data);
-      })
-      .catch((error) => {
-        console.log("Here2");
-        console.error('Fetch error:', error);
-      });
-  }, [prescriptionUpdated]);
-
-*/
-
 const handleCheckSubmit = async (e) => {
   const token = localStorage.getItem("token"); // get auth token from localStorage
   const getPatStr = "http://127.0.0.1:3030/pharmacy-0x2/api/a-patient/" + formData.userEmail
@@ -198,6 +159,7 @@ const handleCheckSubmit = async (e) => {
               refillPolicy ={item.refillPolicy.allowRefill}
               refillDueDate={item.refillPolicy.dueDate}
               refills = {item.refillPolicy.refills}
+              patient = {selectedPatient}
             />
           ))}
         </tbody>
