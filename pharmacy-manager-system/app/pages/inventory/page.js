@@ -1,15 +1,19 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import React from 'react';
 import InventoryRow from "./InventoryRow";
 import PopupInvenotryItemWindow from "./PopupInventoryItemWindow"
 import BatchItem from "./BatchItem";
 
 export default function Inventory() {
-  const [inventoryItems,     setInventoryItems] = useState([]);
+  const [inventoryItems,     setInventoryItems]     = useState([]);
   const [popupWindow,        setPopupWindow]        = useState(false); 
   const [popupWindowContent, setPopupWindowContent] = useState({}); 
-  const [inventoryUpdated, setInventoryUpdated]     = useState(false);
+  const [inventoryUpdated,   setInventoryUpdated]   = useState(false);
+  const [storedBatches,      setStoredBatches]      = useState(new Map()); 
+ 
+  const router = useRouter();
 
   useEffect(() => {
     setInventoryUpdated(!inventoryUpdated); 
@@ -32,26 +36,51 @@ export default function Inventory() {
       return res.json();
     })
     .then((data) => {
+
+      const tempMap = new Map(storedBatches);
+
       for (const item of data) {
         for (const batch of item.batches) {
-          batch.parentId = item._id; 
+          tempMap.set(batch.barcode, item);
+          batch.parentId = item._id;
+          //batch = {...batch, ...{parentId: item._id}} 
         }
       }
+      setStoredBatches(tempMap);
       setInventoryItems(data); 
-      console.log(data); 
+      //console.log(data); 
     }) 
     .catch((error) => {
       console.error('Fetch error:', error);
     }); 
   }, [inventoryUpdated]);
 
-  const thStyle = " px-6 py-4";
-  const blockStyle = "m-5 p-5 flex flex-col justify-center items-center ";
+  const handleGoToOrderPage = (e) => {
+    e.preventDefault(); 
+    router.push ("/pages/orders");
+  }
+
+  const handleGoToAddInvItem = (e) => {
+    e.preventDefault(); 
+    router.push ("/pages/inventory/addInventoryItem");
+  }
+
+  const thStyle = " px-6 py-4 text-base sm:text-sm md:text-md lg:text-lg";
+  const blockStyle = "m-5 p-5 flex flex-col justify-center items-center";
+
   return (
     <div className={blockStyle}>
+      <button className="top-5 left-0 m-2 px-4 py-2 bg-blue-500 text-white rounded absolute"
+                onClick={handleGoToOrderPage}>
+        Go to order page
+      </button>
+      <button className="top-20 left-0 m-2 px-4 py-2 bg-blue-500 text-white rounded absolute"
+                onClick={handleGoToAddInvItem}>
+        Add Inventory Item
+      </button>
       <h3>Current Inventory </h3>
-
-      {/* Only show modal if an item is clicked */}{/* TODO: REPLACE WITH POPUPINVENTORYITEMWINDOW */}
+      
+      {/* Only show modal if an item is clicked */}
       {popupWindow && <PopupInvenotryItemWindow 
                         popupWindowContent={popupWindowContent} 
                         setPopupWindow={setPopupWindow}
@@ -59,7 +88,7 @@ export default function Inventory() {
                         setInventoryUpdated={setInventoryUpdated}/>
       }
 
-      <table className="border-collapse border border-sky-700 md:table-fixed  font-light mx-4 my-4">
+      <table className="border-collapse border border-sky-700 md:table-fixed w-90 font-light mx-4 my-4 table-auto">
         <thead className="border-b bg-neutral-50 font-medium dark:border-neutral-500 dark:text-neutral-800">
           <tr>
             <th scope="col" className={thStyle}>
@@ -116,6 +145,7 @@ export default function Inventory() {
                 key={index}
                 _id={item.parentId}
                 barcode={item.barcode}
+                parentInfoMap={storedBatches}
                 setPopupWindow={setPopupWindow}
                 setPopupWindowContent={setPopupWindowContent}
                 quantity={item.quantity}
