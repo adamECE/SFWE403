@@ -149,7 +149,8 @@ exports.removeItem = asyncHandler(async(req, res) => {
 
         console.error(error);
         res.status(500).json({ error: 'OOOps something went wrong!' });
-
+    }
+  });
 exports.addNotification = asyncHandler(async (req, res) => {
   try {
     const { medID, medName, batchID, expirationDate } = req.body;
