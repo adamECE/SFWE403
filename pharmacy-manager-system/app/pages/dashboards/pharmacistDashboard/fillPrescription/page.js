@@ -10,6 +10,7 @@ export default function Prescription() {
   const [popupWindowContent, setPopupWindowContent] = useState({});
   const [prescriptionUpdated, setPrescriptionUpdated] = useState(false);
   const [findUser, setFindUser] = useState(false);
+  const [item, setItem] = useState({});
   const submitButtonStyle =
     "z-[4] bgCor inline-block rounded-r bg-cyan-100 px-6 pb-2 pt-2.5  font-medium uppercase leading-normal text-white focus:outline-none focus:shadow-outline";
 
@@ -50,7 +51,6 @@ export default function Prescription() {
 
       const patientData = await response.json();
       setPatient(patientData);
-      console.log(patientData);
       setFindUser(!findUser);
     } catch (error) {
       console.error("Fetch error:", error);
@@ -83,8 +83,6 @@ export default function Prescription() {
       .then((data) => {
         setPrescriptionItems(data);
         setPrescriptionUpdated(!prescriptionUpdated);
-
-        console.log(data);
       })
       .catch((error) => {
         console.error("Fetch error:", error);
@@ -95,6 +93,7 @@ export default function Prescription() {
   const blockStyle = "m-5 p-5 flex flex-col justify-center items-center ";
   return (
     <div className={blockStyle}>
+      <h3> Fill Patient Prescription</h3>
       <form
         onSubmit={handleCheckSubmit}
         className="max-w-[800px] w-full mx-auto bg-transparent p-4 rounded border border-blue-500"
@@ -119,7 +118,7 @@ export default function Prescription() {
           </div>{" "}
         </div>{" "}
       </form>{" "}
-      {prescriptionUpdated ? (
+      {findUser ? (
         <>
           {" "}
           <h3> Prescriptions </h3>
@@ -127,13 +126,16 @@ export default function Prescription() {
             <PopupPrescriptionItemWindow
               popupWindowContent={popupWindowContent}
               setPopupWindow={setPopupWindow}
-              prescriptionUpdated={prescriptionUpdated}
-              setPrescriptionUpdated={setPrescriptionUpdated}
+              setItem={setItem}
+              item={item}
             />
           )}{" "}
           <table className="border-collapse border border-sky-700 md:table-fixed font-light mx-4 my-4">
             <thead className="border-b bg-neutral-50 font-medium dark:border-neutral-500 dark:text-neutral-800">
               <tr>
+                <th scope="col" className={thStyle}>
+                  Medication{" "}
+                </th>{" "}
                 <th scope="col" className={thStyle}>
                   Delivered By{" "}
                 </th>{" "}
@@ -141,21 +143,20 @@ export default function Prescription() {
                   Doctor Name{" "}
                 </th>{" "}
                 <th scope="col" className={thStyle}>
-                  ID{" "}
-                </th>{" "}
-                <th scope="col" className={thStyle}>
                   Dosage{" "}
                 </th>{" "}
                 <th scope="col" className={thStyle}>
                   Refill Due Date{" "}
-                </th>{" "}
+                </th>
                 <th scope="col" className={thStyle}>
-                  Refills{" "}
-                </th>{" "}
-              </tr>{" "}
-            </thead>{" "}
+                  Refills Left
+                </th>
+                <th scope="col" className={thStyle}>
+                  isValid
+                </th>
+              </tr>
+            </thead>
             <tbody>
-              {" "}
               {prescriptionItems.map((item) => (
                 <PrescriptionRow
                   key={item._id}
