@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-
+import Swal from 'sweetalert2'
 export default function PopupOrdersItemWindow({
   popupWindowContent,
   setPopupWindow,
@@ -53,14 +53,27 @@ export default function PopupOrdersItemWindow({
       if (response.ok) {
         setFormData(initialState);
         const responseText = await response.text();
-        alert(JSON.parse(responseText).message);
+        Swal.fire({
+          position: 'top-end',
+          icon: 'success',
+          title: JSON.parse(responseText).message,
+          showConfirmButton: true
+          
+})
+        //alert(JSON.parse(responseText).message);
 
         setOrderStatus("received");
         setPopupWindow(false);
       } else {
         setFormData(initialState);
         const errorText = await response.text();
-        alert(JSON.parse(errorText).error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: JSON.parse(errorText).error,
+
+                    })
+        //alert(JSON.parse(errorText).error);
       }
     } catch (error) {
       console.error("error:", error);

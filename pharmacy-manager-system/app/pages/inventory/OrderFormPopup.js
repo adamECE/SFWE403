@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-
+import Swal from 'sweetalert2'
 export default function OrderFormPopup({
   setSecondPopup,
   orderPopupWindowContent,
@@ -27,7 +27,7 @@ export default function OrderFormPopup({
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Call the submitOrder function with formData
-    alert(orderPopupWindowContent.medicationID);
+    //alert(orderPopupWindowContent.medicationID);
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
@@ -51,7 +51,14 @@ export default function OrderFormPopup({
       if (response.ok) {
         setFormData(initialState);
         const responseText = await response.text();
-        alert(JSON.parse(responseText).message);
+         Swal.fire({
+          position: 'top-end',
+          icon: 'success',
+          title: JSON.parse(responseText).message,
+          showConfirmButton: true
+         
+})
+        //alert(JSON.parse(responseText).message);
         router.refresh();
       } else {
         setFormData(initialState);
