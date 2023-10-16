@@ -1,30 +1,25 @@
 import React from "react";
 
 export default function PrescriptionRow({
+  _id,
   popupWindow,
   setPopupWindow,
   setPopupWindowContent,
-  name,
-  _id,
-  medicationDescription,
-  medicationManufacturer,
-  price,
-  quantityInStock,
-  manufacturer,
-  barcode,
-  expirationDate,
-  location,
-  created_at,
-  updated_at,
-  batches,
-  doctorName,
   deliveredBy,
+  doctorName,
+  dosage,
+  medicationID,
   isValid,
   quantity,
-  dosage,
+  price,
+  medicationName,
+  medicationDescription,
+  medicationManufacturer,
+  filledInfo,
+  refillPolicy,
   refillDueDate,
   refills,
-  medicationID
+  patient,
 }) {
   const handleRowOnClick = (e) => {
     e.preventDefault();
@@ -32,20 +27,21 @@ export default function PrescriptionRow({
     setPopupWindow(true);
 
     setPopupWindowContent({
-      name: name,
+      name: medicationName,
       _id: _id,
       description: medicationDescription,
       price: price,
       quantity: quantity,
-      quantityInStock: quantityInStock,
       manufacturer: medicationManufacturer,
-      barcode: barcode,
-      expirationDate: expirationDate,
-      location: location,
-      created_at: created_at,
-      updated_at: updated_at,
-      batches: batches,
-      medicationID: medicationID
+      filledInfo: filledInfo,
+      medicationID: medicationID,
+      deliveredBy: deliveredBy,
+      doctorName: doctorName,
+      dosage: dosage,
+      medicationName: medicationName,
+      refills: refills,
+      patient: patient,
+      refillDueDate,
     });
   };
 
@@ -58,15 +54,23 @@ export default function PrescriptionRow({
       }
       onClick={handleRowOnClick}
     >
-      <td className="whitespace-nowrap px-6 py-4"> {deliveredBy} </td>
-      <td className="whitespace-nowrap px-6 py-4"> {doctorName} </td>
-      <td className="whitespace-nowrap px-6 py-4"> {_id} </td>
-      <td className="whitespace-nowrap px-6 py-4"> {dosage} </td>
-      <td className="whitespace-nowrap px-6 py-4"> {refillDueDate} </td>
-      <td className="whitespace-nowrap px-6 py-4"> {refills} </td>
-      
-        
-      
+      <td className="whitespace-nowrap px-6 py-4"> {medicationName} </td>{" "}
+      <td className="whitespace-nowrap px-6 py-4"> {deliveredBy} </td>{" "}
+      <td className="whitespace-nowrap px-6 py-4"> {doctorName} </td>{" "}
+      <td className="whitespace-nowrap px-6 py-4"> {dosage} </td>{" "}
+      <td className="whitespace-nowrap px-6 py-4">
+        {" "}
+        {new Date(refillDueDate).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        })}{" "}
+      </td>{" "}
+      <td className="whitespace-nowrap px-6 py-4"> {refills} </td>{" "}
+      <td className="whitespace-nowrap px-6 py-4">
+        {" "}
+        {isValid ? "Yes" : "No"}{" "}
+      </td>{" "}
     </tr>
   );
 }
