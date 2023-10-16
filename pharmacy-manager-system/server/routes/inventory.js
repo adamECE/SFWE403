@@ -6,6 +6,7 @@ const {
     expDateCheck,
     lowQuantCheck,
     aboveQuantThresholdCheck,
+    checkForBatchExist,
 } = require("../middleware/notifications");
 const {
     protect,
@@ -70,6 +71,7 @@ router.delete(
 ); // route to delete inventory item (ideally an expired item)
 router.get("/get-notis", 
     aboveQuantThresholdCheck,
+    checkForBatchExist,
     inventoryController.getNotifications);
 
 router.post(

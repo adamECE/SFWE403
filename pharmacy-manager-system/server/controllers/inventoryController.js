@@ -141,7 +141,6 @@ exports.removeItem = asyncHandler(async(req, res) => {
         if (inventoryItem.batches[batchIndex].expirationDate <= new Date()) {
             inventoryItem.quantityInStock -= inventoryItem.batches[batchIndex].quantity
             await notification.deleteOne({ batchID: inventoryItem.batches[batchIndex]._id, notiType: "expSoon" });
-            await notification.save();
             inventoryItem.batches.splice(batchIndex, 1); // Remove the batch 
             await inventoryItem.save() // Save the updated inventory item
             res.status(200).json({ message: "expired batch removed from inventory" });
