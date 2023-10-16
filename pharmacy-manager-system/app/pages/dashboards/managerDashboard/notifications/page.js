@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import React from 'react';
 import NotificationRow from "./NotificationRow";
+import OrderFormPopup from "./OrderFormPopup";
 import PopupNotificationWindow from "./PopupNotificationWindow.js"
 
 export default function Notifications() {
@@ -10,6 +11,9 @@ export default function Notifications() {
   const [popupWindow,        setPopupWindow]        = useState(false); 
   const [popupWindowContent, setPopupWindowContent] = useState({}); 
   const [notificationsUpdated,   setNotificationsUpdated]   = useState(false);
+  const [orderPopupWindowContent, setOrderPopupWindowContent] = useState({});
+  const [showOrderForm, setShowOrderForm] = useState(false);
+
  
   const router = useRouter();
 
@@ -61,8 +65,18 @@ export default function Notifications() {
                         popupWindowContent={popupWindowContent} 
                         setPopupWindow={setPopupWindow}
                         notificationsUpdated={notificationsUpdated}
-                        setNotificationsUpdated={setNotificationsUpdated}/>
+                        setNotificationsUpdated={setNotificationsUpdated}
+                        orderPopupWindowContent={orderPopupWindowContent}
+                        setOrderPopupWindowContent={setOrderPopupWindowContent}
+                        setShowOrderForm={setShowOrderForm}
+                        />
       }
+      {showOrderForm && (
+        <OrderFormPopup
+          setSecondPopup={setShowOrderForm}
+          orderPopupWindowContent={orderPopupWindowContent}
+        />
+      )}
 
       <table className="border-collapse border border-sky-700 md:table-fixed w-90 font-light mx-4 my-4 table-auto">
         <thead className="border-b bg-neutral-50 font-medium dark:border-neutral-500 dark:text-neutral-800">
@@ -74,7 +88,10 @@ export default function Notifications() {
               Notification Type
             </th>
             <th scope="col" className={thStyle}>
-              Create At
+              Created At
+            </th>
+            <th scope="col" className={thStyle}>
+              View
             </th>
           </tr>
         </thead>
@@ -95,6 +112,7 @@ export default function Notifications() {
                 batchID={item.batchID}
                 expirationDate={item.expirationDate}
                 created_at={item.created_at}
+                medicine={item}
               />
           ))}
 

@@ -6,13 +6,12 @@ export default function PopupNotificationWindow({
   setPopupWindow,
   notificationsUpdated,
   setNotificationsUpdated,
+  setOrderPopupWindowContent,
+  setShowOrderForm,
 }) {
   const [confirmDeleteWindow, setConfirmDeleteWindow] = useState(false);
   const [itemNotExpired, setItemNotExpired] = useState(false);
   const [orderQuantityOption, setOrderQuantityOption] = useState(false); 
-  const [inputText, setInputText] = useState('');
-  const [manuInputText, setManuInputText] = useState('');
-  const [warningText, setWarningText] = useState('');
   const [sucessfulSubmit, setSucessfulSubmit] = useState('');
 
   const handleCloseModalBtn = (e) => {
@@ -24,39 +23,46 @@ export default function PopupNotificationWindow({
     setWarningText('');
   };
 
-  const handlePlaceOrder = (e) => {
-    e.preventDefault(); 
-    setSucessfulSubmit('');
-    setOrderQuantityOption(true);
-}
-const handleInputChange = (e) => {
-    // Step 3: Update the state variable with the input value
-    setInputText(e.target.value);
+  const handlePlaceOrder = async (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem("token"); // Get auth token from localStorage
+    await fetch("http://127.0.0.1:3030/pharmacy-0x2/api/inventory/get-item", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", // Specify the content type as JSON
+          Authorization: `Bearer ${token}`, // Include bearer token in the Autho header
+        },
+        body: JSON.stringify({
+          medicationID: popupWindowContent.medID,
+        }),
+      })
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error("Network response error");
+          }
+            return res.json();
+          })
+        .then((data) => {
+          console.log(data)
+          setOrderPopupWindowContent({
+            medicationID: data[0].barcode,
+            name: data[0].name,
+            category: data[0].category,
+            description: data[0].description,
+            price: data[0].price,
+            quantityInStock: data[0].quantityInStock,
+            manufacturer: data[0].manufacturer,
+            location: data[0].location,
+            created_at: data[0].created_at,
+            updated_at: data[0].updated_at,
+          });
+      
+          setShowOrderForm(true);
+        })
+        .catch((error) => {
+          console.error("Delete error:", error);
+        });
 };
-const handleManuInputChange = (e) => {
-    // Step 3: Update the state variable with the input value
-    setManuInputText(e.target.value);
-};
-
-const handleSubmitOrder = (e) => {
-    e.preventDefault(); 
-    if (!(/^-?\d+$/.test(inputText))) {
-        setWarningText('Please submit a valid quantity');
-    } else {
-        // TODO: add functionality to place an order
-        // all necessary data to place the order should be stored in popupWindowContent
-
-        setSucessfulSubmit('Item sucessfully submitted');
-        setWarningText('');
-        setOrderQuantityOption(false);
-    }
-}
-
-const handleCancelSubmitOrder = (e) => {
-    e.preventDefault(); 
-    setOrderQuantityOption(false);
-}
-
   const handleDeleteItem = async (e) => {
     e.preventDefault();
 
@@ -111,11 +117,11 @@ const handleCancelSubmitOrder = (e) => {
           {popupWindowContent.message}
         </div>
         <div className="px-4 py-2">
-          <b>Medication ID:</b> ${popupWindowContent.medID}
+          <b>Medication ID:</b> {popupWindowContent.medID}
         </div>
         {(popupWindowContent.notiType === "quantLow") && ( 
         <div className="px-4 py-2">
-          <b>Total Quantity in Stock:</b> ${popupWindowContent.totalQuant}
+          <b>Total Quantity in Stock:</b> {popupWindowContent.totalQuant}
         </div>
         )}
         <div className="px-4 py-2">
@@ -160,28 +166,7 @@ const handleCancelSubmitOrder = (e) => {
                     onClick={handlePlaceOrder}>
                 Order New Batch
             </button>}
-            {orderQuantityOption && 
-            <div>
-                <div className="border-2 m-2 px-4 py-4">
-                    {(warningText.length != 0) && <div className="text-red-500">{warningText}</div>}
-                    <b>Enter Quantity:</b> 
-                    <input className="border-4 m-2" type="text" name="example" id="example"
-                                        onChange={handleInputChange}></input>
-                </div>
-                <div className="border-2 m-2 px-4 py-4">
-                    <b>Enter Manufacturer:</b> 
-                    <input className="border-4 m-2" type="text" name="example" id="example"
-                                        onChange={handleManuInputChange}></input>
-                </div>
-                <button className="bottom-0 right-0 m-2 px-4 py-2 bg-blue-500 text-white rounded"
-                        onClick={handleSubmitOrder}>
-                    Submit Order
-                </button> 
-                <button className="bottom-0 right-0 m-2 px-4 py-2 bg-blue-500 text-white rounded"
-                        onClick={handleCancelSubmitOrder}>
-                    Cancel Order
-                </button> 
-            </div>}
+          
       </div>
     </div>
   );

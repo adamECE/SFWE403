@@ -28,7 +28,7 @@ router.get("/order-list", protect, isAccountActive,isManager, orderController.ge
 router.delete("/remove-item", protect, lowQuantCheck, isAccountActive,isManager, inventoryController.removeItem); // route to delete inventory item (ideally an expired item)
 router.get("/get-notis", aboveQuantThresholdCheck, inventoryController.getNotifications);
 
-router.post("/get-item", protect, isAccountActive, isPharmacist, inventoryController.getItem);
+router.post("/get-item", protect, isAccountActive, isStaff, inventoryController.getItem);
 
 
 module.exports = router;
