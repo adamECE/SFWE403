@@ -2,14 +2,18 @@ const express = require("express");
 const router = express.Router();
 const inventoryController = require("../controllers/inventoryController");
 const orderController = require("../controllers/OrderController");
-
-const { expDateCheck, lowQuantCheck } = require("../middleware/notifications");
 const {
-  protect,
-  isManager,
-  isStaff,
-  isPharmacist,
-  isAccountActive,
+    expDateCheck,
+    lowQuantCheck,
+    aboveQuantThresholdCheck,
+    checkForBatchExist,
+} = require("../middleware/notifications");
+const {
+    protect,
+    isManager,
+    isStaff,
+    isPharmacist,
+    isAccountActive,
 } = require("../middleware/auth");
 
 router.post(
@@ -65,14 +69,18 @@ router.delete(
   isManager,
   inventoryController.removeItem
 ); // route to delete inventory item (ideally an expired item)
-router.get("/get-notis", inventoryController.getNotifications);
+router.get("/get-notis", 
+    aboveQuantThresholdCheck,
+    checkForBatchExist,
+    inventoryController.getNotifications);
 
 router.post(
   "/get-item",
   protect,
   isAccountActive,
-  isPharmacist,
+  isStaff,
   inventoryController.getItem
 );
+
 
 module.exports = router;

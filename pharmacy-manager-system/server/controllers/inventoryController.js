@@ -113,47 +113,45 @@ exports.getAll = asyncHandler(async (req, res) => {
   }
 });
 
-exports.removeItem = asyncHandler(async (req, res) => {
-  try {
-    // Extract item details from the request body
-    const { medicationID, barcode } = req.body;
-    //check if all the required inputs are given
-    if (!medicationID || !barcode) {
-      res.status(400).json({ error: "Please add all Fields" });
-      return;
+exports.removeItem = asyncHandler(async(req, res) => {
+    try {
+        // Extract item details from the request body
+        const { medicationID, barcode } = req.body;
+        //check if all the required inputs are given
+        if (!medicationID || !barcode) {
+            res.status(400).json({ error: "Please add all Fields" });
+            return;
+        }
+
+        const inventoryItem = await Inventory.findById(medicationID) //attempt to find the item on the db
+        if (!inventoryItem) {
+            // If the medicationID is not found in the Inventory
+            res.status(404).json({ error: 'Medication not found in inventory' })
+            return
+        }
+        // Find the index of the batch matching batchId
+        const batchIndex = inventoryItem.batches.findIndex((batch) => batch._id == barcode)
+
+        if (batchIndex === -1) {
+            res.status(404).json({ message: 'Batch not found in inventory' })
+            return
+        }
+
+        // Check the expiration date of the batch
+        if (inventoryItem.batches[batchIndex].expirationDate <= new Date()) {
+            inventoryItem.quantityInStock -= inventoryItem.batches[batchIndex].quantity
+            await notification.deleteOne({ batchID: inventoryItem.batches[batchIndex]._id, notiType: "expSoon" });
+            inventoryItem.batches.splice(batchIndex, 1); // Remove the batch 
+            await inventoryItem.save() // Save the updated inventory item
+            res.status(200).json({ message: "expired batch removed from inventory" });
+        } else
+            res.status(401).json({ message: "this item is not expired" });
+    } catch (error) {
+
+        console.error(error);
+        res.status(500).json({ error: 'OOOps something went wrong!' });
     }
-
-    const inventoryItem = await Inventory.findById(medicationID); //attempt to find the item on the db
-    if (!inventoryItem) {
-      // If the medicationID is not found in the Inventory
-      res.status(404).json({ error: "Medication not found in inventory" });
-      return;
-    }
-    // Find the index of the batch matching batchId
-    const batchIndex = inventoryItem.batches.findIndex(
-      (batch) => batch._id == barcode
-    );
-
-    if (batchIndex === -1) {
-      res.status(404).json({ message: "Batch not found in inventory" });
-      return;
-    }
-
-    // Check the expiration date of the batch
-    if (inventoryItem.batches[batchIndex].expirationDate <= new Date()) {
-      inventoryItem.quantityInStock -=
-        inventoryItem.batches[batchIndex].quantity;
-      inventoryItem.batches.splice(batchIndex, 1); // Remove the batch
-
-      await inventoryItem.save(); // Save the updated inventory item
-      res.status(200).json({ message: "expired batch removed from inventory" });
-    } else res.status(401).json({ message: "this item is not expired" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "OOOps something went wrong!" });
-  }
-});
-
+  });
 exports.addNotification = asyncHandler(async (req, res) => {
   try {
     const { medID, medName, batchID, expirationDate } = req.body;

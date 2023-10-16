@@ -35,10 +35,54 @@ exports.lowQuantCheck = asyncHandler(async(req, res, next) => {
                 await newNotification.save();
             }
         }
-        //res.status(200).json({ message: "Notifications Generated" });
         next()
 
     } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'OOOps something went wrong!' });
+    }
+})
+
+exports.checkForBatchExist = asyncHandler(async(req, res, next) => {
+    try {
+        const notifications = await notification.find();
+        for ( let i = 0; i < notifications.length; i++ ){
+            if (notifications[i].notiType === "expSoon"){
+            const findItem = await Inventory.findOne({ _id: notifications[i].medID});
+            console.log("1")
+            if (findItem) {
+                const batchIndex = findItem.batches.findIndex((batch) => batch._id == notifications[i].batchID)
+                console.log("2")
+                if (batchIndex == -1) {
+                    console.log("3")
+                    await notification.deleteOne({batchID: notifications[i].batchID, notiType: "expSoon"});
+                }
+            }
+        }
+        }
+        next()
+    } catch (error) {
+
+        console.error(error);
+        res.status(500).json({ error: 'OOOps something went wrong!' });
+    }
+})
+exports.aboveQuantThresholdCheck = asyncHandler(async(req, res, next) => {
+    try {
+        const inventoryItems = await Inventory.find();
+        for ( let i = 0; i < inventoryItems.length; i++ ){
+            const findNoti = await notification.findOne({ batchID: inventoryItems[i]._id, notiType: "expSoon" });
+            if (findNoti) {
+                if (inventoryItems[i].quantityInStock <= 120) {
+                    console.log("inventory still below 120")
+                    continue;
+                }
+                await notification.deleteOne({medID: inventoryItems[i]._id, notiType: "quantLow"});
+            }
+        }
+        next()
+    } catch (error) {
+
         console.error(error);
         res.status(500).json({ error: 'OOOps something went wrong!' });
     }
