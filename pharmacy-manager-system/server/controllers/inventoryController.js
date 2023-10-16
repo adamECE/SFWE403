@@ -38,7 +38,9 @@ exports.addItem = asyncHandler(async (req, res) => {
     await newItem.save();
 
     // Return the newly created item as the response
+
     res.status(201).json({ message: "new inventory item added" });
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "OOOps something went wrong!" });
@@ -229,7 +231,9 @@ exports.getItem = asyncHandler(async (req, res) => {
       res.status(404).json({ error: "Medication not found in inventory" });
       return;
     } else {
-      res.json(updatedInventoryItems);
+
+      res.status(200).json(updatedInventoryItems);
+
     }
   } catch (error) {
     console.error(error);
