@@ -118,6 +118,35 @@ exports.createPatient = asyncHandler(async(req, res) => {
     }
 })
 
+//remove patient account
+exports.removePatient = asyncHandler(async(req, res) => {
+    const { email } = req.body;
+
+    if (
+        req.user.role != ROLES.PHARMACY_MANAGER &&
+        req.user.role != ROLES.PHARMACIST
+    ) {
+        res.status(401).json({
+            error: "Not authorized: action can only be performed by pharmacy manager or  Pharmacist",
+        });
+        return;
+    }
+    // try to find the user for the given user email
+    const user = await User.findOne({ email });
+
+    if (user) {
+        //check if the user with account locked is a staff member
+        if (
+            Object.values(ROLES).includes(user.role.toLowerCase()) &&
+            user.role == ROLES.PATIENT
+        ) {
+            await User.deleteOne({ email });
+            res.status(200).json({ message: `patient account has been deleted` });
+        } else
+            res.status(401).json({ error: "Not authorized: user is not a patient!" });
+    } else res.status(404).json({ error: "User not found!" });
+});
+
 //staff login
 exports.login = asyncHandler(async(req, res) => {
     const { email, password } = req.body // get the given user name and password
@@ -310,57 +339,59 @@ exports.passwordReset = asyncHandler(async(req, res) => {
 })
 
 exports.getPatientList = asyncHandler(async(req, res) => {
+    const filter = { role: "patient" };
 
-    const filter = { role: 'patient' }
-
-    const userList = await User.find(filter).select('-password -prescriptions -insuranceInformation ')
+    const userList = await User.find(filter).select(
+        "-password -isLocked -loginAttempts -lastLogin -isActive -prescriptions"
+    );
     if (!userList) {
-        res.status(404).json({ message: 'No Patients found' })
+        res.status(404).json({ message: "No Patients found" });
     } else {
         res.status(200).json(userList);
     }
-})
+});
 
 exports.getStaffList = asyncHandler(async(req, res) => {
+    const filter = { role: { $ne: "patient" } };
 
-    const filter = { role: { $ne: 'patient' } }
-
-    const staffList = await User.find(filter).select('-password -prescriptions -insuranceInformation ')
+    const staffList = await User.find(filter).select(
+        "-password -prescriptions -insuranceInformation "
+    );
     if (!staffList) {
-        res.status(404).json({ message: 'No staff found' })
+        res.status(404).json({ message: "No staff found" });
     } else {
         res.status(200).json(staffList);
     }
-
-})
+});
 
 exports.getStaffMember = asyncHandler(async(req, res) => {
+    const filter = req.params;
+    console.log(filter);
 
-    const filter = req.params
-    console.log(filter)
-
-    const staffList = await User.findOne(filter).select('-password -prescriptions -insuranceInformation ')
+    const staffList = await User.findOne(filter).select(
+        "-password -prescriptions -insuranceInformation "
+    );
     if (!staffList) {
-        res.status(404).json({ message: 'No staff found' })
+        res.status(404).json({ message: "No staff found" });
     } else {
         res.status(200).json(staffList);
     }
-})
+});
 
 exports.getAPatient = asyncHandler(async(req, res) => {
+    const filter = { email: req.params.email, role: "patient" };
 
-    const filter = { "email": req.params.email, role: "patient" }
+    console.log(filter);
 
-    console.log(filter)
-
-    const patientInfo = await User.findOne(filter).select('-password -prescriptions -insuranceInformation ')
+    const patientInfo = await User.findOne(filter).select(
+        "-password  -isLocked -loginAttempts -lastLogin -isActive -prescriptions"
+    );
     if (!patientInfo) {
-        res.status(404).json({ error: 'No Patient found! Add Patient Account' })
+        res.status(404).json({ error: "No Patient found! Add Patient Account" });
     } else {
         res.status(200).json(patientInfo);
     }
-
-})
+});
 
 
 //this function uses jwt to generate the user auth token given the email

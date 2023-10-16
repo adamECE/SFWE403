@@ -20,22 +20,22 @@ exports.placeOrder = asyncHandler(async(req, res) => {
         const inventoryItem = await Inventory.findById(medicationID);
         if (!inventoryItem) {
             // If the medicationID is not found in the Inventory
-            res.status(404).json({ error: 'Medication not found in inventory' });
-            return
+            res.status(404).json({ error: "Medication not found in inventory" });
+            return;
         }
-        // Create a new order 
+        // Create a new order
         const newOrder = new Order({
             medicationID,
             quantity,
-            supplier
+            supplier,
         });
 
         // Save the new order to the database
         await newOrder.save();
-        res.status(201).json("Your order has been placed");
+        res.status(201).json({ message: "Your order has been placed" });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'OOOps something went wrong!' });
+        res.status(500).json({ error: "OOOps something went wrong!" });
     }
 });
 
@@ -45,11 +45,8 @@ exports.getAll = asyncHandler(async(req, res) => {
         // const orderItems = await Order.find();
         // res.json(orderItems);
 
-
         // Fetch the order items and populate the "medicationID" field with inventory details
-        const orderItems = await Order.find()
-            .populate('medicationID')
-            .exec();
+        const orderItems = await Order.find().populate("medicationID").exec();
 
         //Map the order items to format the response data
         const updatedOrderItems = orderItems.map((orderItem) => ({
@@ -64,16 +61,14 @@ exports.getAll = asyncHandler(async(req, res) => {
         }));
 
         res.status(200).json(updatedOrderItems);
-
     } catch (error) {
-
         console.error(error);
-        res.status(500).json({ error: 'OOOps something went wrong!' });
+        res.status(500).json({ error: "OOOps something went wrong!" });
     }
 });
 
 //update inventory order status
-exports.updateOrderStatus = asyncHandler(async(req, res) => {
+exports.updateOrderStatus = asyncHandler(async(req, res, next) => {
     try {
         // Extract item details from the request body
         const { orderID, status, expirationDate } = req.body;
@@ -91,28 +86,49 @@ exports.updateOrderStatus = asyncHandler(async(req, res) => {
         const orderItem = await Order.findById(orderID);
         if (!orderItem) {
             // If the orderID is not found in the Inventory
-            res.status(404).json({ error: 'Medication not found in inventory' });
-            return
+            res.status(404).json({ error: "Medication not found in inventory" });
+            return;
         }
 
         //check the status, if recieved, updated the related inventory item quantity, and the order reception date
-        if (status == ORDER_STATUS.RECEIVED && orderItem.status != ORDER_STATUS.RECEIVED) {
+        if (
+            status == ORDER_STATUS.RECEIVED &&
+            orderItem.status != ORDER_STATUS.RECEIVED
+        ) {
             orderItem.receptionDate = new Date(); //update the reception date
             const inventoryItem = await Inventory.findById(orderItem.medicationID); //find the related inventory item
-            inventoryItem.quantityInStock += orderItem.quantity //update ths total stock quantity
-            inventoryItem.batches.push({ //add the new bacth
+            inventoryItem.quantityInStock += orderItem.quantity; //update ths total stock quantity
+            inventoryItem.batches.push({
+                //add the new bacth
                 quantity: orderItem.quantity,
-                "expirationDate": new Date(expirationDate)
-            })
+                expirationDate: new Date(expirationDate),
+            });
             inventoryItem.updated_at = new Date();
-            await inventoryItem.save()
-
+            await inventoryItem.save();
+            const newBatch = inventoryItem.batches[inventoryItem.batches.length - 1]
+            console.log(newBatch)
+            req.invLogger = { //save info to update Logs
+                staffEmail: req.user.email,
+                staffName: `${req.user.firstName} ${req.user.lastName}`,
+                medicationID: orderItem.medicationID,
+                batch: {
+                    barcode: newBatch._id,
+                    expirationDate: newBatch.expirationDate,
+                    quantity: newBatch.quantity,
+                },
+                itemType: inventoryItem.category,
+                actionType: "added",
+            }
+            orderItem.status = status.toLowerCase();
+            await orderItem.save();
+            next() //got next middleware to log updates
+        } else {
+            orderItem.status = status.toLowerCase();
+            await orderItem.save();
+            res.status(201).json({ message: "Your order status has been updated" });
         }
-        orderItem.status = status.toLowerCase()
-        await orderItem.save()
-        res.status(201).json("Your order status has been updated");
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'OOOps something went wrong!' });
+        res.status(500).json({ error: "OOOps something went wrong!" });
     }
 });

@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect, } from 'react';
 import { setCookie, destroyCookie } from 'nookies'
 import { useRouter } from "next/navigation";
-
+import Swal from 'sweetalert2'
 export const AuthContext = createContext("")
 
 export function AuthProvider({ children }) {
@@ -51,7 +51,13 @@ export function AuthProvider({ children }) {
             } else {
 
                 const errorText = await response.text();
-                console.log(JSON.parse(errorText).error);
+                Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: JSON.parse(errorText).error,
+
+                    })
+                    //alert(JSON.parse(errorText).error);
 
             }
         } catch (error) {
@@ -140,9 +146,8 @@ export function AuthProvider({ children }) {
 
 
 
-    return ( <
-        AuthContext.Provider value = {
-            { user, isAuthenticated, signIn, signOut, sendResetEmail, activateAccount, resetPassword } } > { children } <
-        /AuthContext.Provider>
+    return ( <AuthContext.Provider value = {
+            { user, isAuthenticated, signIn, signOut, sendResetEmail, activateAccount, resetPassword }
+        } > { children } </AuthContext.Provider>
     )
 }

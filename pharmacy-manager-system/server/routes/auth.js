@@ -13,4 +13,5 @@ router.get('/patient-list', protect, isAccountActive, isStaff, authController.ge
 router.get('/staff-list', protect, isAccountActive, isManager, authController.getStaffList) // route for list off staff
 router.get('/staff-member/:email', protect, isAccountActive, isStaff, authController.getStaffMember) // route for getting one staff given the email
 router.get('/a-patient/:email', protect, isAccountActive, isStaff, authController.getAPatient) // route for getting one patient given the email
+router.delete('/remove-patient/', protect, isAccountActive, isStaff, authController.removePatient) // route for removing one patient account
 module.exports = router;
