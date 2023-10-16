@@ -27,7 +27,7 @@ export default function OrderFormPopup({
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Call the submitOrder function with formData
-    alert(orderPopupWindowContent.medicationID);
+    //alert(orderPopupWindowContent.medicationID);
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
@@ -72,9 +72,9 @@ export default function OrderFormPopup({
       id="myModal"
       className="modal p-10px fixed w-screen h-full top-0 left-0 flex items-center justify-center custom-z-pos-index"
     >
-      <div className="modal-content border-2 border-blue-800 border-opacity-100 bg-white p-8 rounded shadow-lg relative">
+      <div className="modal-content border-2 border-cyan-800 border-opacity-100 bg-white p-8 rounded shadow-lg relative">
         <button
-          className="top-0 right-0 m-1 px-2 py-1 bg-blue-500 text-white rounded absolute"
+          className=" bgCor top-0 right-0 m-1 px-2 py-1 bg-blue-500 text-white rounded absolute"
           onClick={handleCloseModalBtn}
         >
           &times;{" "}
@@ -82,9 +82,10 @@ export default function OrderFormPopup({
         <div className="order-form-popup">
           <form onSubmit={handleSubmit}>
             <h3 className="text-black my-3">
+              {" "}
               {` New Order for:  ${orderPopupWindowContent.name}`}{" "}
             </h3>{" "}
-            <div className="font-bold">Description:</div>{" "}
+            <div className="font-bold"> Description: </div>{" "}
             <div className="border-2 px-4 py-2 ">
               {" "}
               {orderPopupWindowContent.description}{" "}
@@ -94,11 +95,11 @@ export default function OrderFormPopup({
                 <div className="px-4 py-2">
                   <b> Category: </b> {orderPopupWindowContent.category}{" "}
                 </div>{" "}
-              </div>
+              </div>{" "}
               <div className="w-full mx-2 px-4 py-2">
                 <b> Price: </b> ${orderPopupWindowContent.price}{" "}
               </div>{" "}
-            </div>
+            </div>{" "}
             <div className="w-full  md:flex flex-1">
               <div className="px-4 py-2 w-full mx-2">
                 <b> Manufacturer: </b> {orderPopupWindowContent.manufacturer}{" "}
@@ -106,13 +107,13 @@ export default function OrderFormPopup({
               <div className="px-4 py-2 w-full mx-2">
                 <b> Location: </b> {orderPopupWindowContent.location}{" "}
               </div>{" "}
-            </div>
+            </div>{" "}
             <hr />
-            <p className="text-black my-3 bg-blue-100">Order Details</p>
+            <p className="text-black my-3 bg-blue-100"> Order Details </p>{" "}
             <hr />
             <div className="w-full  md:flex flex-1">
               <div className=" w-full mx-2">
-                <label className={labelSyle}>Quantity</label>
+                <label className={labelSyle}> Quantity </label>{" "}
                 <input
                   type="number"
                   name="quantity"
@@ -123,9 +124,9 @@ export default function OrderFormPopup({
                   required={true}
                   min="1"
                 />{" "}
-              </div>
+              </div>{" "}
               <div className=" w-full mx-2">
-                <label className={labelSyle}>Supplier</label>
+                <label className={labelSyle}> Supplier </label>{" "}
                 <input
                   type="text"
                   name="supplier"
@@ -135,8 +136,8 @@ export default function OrderFormPopup({
                   placeholder="supplier"
                   required={true}
                 />{" "}
-              </div>
-            </div>
+              </div>{" "}
+            </div>{" "}
             {/* Add more form fields as needed */}{" "}
             <button className={submitButtonStyle} type="submit">
               {" "}
