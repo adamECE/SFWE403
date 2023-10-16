@@ -54,7 +54,7 @@ export default function PrescriptionRow({
     >
       <td className={tdStyle}> {medName} </td>
       <td className={tdStyle}> {notiType} </td>
-      <td className={tdStyle}> {created_at} </td>
+      <td className={tdStyle}> {created_at_str} </td>
       <td className={tdStyle} onClick={handleRowOnClick}>
         {" "}
         <button className="bg-blue-500 text-white rounded">

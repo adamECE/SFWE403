@@ -68,7 +68,9 @@ router.delete(
   isManager,
   inventoryController.removeItem
 ); // route to delete inventory item (ideally an expired item)
-router.get("/get-notis", aboveQuantThresholdCheck, inventoryController.getNotifications);
+router.get("/get-notis", 
+    aboveQuantThresholdCheck,
+    inventoryController.getNotifications);
 
 router.post(
   "/get-item",
