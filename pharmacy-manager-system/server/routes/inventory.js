@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 const inventoryController = require("../controllers/inventoryController");
 const orderController = require("../controllers/OrderController");
-const { logPrescription, logInventoryRemoval } = require("../middleware/log");
+const { logPrescription, logInventoryUpdate } = require("../middleware/log");
+
 const {
     expDateCheck,
     lowQuantCheck,
@@ -44,7 +45,7 @@ router.put(
     protect,
     isManager,
     isAccountActive,
-    orderController.updateOrderStatus
+    orderController.updateOrderStatus, logInventoryUpdate
 ); // route to update inventory order
 
 router.get(
@@ -68,13 +69,13 @@ router.delete(
     lowQuantCheck,
     isAccountActive,
     isManager,
-    inventoryController.removeItem, logInventoryRemoval
+    inventoryController.removeItem, logInventoryUpdate
 ); // route to delete inventory item (ideally an expired item)
 router.get("/get-notis",
     aboveQuantThresholdCheck,
     checkForBatchExist,
     inventoryController.getNotifications);
-
+router.get("/logs", protect, isAccountActive, isManager, inventoryController.getInventoryLogs);
 router.post(
     "/get-item",
     protect,

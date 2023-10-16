@@ -76,7 +76,6 @@ exports.addBatch = asyncHandler(async(req, res) => {
 
         // Save the updated inventory item
         await inventoryItem.save();
-
         return res.status(201).json({ message: "Batch added to inventory item" });
     } catch (error) {
         console.error(error);
@@ -167,57 +166,6 @@ exports.removeItem = asyncHandler(async(req, res, next) => {
     }
 });
 
-exports.removeItemWithTrack = asyncHandler(async(req, res, next) => {
-    try {
-
-        // Extract item details from the request body
-        const { medicationID, barcode } = req.body;
-        //check if all the required inputs are given
-        if (!medicationID || !barcode) {
-            res.status(400).json({ error: "Please add all Fields" });
-            return;
-        }
-
-        const inventoryItem = await Inventory.findById(medicationID); //attempt to find the item on the db
-        if (!inventoryItem) {
-            // If the medicationID is not found in the Inventory
-            res.status(404).json({ error: "Medication not found in inventory" });
-            return;
-        }
-        // Find the index of the batch matching batchId
-        const batchIndex = inventoryItem.batches.findIndex(
-            (batch) => batch._id == barcode
-        );
-
-        if (batchIndex === -1) {
-            res.status(404).json({ message: "Batch not found in inventory" });
-            return;
-        }
-
-        // Check the expiration date of the batch
-        if (inventoryItem.batches[batchIndex].expirationDate <= new Date()) {
-            inventoryItem.quantityInStock -= inventoryItem.batches[batchIndex].quantity;
-            req.invLogger = { //save info to update Logs
-                staffEmail: req.user.email,
-                staffName: `${req.user.firstName} ${req.user.lastName}`,
-                medicationID: medicationID,
-                batch: {
-                    barcode: barcode,
-                    expirationDate: inventoryItem.batches[batchIndex].expirationDate,
-                    quantity: inventoryItem.batches[batchIndex].quantity,
-                },
-                itemType: inventoryItem.category,
-                actionType: "removed",
-            }
-            inventoryItem.batches.splice(batchIndex, 1); // Remove the batch
-            await inventoryItem.save(); // Save the updated inventory item
-            next()
-        } else res.status(401).json({ message: "this item is not expired" });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "OOOps something went wrong!" });
-    }
-});
 
 
 exports.addNotification = asyncHandler(async(req, res) => {
@@ -302,6 +250,37 @@ exports.getItem = asyncHandler(async(req, res) => {
 
         }
     } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "OOOps something went wrong!" });
+    }
+});
+
+exports.getInventoryLogs = asyncHandler(async(req, res) => {
+    try {
+        const inventoryLogs = await InventoryUpdateLog.find();
+
+        // Format the date and time for each log entry
+        const formattedLogs = inventoryLogs.map((log) => ({
+            staffEmail: log.staffEmail,
+            staffName: log.staffName,
+            medicationID: log.medicationID,
+            batch: log.batch,
+            itemType: log.itemType,
+            actionType: log.actionType,
+            date: new Date(log.timestamp).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+            }),
+            time: new Date(log.timestamp).toLocaleTimeString("en-US", {
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+            }),
+        }));
+
+        res.json(formattedLogs);
+    } catch {
         console.error(error);
         res.status(500).json({ error: "OOOps something went wrong!" });
     }

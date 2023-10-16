@@ -57,8 +57,8 @@ export default function PopupOrdersItemWindow({
           position: 'top-end',
           icon: 'success',
           title: JSON.parse(responseText).message,
-          showConfirmButton: false,
-          timer: 1500
+          showConfirmButton: true
+          
 })
         //alert(JSON.parse(responseText).message);
 

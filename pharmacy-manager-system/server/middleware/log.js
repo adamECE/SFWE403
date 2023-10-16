@@ -26,7 +26,7 @@ exports.logPrescription = asyncHandler(async(req, res, next) => {
 });
 
 
-exports.logInventoryRemoval = asyncHandler(async(req, res, next) => {
+exports.logInventoryUpdate = asyncHandler(async(req, res, next) => {
 
     const log_invRemoval = new InventoryUpdateLog({
         staffEmail: req.invLogger.staffEmail,
@@ -37,5 +37,8 @@ exports.logInventoryRemoval = asyncHandler(async(req, res, next) => {
         actionType: req.invLogger.actionType,
     });
     log_invRemoval.save();
-    res.status(200).json({ message: "expired batch removed from inventory" });
+    if (req.invLogger.itemType == "removed")
+        res.status(200).json({ message: "expired batch removed from inventory" });
+    else
+        return res.status(201).json({ message: "New Batch added to inventory" });
 });
