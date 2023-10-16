@@ -20,7 +20,6 @@ export default function PopupNotificationWindow({
     // Make sure everything else is closed
     setItemNotExpired(false);
     setConfirmDeleteWindow(false);
-    setWarningText('');
   };
 
   const handlePlaceOrder = async (e) => {
