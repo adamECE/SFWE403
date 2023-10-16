@@ -342,7 +342,7 @@ exports.getPatientList = asyncHandler(async(req, res) => {
     const filter = { role: "patient" };
 
     const userList = await User.find(filter).select(
-        "-password -isLocked -loginAttempts -lastLogin -isActive "
+        "-password -isLocked -loginAttempts -lastLogin -isActive -prescriptions"
     );
     if (!userList) {
         res.status(404).json({ message: "No Patients found" });
@@ -384,7 +384,7 @@ exports.getAPatient = asyncHandler(async(req, res) => {
     console.log(filter);
 
     const patientInfo = await User.findOne(filter).select(
-        "-password  -isLocked -loginAttempts -lastLogin -isActive"
+        "-password  -isLocked -loginAttempts -lastLogin -isActive -prescriptions"
     );
     if (!patientInfo) {
         res.status(404).json({ error: "No Patient found! Add Patient Account" });
