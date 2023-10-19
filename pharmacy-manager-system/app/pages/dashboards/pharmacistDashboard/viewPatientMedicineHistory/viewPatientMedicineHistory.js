@@ -4,7 +4,7 @@ import viewPatientMedicineHistoryForm from "/app/pages/components/viewPatientMed
 export default function ViewPatientMedicineHistory() {
   return (
 
-    <viewPatientMedicineHistoryForm/>
+    <ViewPatientMedicineHistoryForm/>
 
   );
 }
