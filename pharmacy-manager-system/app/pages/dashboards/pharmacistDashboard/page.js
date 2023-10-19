@@ -39,6 +39,9 @@ export default function PharmacistDashboard() {
         <Link className="user-button" href="./pharmacistDashboard/inputPrescriptionInfo">
           Input Prescription Info{" "}
         </Link>{" "}
+        <Link className="user-button" href="./pharmacistDashboard/viewPatientMedicineHistory">
+          View Patient Medicine History{" "}
+        </Link>{" "}
       </div>{" "}
     </div>
   );
