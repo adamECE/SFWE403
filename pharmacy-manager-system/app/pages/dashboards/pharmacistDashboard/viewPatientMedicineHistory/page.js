@@ -1,6 +1,6 @@
 "use client";
 
-import viewPatientMedicineHistoryForm from "/app/pages/components/viewPatientMedicineHistoryForm"
+import ViewPatientMedicineHistoryForm from "/app/pages/components/ViewPatientMedicineHistoryForm"
 export default function ViewPatientMedicineHistory() {
   return (
 
