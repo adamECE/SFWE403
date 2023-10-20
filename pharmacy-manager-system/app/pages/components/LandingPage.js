@@ -53,7 +53,7 @@ export default function LandingPage() {
           My Dashboard{' '}
         </Link>{' '}
         <Link className="user-button" href="./pages/settings">
-          My Account Settings{' '}
+          Account Settings{' '}
         </Link>{' '}
         <Link className="user-button" href="./pages/pharmacy">
           Pharmacy Info{' '}
