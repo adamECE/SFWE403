@@ -168,7 +168,7 @@ export default function ViewPatientMedicineHistory() {
 
     return (
         <div>
-            <h2 className={centerStyle}>Input Prescription Info</h2>
+            <h2 className={centerStyle}>View Patient Medicine History</h2>
             <div className={blockStyle}>
                 {!findUser ? (
                     <form
