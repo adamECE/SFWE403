@@ -83,7 +83,15 @@ export default function PopupUsers({
           <b> Role: </b> {popupWindowContent.role}{" "}
         </div>{" "}
         <div className="px-4 py-2">
-          <b> DOB: </b> {popupWindowContent.dateOfBirth}{" "}
+          <b> DOB: </b>{" "}
+          {new Date(popupWindowContent.dateOfBirth).toLocaleDateString(
+            "en-US",
+            {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+            }
+          )}{" "}
         </div>{" "}
         <div className="px-4 py-2">
           <b> Address: </b> {popupWindowContent.addressStreet}{" "}
@@ -91,7 +99,24 @@ export default function PopupUsers({
           {popupWindowContent.addressZipcode}{" "}
         </div>{" "}
         <div className="px-4 py-2">
-          <b> Last Login: </b> {popupWindowContent.lastLogin}{" "}
+          <b> Last Login: </b>{" "}
+          {popupWindowContent.lastLogin
+            ? `${new Date(popupWindowContent.lastLogin).toLocaleDateString(
+                "en-US",
+                {
+                  year: "numeric",
+                  month: "2-digit",
+                  day: "2-digit",
+                }
+              )} at ${new Date(popupWindowContent.lastLogin).toLocaleTimeString(
+                "en-US",
+                {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  second: "2-digit",
+                }
+              )} `
+            : "---"}
         </div>{" "}
         {popupWindowContent.isLocked && (
           <button
