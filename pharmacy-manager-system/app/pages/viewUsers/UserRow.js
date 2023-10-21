@@ -51,11 +51,11 @@ export default function UserRow({
       }
       onClick={handleRowOnClick}
     >
-      <td className="whitespace-nowrap px-6 py-4">  {firstName}  </td>
-      <td className="whitespace-nowrap px-6 py-4"> {lastName} </td>
-      <td className="whitespace-nowrap px-6 py-4"> {email} </td>
-      <td className="whitespace-nowrap px-6 py-4"> {phoneNumber} </td>
-      <td className="whitespace-nowrap px-6 py-4"> {role} </td>
+      <td className="px-6 py-4">  {firstName}  </td>
+      <td className="px-6 py-4"> {lastName} </td>
+      <td className="px-6 py-4"> {email} </td>
+      <td className="px-6 py-4"> {phoneNumber} </td>
+      <td className="px-6 py-4"> {role} </td>
       
       
         
