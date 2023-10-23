@@ -123,6 +123,34 @@ export default function ViewPatientMedicineHistory() {
             console.error('error:', error);
         }
     };
+/////////////////
+    let test;
+    const getPrescriptionList = async (e) => {
+        const token = localStorage.getItem('token');
+        try {
+            const response = await fetch(
+                'http://127.0.0.1:3030/pharmacy-0x2/api/patientHistory/get-patient-prescription-info',
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: {
+                        "userId":"650bbd1d3ccdb74624e5be72"
+                    }
+                }
+            );
+            if (response.ok) {
+                test = await response.json();
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    getPrescriptionList;
+    console.log(test);
+//////////////////
 
     const handleSearchSubmit = async (e) => {
         e.preventDefault();
@@ -165,6 +193,8 @@ export default function ViewPatientMedicineHistory() {
             router.push('/pages/');
         }
     });
+
+
 
     return (
         <div>
