@@ -151,37 +151,3 @@ exports.getPrescription = asyncHandler(async(req, res) => {
         res.status(500).json({ error: "OOOps something went wrong!" });
     }
 });
-
-exports.getPrescriptionLogs = asyncHandler(async(req, res) => {
-    try {
-        const prescriptionLogs = await PrescriptionLog.find();
-
-        // Format the date and time for each log entry
-        const formattedLogs = prescriptionLogs.map((log) => ({
-            filledBy: {
-                pharmacistEmail: log.pharmacistEmail,
-                pharmacistName: log.pharmacistName,
-            },
-            prescriptionID: log.prescriptionID,
-            patientName: log.patientName,
-            patientEmail: log.patientEmail,
-            itemType: log.itemType,
-            quantity: log.quantity,
-            date: new Date(log.timestamp).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-            }),
-            time: new Date(log.timestamp).toLocaleTimeString("en-US", {
-                hour: "2-digit",
-                minute: "2-digit",
-                second: "2-digit",
-            }),
-        }));
-
-        res.json(formattedLogs);
-    } catch {
-        console.error(error);
-        res.status(500).json({ error: "OOOps something went wrong!" });
-    }
-});
