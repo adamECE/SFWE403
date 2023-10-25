@@ -304,6 +304,56 @@ exports.sendPasswordResetEmail = asyncHandler(async(req, res) => {
 })
 
 //send password reset email link
+exports.sendTwoFactorEmail = asyncHandler(async(req, res) => {
+    const { email } = req.body
+        // try to find the user for the given user email
+    const user = await User.findOne({ email })
+
+    if (user) {
+        //check if the user with account locked is a staff member
+        if (Object.values(ROLES).includes(user.role.toLowerCase()) && user.role != ROLES.PATIENT) {
+            if (!user.isActive) {
+                res.status(400).json({ error: "Your account has not been Activated yet! Please contact your manager" })
+                return
+            }
+
+            if (user.isLocked) {
+                res.status(400).json({ error: "Your account is locked! Please contact your manager" })
+                return
+            }
+
+
+            // Generate a 6 digit code
+            code = Math.floor(100000 + Math.random() * 900000);
+
+            const mailOptions = {
+                from: 'pharmacy.x02@gmail.com',
+                to: email,
+                subject: '2-Factor Code Pharmacy X02',
+                html: `
+          <p>Here's your 2-factor authentication code.</p>
+          <p>${code}</p>
+          <p>If you did not request this, please ignore this email.</p>
+        `,
+            };
+
+            try {
+                await transporter.sendMail(mailOptions);
+                console.log("2 factor sent successfully.");
+                res.status(200).json({ code: code });
+            } catch (error) {
+                throw ("Error sending email notification:", error);
+            }
+
+
+        } else
+            res.status(401).json({ error: 'Not authorized: user is not a staff member!' })
+
+    } else
+        res.status(404).json({ error: "User not found!" })
+})
+
+//send password reset email link
 exports.passwordReset = asyncHandler(async(req, res) => {
     const { token, newPassword, confirmPassword } = req.body
         // try to find the user for the given user email

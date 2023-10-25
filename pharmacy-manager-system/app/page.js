@@ -8,8 +8,12 @@ import { useRouter } from "next/navigation";
 export default function Login() {
   const [showPassword, setShowPassword] = useState(true); // Initially show the password field
   const [email, setEmail] = useState(""); // stores the entered email
-  const { signIn,sendResetEmail } = useContext(AuthContext);
+  const [code, setCode] = useState("");
+  const [userCode, setUserCode] = useState("");
+  const [pswd, setPswd] = useState("");
+  const { signIn, sendResetEmail, sendTwoFactorEmail } = useContext(AuthContext);
   const router = useRouter();
+  const [twoFactor, setTwoFactor] = useState(false);
 
   const handleForgotPasswordClick = () => {
     setShowPassword(!showPassword);
@@ -21,7 +25,10 @@ export default function Login() {
     try {
       if (showPassword) {
         // Login
-        await signIn({ email: email, password: e.target.password.value });
+        setTwoFactor(true);
+        const resp = await sendTwoFactorEmail({ email })
+        setCode(resp);
+        setPswd(e.target.password.value);
       } else {
         // Reset Password
         console.log(email)
@@ -29,7 +36,28 @@ export default function Login() {
         alert(resp);
         setShowPassword(!showPassword)
         setEmail("")
-        
+        setPswd("")
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+  const handleTwoFactorSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (twoFactor) {
+        // Login
+        if(toString(userCode) === toString(code)){
+          await signIn({ email: email, password: pswd});
+        }
+        else {
+          console.log("failed login")
+          console.log(userCode)
+          console.log(code)
+          console.log(pswd)
+        }
+      } else {
+        setTwoFactor(false);
       }
     } catch (error) {
       console.error("Error:", error);
@@ -38,6 +66,9 @@ export default function Login() {
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
+  };
+  const handleTwoFactorChange = (e) => {
+    setUserCode(e.target.value);
   };
 
   return (
@@ -106,6 +137,34 @@ export default function Login() {
             </a>{" "}
           </div>{" "}
         </form>{" "}
+        {twoFactor && (
+        <form
+          onSubmit={handleTwoFactorSubmit}
+          className="max-w-[400px] w-full mx-auto bg-transparent p-4 rounded border border-sky-400"
+        >
+          <div className="mb-4">
+            <label className="block text-white text-sm font-bold mb-2">
+              2-Factor Code
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="two-factor"
+              name="two-factor"
+              type="text"
+              placeholder="Insert Code"
+              required
+              value={userCode} // Bind the email value to the state
+              onChange={handleTwoFactorChange} // Update the email state
+            />
+            <button
+                className="bg-blue-500 hover:bg-blue-700 rounded w-full my-2 py-2 text-white appearance-none focus:outline-none focus:shadow-outline"
+                type="submit"
+              >
+                Submit
+              </button>
+          </div>
+        </form>
+        )}
       </div>{" "}
     </div>
   );

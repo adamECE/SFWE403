@@ -90,6 +90,30 @@ export function AuthProvider({ children }) {
 
     }
 
+    async function sendTwoFactorEmail({ email }) {
+        try {
+            // Make a POST request to the login endpoint
+            const response = await fetch('http://127.0.0.1:3030/pharmacy-0x2/api/two-factor', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email }),
+            });
+            if (response.ok) {
+
+                const responseText = await response.text();
+                return (JSON.parse(responseText).code)
+            } else {
+                const errorText = await response.text();
+                return (JSON.parse(errorText).error);
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+        }
+
+    }
+
 
     async function activateAccount({ currentPassword, newPassword, confirmPassword }) {
         try {
@@ -147,7 +171,7 @@ export function AuthProvider({ children }) {
 
 
     return ( <AuthContext.Provider value = {
-            { user, isAuthenticated, signIn, signOut, sendResetEmail, activateAccount, resetPassword }
+            { user, isAuthenticated, signIn, signOut, sendResetEmail, sendTwoFactorEmail, activateAccount, resetPassword }
         } > { children } </AuthContext.Provider>
     )
 }
