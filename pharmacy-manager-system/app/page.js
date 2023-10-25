@@ -19,7 +19,14 @@ export default function Login() {
     setShowPassword(!showPassword);
    
   };
-
+  const handleReset = async (e) => {
+    setUserCode("")
+    setCode("")
+    setEmail("")
+    setShowPassword(true)
+    setTwoFactor(false)
+    setPswd("")
+  }
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -81,6 +88,7 @@ export default function Login() {
         />
       </div>{" "}
       <div className="flex flex-col justify-center">
+      {!twoFactor && (
         <form
           onSubmit={handleEmailSubmit}
           className="max-w-[400px] w-full mx-auto bg-transparent p-4 rounded border border-sky-400"
@@ -136,7 +144,8 @@ export default function Login() {
               {showPassword ? "Forgot Password?" : "Cancel"}
             </a>{" "}
           </div>{" "}
-        </form>{" "}
+        </form>
+      )}
         {twoFactor && (
         <form
           onSubmit={handleTwoFactorSubmit}
@@ -161,6 +170,13 @@ export default function Login() {
                 type="submit"
               >
                 Submit
+              </button>
+              <button
+                className="bg-blue-500 hover:bg-blue-700 rounded w-full my-2 py-2 text-white appearance-none focus:outline-none focus:shadow-outline"
+                type="button"
+                onClick={handleReset}
+              >
+              Reset
               </button>
           </div>
         </form>
