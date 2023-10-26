@@ -35,21 +35,9 @@ export default function PharmacyStaffDashboard() {
       <div style={blockStyle}>
         <Link
           className="user-button"
-          href="./staffDashboard/createPatientAccount"
+          href="./createOrder/orderPayment"
         >
-          Create Patient Accounts{" "}
-        </Link>{" "}
-        <Link
-          className="user-button"
-          href="./staffDashboard/inputPrescriptionInfo"
-        >
-          Input Prescription Info{" "}
-        </Link>{" "}
-        <Link
-          className="user-button"
-          href="./staffDashboard/createOrder"
-        >
-          Create Order{" "}
+          Pay{" "}
         </Link>{" "}
       </div>{" "}
     </div>
