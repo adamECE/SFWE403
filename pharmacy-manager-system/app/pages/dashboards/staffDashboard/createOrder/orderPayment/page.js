@@ -15,6 +15,7 @@ export default function orderPayment() {
     "bg-blue-500 hover:bg-blue-700  border rounded w-full my-5 py-2  text-white appearance-none focus:outline-none focus:shadow-outline";
   const labelSyle = "block text-white text-sm font-bold mb-2";
   const labelStyle = "block text-white text-sm font-bold mb-2";
+  const test = "";
   
 
   const initialState = {
