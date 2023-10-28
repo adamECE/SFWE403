@@ -45,6 +45,14 @@ export default function LandingPage() {
   }, []);
 
   // }
+  let managerLink = null;
+  if (localStorage.getItem('role') === 'pharmacy manager') {
+    managerLink = (
+      <Link className="user-button" href="./pages/viewUsers">
+        View Users 
+      </Link>
+    );
+  }
 
   return (
     <div>
@@ -53,8 +61,9 @@ export default function LandingPage() {
           My Dashboard{' '}
         </Link>{' '}
         <Link className="user-button" href="./pages/settings">
-          My Account Settings{' '}
+          Account Settings{' '}
         </Link>{' '}
+        {managerLink}
         <Link className="user-button" href="./pages/pharmacy">
           Pharmacy Info{' '}
         </Link>{' '}
