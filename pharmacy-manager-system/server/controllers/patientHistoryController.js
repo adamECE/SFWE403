@@ -136,8 +136,10 @@ exports.getPrescription = asyncHandler(async(req, res) => {
             return;
         }
         // renaming medicationID field into medicationInfo
+
         const prescriptionsWithMedicationInfo = userInfo.prescriptions.map(
             (prescription) => {
+
                 prescription = prescription.toObject();
                 prescription["medicationInfo"] = prescription.medicationID;
                 delete prescription.medicationID;
@@ -145,7 +147,13 @@ exports.getPrescription = asyncHandler(async(req, res) => {
             }
         );
 
-        res.status(200).json(prescriptionsWithMedicationInfo);
+        res.status(200).json({
+            userInfo: {
+                name: `${userInfo.firstName} ${userInfo.lastName}`,
+                email: userInfo.email
+            },
+            prescription: prescriptionsWithMedicationInfo
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "OOOps something went wrong!" });
