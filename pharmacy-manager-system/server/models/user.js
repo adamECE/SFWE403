@@ -50,6 +50,10 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: null,
     },
+    twoFactorCode: {
+        type: Number,
+        default: null,
+    },
     prescriptions: [prescriptionSchema],
     isActive: { type: Boolean, default: false },
 });

@@ -10,8 +10,9 @@ export default function Login() {
   const [email, setEmail] = useState(""); // stores the entered email
   const [code, setCode] = useState("");
   const [userCode, setUserCode] = useState("");
+  const [userData, setUserData] = useState({});
   const [pswd, setPswd] = useState("");
-  const { signIn, sendResetEmail, sendTwoFactorEmail } = useContext(AuthContext);
+  const { signIn, sendResetEmail, sendTwoFactorEmail,checkTwoFactorCode } = useContext(AuthContext);
   const router = useRouter();
   const [twoFactor, setTwoFactor] = useState(false);
 
@@ -31,15 +32,17 @@ export default function Login() {
     e.preventDefault();
     try {
       if (showPassword) {
+        const firstStep = await signIn({ email: email, password: pswd});
         // Login
-        setTwoFactor(true);
-        const resp = await sendTwoFactorEmail({ email })
-        setCode(resp);
-        setPswd(e.target.password.value);
+        if (firstStep) {//if user email and passwird are correct
+          setTwoFactor(true);
+          setUserData(firstStep)
+        await sendTwoFactorEmail({ email })//send the email for second step
+        }
+        
       } else {
         // Reset Password
-        console.log(email)
-        const resp = await sendResetEmail({ email }) // call API endpoint to send email
+        const resp = await sendResetEmail({ email }) 
         alert(resp);
         setShowPassword(!showPassword)
         setEmail("")
@@ -53,16 +56,9 @@ export default function Login() {
     e.preventDefault();
     try {
       if (twoFactor) {
-        // Login
-        if(toString(userCode) === toString(code)){
-          await signIn({ email: email, password: pswd});
-        }
-        else {
-          console.log("failed login")
-          console.log(userCode)
-          console.log(code)
-          console.log(pswd)
-        }
+        // 
+      await checkTwoFactorCode({ data: userData, code: userCode })
+          
       } else {
         setTwoFactor(false);
       }
@@ -74,6 +70,10 @@ export default function Login() {
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
+ const handlePasswordChange = (e) => {
+    setPswd(e.target.value);
+  };
+
   const handleTwoFactorChange = (e) => {
     setUserCode(e.target.value);
   };
@@ -118,7 +118,8 @@ export default function Login() {
                 id="password"
                 name="password"
                 type="password"
-                placeholder="Insert password"
+                  placeholder="Insert password"
+                  onChange={ handlePasswordChange}
               />
               <button
                 className="bg-blue-500 hover:bg-blue-700 rounded w-full my-2 py-2 text-white appearance-none focus:outline-none focus:shadow-outline"

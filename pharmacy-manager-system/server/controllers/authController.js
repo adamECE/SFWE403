@@ -325,7 +325,8 @@ exports.sendTwoFactorEmail = asyncHandler(async(req, res) => {
 
             // Generate a 6 digit code
             code = Math.floor(100000 + Math.random() * 900000);
-
+            user.twoFactorCode = code
+            await user.save()
             const mailOptions = {
                 from: 'pharmacy.x02@gmail.com',
                 to: email,
@@ -345,6 +346,42 @@ exports.sendTwoFactorEmail = asyncHandler(async(req, res) => {
                 throw ("Error sending email notification:", error);
             }
 
+
+        } else
+            res.status(401).json({ error: 'Not authorized: user is not a staff member!' })
+
+    } else
+        res.status(404).json({ error: "User not found!" })
+})
+
+
+
+exports.checkTwoFactorCode = asyncHandler(async(req, res) => {
+    const { email, code } = req.body
+        // try to find the user for the given user email
+    const user = await User.findOne({ email })
+
+    if (user) {
+        //check if the user with account locked is a staff member
+        if (Object.values(ROLES).includes(user.role.toLowerCase()) && user.role != ROLES.PATIENT) {
+            if (!user.isActive) {
+                res.status(400).json({ error: "Your account has not been Activated yet! Please contact your manager" })
+                return
+            }
+
+            if (user.isLocked) {
+                res.status(400).json({ error: "Your account is locked! Please contact your manager" })
+                return
+            }
+
+            if (user.twoFactorCode != Number(code)) {
+                res.status(400).json({ error: "Incorrect verification code" })
+                return
+            } else {
+                user.twoFactorCode = null
+                user.save()
+                res.status(200).json({ message: "verified" });
+            }
 
         } else
             res.status(401).json({ error: 'Not authorized: user is not a staff member!' })
