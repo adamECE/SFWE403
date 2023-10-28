@@ -82,59 +82,111 @@ export default function ViewPatientMedicineHistory({ historyItems, setHistoryIte
                 style={{ backgroundColor: "rgb(51,102,153,255)" }}
                 className="max-w-[800px] w-full mx-auto bg-transparent p-4 rounded border border-blue-500"
             >
-                <h3> Prescription Info </h3>
-
+                <h3>Prescription Info</h3>
+                <hr className="mb-2" />
                 <div className="w-full md:flex">
                     <div className="w-full mx-2">
-                        <label className={labelSyle}>Doctor Name</label>
+                        <label className={labelSyle}>Delivered By</label>
                         <input
                             type="text"
-                            placeholder="Doctor Name"
                             className={inputStyle}
-                            id="doctorName"
-                            name="doctorName"
-                            value={formData.doctorName}
-                            onChange={handleChange}
-                            required
+                            value={data.deliveredBy}
+                            disabled
                         />
                     </div>
-                    {/* <div className="w-full mx-2">
-                        <label className={labelSyle}>Medication</label>
-                        <select
+                    <div className="w-full mx-2">
+                        <label className={labelSyle}>Dosage</label>
+                        <input
+                            type="text"
                             className={inputStyle}
-                            id="medicationID"
-                            name="medicationID"
-                            value={formData.medicationID}
-                            onChange={handleChange}
-                            required
-                        >
-                            <option value=""> -- select an option -- </option>
-
-                            {inventoryItems
-                                .filter((item) => item.category === 'prescription')
-                                .map((item) => (
-                                    <option key={item._id} value={item._id}>
-                                        {item.name}
-                                    </option>
-                                ))}
-                        </select>
-                    </div>*/}
+                            value={data.dosage}
+                            disabled
+                        />
+                    </div>
+                    <div className="w-full mx-2">
+                        <label className={labelSyle}>ID</label>
+                        <input
+                            type="text"
+                            className={inputStyle}
+                            value={data._id}
+                            disabled
+                        />
+                    </div>
                 </div>
-                {/*
+                <h3>Medication Info</h3>
+                <hr className="mb-2" />
                 <div className="w-full md:flex">
                     <div className="w-full mx-2">
-                        <label className={labelSyle}>Quantity</label>
+                        <label className={labelSyle}>Name</label>
                         <input
-                            type="number"
-                            min="1"
-                            placeholder="Quantity"
+                            type="text"
                             className={inputStyle}
-                            id="quantity"
-                            name="quantity"
-                            value={formData.quantity}
-                            onChange={handleChange}
-                            required
+                            value={data.medicationInfo.name}
+                            disabled
                         />
+                    </div>
+                    <div className="w-full mx-2">
+                        <label className={labelSyle}>Manufacturer</label>
+                        <input
+                            type="text"
+                            className={inputStyle}
+                            value={data.medicationInfo.manufacturer}
+                            disabled
+                        />
+                    </div>
+                    <div className="w-full mx-2">
+                        <label className={labelSyle}>Location</label>
+                        <input
+                            type="text"
+                            className={inputStyle}
+                            value={data.medicationInfo.location}
+                            disabled
+                        />
+                    </div>
+                </div>
+                <div className="w-full md:flex">
+                    <div className="w-full mx-2">
+                        <label className={labelSyle}>Description</label>
+                        <input
+                            type="text"
+                            className={inputStyle}
+                            value={data.medicationInfo.description}
+                            disabled
+                        />
+                    </div>
+                    <div className="w-full mx-2">
+                        <label className={labelSyle}>Price</label>
+                        <input
+                            type="text"
+                            className={inputStyle}
+                            value={data.medicationInfo.price}
+                            disabled
+                        />
+                    </div>
+                </div>
+                <h3>Latest Filled Info</h3>
+                <hr className="mb-2" />
+                <div className="w-full md:flex">
+                    <div className="w-full mx-2">
+                        <label className={labelSyle}>Filled Date</label>
+                        <input
+                            type="text"
+                            className={inputStyle}
+                            value={data.filledInfo[data.filledInfo.length - 1].filledDate}
+                            disabled
+                        />
+                    </div>
+                    <div className="w-full mx-2">
+                        <label className={labelSyle}>Expiration Date</label>
+                        <input
+                            type="text"
+                            className={inputStyle}
+                            value={data.filledInfo[data.filledInfo.length - 1].batchInfo.expirationDate}
+                            disabled
+                        />
+                    </div>
+                </div>
+                {/*
                     </div>
                     <div className="w-full mx-2">
                         <label className={labelSyle}>Dosage</label>
