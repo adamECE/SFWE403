@@ -76,6 +76,22 @@ export default function ViewPatientMedicineHistory({ historyItems, setHistoryIte
 
     console.log();
 
+    function fillDate(data) {
+        if (data.filledInfo.length == 0)
+        {
+            return "Not filled";
+        }
+        return data.filledInfo[data.filledInfo.length - 1].filledDate;
+    }
+
+    function expDate(data) {
+        if (data.filledInfo.length == 0)
+        {
+            return "Not filled";
+        }
+        return data.filledInfo[data.filledInfo.length - 1].batchInfo.expirationDate;
+    }
+
     const ExpandedComponent = ({ data }) => (
         <div>
             <form
@@ -172,7 +188,7 @@ export default function ViewPatientMedicineHistory({ historyItems, setHistoryIte
                         <input
                             type="text"
                             className={inputStyle}
-                            value={data.filledInfo[data.filledInfo.length - 1].filledDate}
+                            value={fillDate(data)}
                             disabled
                         />
                     </div>
@@ -181,109 +197,11 @@ export default function ViewPatientMedicineHistory({ historyItems, setHistoryIte
                         <input
                             type="text"
                             className={inputStyle}
-                            value={data.filledInfo[data.filledInfo.length - 1].batchInfo.expirationDate}
+                            value={expDate(data)}
                             disabled
                         />
                     </div>
                 </div>
-                {/*
-                    </div>
-                    <div className="w-full mx-2">
-                        <label className={labelSyle}>Dosage</label>
-                        <input
-                            type="text"
-                            placeholder="Dosage"
-                            className={inputStyle}
-                            id="dosage"
-                            name="dosage"
-                            value={formData.dosage}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                    <div className="w-full mx-2">
-                        <label className={labelSyle}>Delivered By</label>
-                        <select
-                            placeholder="Delivered By"
-                            className={inputStyle}
-                            id="deliveredBy"
-                            name="deliveredBy"
-                            value={formData.deliveredBy}
-                            onChange={handleChange}
-                            required
-                        >
-                            <option value="" style={{ display: 'none' }}>
-                                {' '}
-                                -- select an option --{' '}
-                            </option>
-                            <option value="patient">Patient</option>
-                            <option value="doctor's office">Doctor's Office</option>
-                        </select>
-                    </div>
-                </div>
-                <h3> Refill Policy </h3>
-                <hr className="mb-2" />
-                <div className="w-full flex-1 md:flex ">
-                    <div className="w-full mx-2">
-                        <label className={labelSyle}> # Refills</label>
-                        <input
-                            type="number"
-                            min="0"
-                            placeholder="Refills"
-                            id="refills"
-                            name="refills"
-                            value={formData.refills}
-                            onChange={handleChange}
-                            className={inputStyle}
-                        />
-                    </div>
-                    <div className="w-full mx-2">
-                        <label className={labelSyle}> Allow Refill </label>
-                        <div
-                            style={{
-                                background: 'white',
-                                border: '3px solid white',
-                                padding: '4.1px',
-                                borderRadius: '5px',
-                                display: 'flex',
-                                justifyContent: 'space-around',
-                            }}
-                        >
-                            <label style={{ color: 'gray', fontSize: '1.1em' }}>Yes</label>
-                            <input
-                                type="radio"
-                                id="allowRefillYes"
-                                name="allowRefill"
-                                value="Yes"
-                                checked={formData.allowRefill === 'Yes'}
-                                onChange={handleChange}
-                                style={{ width: '2em' }}
-                            />
-                            <label style={{ color: 'gray', fontSize: '1.1em' }}>No</label>
-                            <input
-                                type="radio"
-                                id="allowRefillNo"
-                                name="allowRefill"
-                                value="No"
-                                checked={formData.allowRefill === 'No'}
-                                onChange={handleChange}
-                                style={{ width: '2em' }}
-                            />
-                            <br></br>
-                        </div>
-                    </div>
-                    <div className="w-full mx-2">
-                        <label className={labelSyle}> Due Date </label>
-                        <input
-                            type="date"
-                            id="dueDate"
-                            name="dueDate"
-                            value={formData.dueDate}
-                            onChange={handleChange}
-                            className={inputStyle}
-                        />
-                    </div>
-                </div> */}
             </form>
         </div>
     );
