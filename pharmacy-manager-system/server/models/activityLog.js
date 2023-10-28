@@ -20,7 +20,11 @@ const activityLogSchema = new mongoose.Schema({
 const inventoryUpdateLogSchema = new mongoose.Schema({
     staffEmail: { type: String, required: true },
     staffName: { type: String, required: true },
-    medicationID: { type: String, required: true },
+    medicationID: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Inventory", // Reference to the medication in the Inventory collection
+        required: true,
+    },
     batch: {
         barcode: { type: String, required: true },
         expirationDate: { type: Date, required: true },
@@ -30,7 +34,6 @@ const inventoryUpdateLogSchema = new mongoose.Schema({
         type: String,
         enum: ["prescription", "over-the-counter"],
         required: true,
-
     },
     actionType: {
         type: String,
@@ -41,8 +44,23 @@ const inventoryUpdateLogSchema = new mongoose.Schema({
     timestamp: { type: Date, default: Date.now },
 });
 
+const authLogSchema = new mongoose.Schema({
+    staffEmail: { type: String, required: true },
+    staffName: { type: String, required: true },
+    actionType: {
+        type: String,
+        enum: ["login", "logout"],
+        required: true,
+    },
+
+    timestamp: { type: Date, default: Date.now },
+});
 
 module.exports = {
     PrescriptionLog: mongoose.model("PrescriptionLog", activityLogSchema),
-    InventoryUpdateLog: mongoose.model("InventoryUpdateLog", inventoryUpdateLogSchema),
+    InventoryUpdateLog: mongoose.model(
+        "InventoryUpdateLog",
+        inventoryUpdateLogSchema
+    ),
+    AuthLog: mongoose.model("AuthLog", authLogSchema),
 };

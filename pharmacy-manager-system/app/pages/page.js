@@ -6,6 +6,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
 import { AuthContext } from "../contexts/authContext";
+import { setCookie, destroyCookie } from 'nookies'
 export default function MainPage() {
   const [accountState, setAccountState] = useState();
   const router = useRouter();
@@ -23,13 +24,13 @@ export default function MainPage() {
     left: "10%",
   };
   const initialRender = useRef(true);
-  useEffect(() => {
-    if (localStorage.getItem("isACCountActive") == null) {
-      signOut();
-      router.push("/");
-    }
-    setAccountState(localStorage.getItem("isACCountActive"));
-  });
+   
+  // useEffect(() => {
+  //   if (localStorage.getItem("role") == null) {
+  //     router.push("/");
+  //   }
+   
+  // });
 
   return (
     <div>
@@ -37,9 +38,9 @@ export default function MainPage() {
         {" "}
         {localStorage.getItem("isACCountActive") == "true" ? (
           <LandingPage />
-        ) : (
+        ) :
           <AccountActivateForm />
-        )}{" "}
+        }
       </div>{" "}
     </div>
   );

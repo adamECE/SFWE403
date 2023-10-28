@@ -4,7 +4,7 @@ import { AuthProvider } from '../contexts/authContext'
 import { useContext } from 'react';
 import { AuthContext } from '../contexts/authContext';
 import { AiFillHome } from "react-icons/ai";
-import { setCookie, parseCookies } from 'nookies'
+import { setCookie,destroyCookie, parseCookies } from 'nookies'
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
@@ -23,11 +23,12 @@ const { signOut } = useContext(AuthContext)
 
 
   const handleLogout = async () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('email');
-    localStorage.removeItem('role')
-    localStorage.removeItem('isACCountActive');
-   signOut()
+    
+    await signOut()
+    console.log(token)
+    destroyCookie({}, 'pharmacyauth.token') 
+    router.push ("/");
+    
   };
 
   const navLinkStyle =
@@ -57,7 +58,7 @@ const { signOut } = useContext(AuthContext)
               </Link>
             </div>
             <div>
-              <button className={navLinkStyle} onClick={handleLogout}>
+              <button className={navLinkStyle} onClick={handleLogout }>
                 Logout
               </button>
             </div>

@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import UpdatePatient from "./UpdatePatient";
 import DataTable, { ExpanderComponentProps } from "react-data-table-component";
 import Button from "@mui/material/Button";
