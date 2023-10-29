@@ -136,8 +136,10 @@ exports.getPrescription = asyncHandler(async(req, res) => {
             return;
         }
         // renaming medicationID field into medicationInfo
+
         const prescriptionsWithMedicationInfo = userInfo.prescriptions.map(
             (prescription) => {
+
                 prescription = prescription.toObject();
                 prescription["medicationInfo"] = prescription.medicationID;
                 delete prescription.medicationID;
@@ -145,42 +147,14 @@ exports.getPrescription = asyncHandler(async(req, res) => {
             }
         );
 
-        res.status(200).json(prescriptionsWithMedicationInfo);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "OOOps something went wrong!" });
-    }
-});
-
-exports.getPrescriptionLogs = asyncHandler(async(req, res) => {
-    try {
-        const prescriptionLogs = await PrescriptionLog.find();
-
-        // Format the date and time for each log entry
-        const formattedLogs = prescriptionLogs.map((log) => ({
-            filledBy: {
-                pharmacistEmail: log.pharmacistEmail,
-                pharmacistName: log.pharmacistName,
+        res.status(200).json({
+            userInfo: {
+                name: `${userInfo.firstName} ${userInfo.lastName}`,
+                email: userInfo.email
             },
-            prescriptionID: log.prescriptionID,
-            patientName: log.patientName,
-            patientEmail: log.patientEmail,
-            itemType: log.itemType,
-            quantity: log.quantity,
-            date: new Date(log.timestamp).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-            }),
-            time: new Date(log.timestamp).toLocaleTimeString("en-US", {
-                hour: "2-digit",
-                minute: "2-digit",
-                second: "2-digit",
-            }),
-        }));
-
-        res.json(formattedLogs);
-    } catch {
+            prescription: prescriptionsWithMedicationInfo
+        });
+    } catch (error) {
         console.error(error);
         res.status(500).json({ error: "OOOps something went wrong!" });
     }
