@@ -89,7 +89,7 @@ export default function InventoryRow({
       <td className={tdStyle}>
         {" "}
         <button
-          className="bg-blue-500 text-white rounded"
+          className="bg-blue-500 p-1 text-white rounded flex items-center justify-center text-center hover:scale-110 "
           onClick={handlePlaceOrderOnClick}
         >
           Place Order
@@ -97,7 +97,7 @@ export default function InventoryRow({
       </td>
       <td className={tdStyle} onClick={handleRowOnClick}>
         {" "}
-        <button className="bg-blue-500 text-white rounded">
+        <button className="bg-blue-500 p-1 text-white rounded flex items-center justify-center text-center hover:scale-110 ">
           View batches
         </button>{" "}
       </td>
