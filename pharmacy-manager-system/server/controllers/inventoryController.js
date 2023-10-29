@@ -257,13 +257,26 @@ exports.getItem = asyncHandler(async(req, res) => {
 
 exports.getInventoryLogs = asyncHandler(async(req, res) => {
     try {
-        const inventoryLogs = await InventoryUpdateLog.find();
+        const inventoryLogs = await InventoryUpdateLog.find().populate({
+            path: "medicationID",
+            model: "Inventory",
+            select: "_id name description manufacturer price location",
+        });
+        console.log(inventoryLogs)
 
         // Format the date and time for each log entry
         const formattedLogs = inventoryLogs.map((log) => ({
             staffEmail: log.staffEmail,
             staffName: log.staffName,
-            medicationID: log.medicationID,
+            medicationInfo: {
+                id: log.medicationID._id,
+                name: log.medicationID.name,
+                description: log.medicationID.description,
+                manufacturer: log.medicationID.manufacturer,
+                price: log.medicationID.price,
+                location: log.medicationID.location
+
+            },
             batch: log.batch,
             itemType: log.itemType,
             actionType: log.actionType,

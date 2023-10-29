@@ -8,17 +8,37 @@ export function AuthProvider({ children }) {
 
     const router = useRouter();
     const [user, setUser] = useState(null)
-    let isAuthenticated
+    const [isAuthenticated, setIsAuthenticated]= useState(false)
 
     async function signOut() {
-        setUser(null)
-        destroyCookie(null, 'pharmacyauth.token')
-        isAuthenticated = false
-        router.push('/');
+       destroyCookie({}, 'pharmacyauth.token')
+        try {
+          
+            // Make a POST request to your login endpoint
+            const response = await fetch('http://127.0.0.1:3030/pharmacy-0x2/api/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',    
+                },
+                body: JSON.stringify({ email:localStorage.getItem('email')}),          
+            });
+
+            if (response.ok) {   
+                localStorage.removeItem('token');
+                localStorage.removeItem('email');
+                localStorage.removeItem('role')
+                //localStorage.removeItem('isACCountActive');
+                router.refresh();
+
+            }
+        } catch (error) {
+            console.error('Logout error:', error);
+        }
     }
     async function signIn({ email, password }) {
         try {
             // Make a POST request to your login endpoint
+         
             const response = await fetch('http://127.0.0.1:3030/pharmacy-0x2/api/login', {
                 method: 'POST',
                 headers: {
@@ -35,30 +55,21 @@ export function AuthProvider({ children }) {
                     isACCountActive: data.isACCountActive,
                     role: data.role,
                 });
-                isAuthenticated = data.isACCountActive
 
-                setCookie(undefined, 'pharmacyauth.token', data.token, {
-                    maxAge: 60 * 60 * 16, // 16 hours
+                return data;
 
-                })
-                localStorage.setItem('token', data.token);
-                localStorage.setItem('email', data.email);
-                localStorage.setItem('role', data.role)
-                localStorage.setItem('isACCountActive', data.isACCountActive);
-
-                router.push("/pages/");
 
             } else {
 
                 const errorText = await response.text();
                 Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: JSON.parse(errorText).error,
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: JSON.parse(errorText).error,
 
-                    })
-                    //alert(JSON.parse(errorText).error);
-
+                })
+                //alert(JSON.parse(errorText).error);
+                return false;
             }
         } catch (error) {
             console.error('Login error:', error);
@@ -90,6 +101,72 @@ export function AuthProvider({ children }) {
 
     }
 
+    async function sendTwoFactorEmail({ email }) {
+        try {
+            // Make a POST request to the login endpoint
+            const response = await fetch('http://127.0.0.1:3030/pharmacy-0x2/api/two-factor', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email }),
+            });
+            if (response.ok) {
+
+                const responseText = await response.text();
+             
+                return (JSON.parse(responseText).code)
+            } else {
+                const errorText = await response.text();
+                return (JSON.parse(errorText).error);
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+        }
+
+    }
+
+
+    async function checkTwoFactorCode({ data,code }) {
+         try {
+        //     // Make a POST request to the login endpoint
+            const response = await fetch('http://127.0.0.1:3030/pharmacy-0x2/api/verify-two-factor', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email:data.email,code }),
+            });
+            if (response.ok) {
+
+                const responseText = await response.text();
+                setCookie(undefined, 'pharmacyauth.token', data.token, {
+                    maxAge: 60 * 60 * 16, // 16 hours
+
+                })
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('email', data.email);
+                localStorage.setItem('role', data.role)
+                localStorage.setItem('isACCountActive', data.isACCountActive);
+
+     router.push("/pages/");
+   
+               return (1)
+            } else {
+                const errorText = await response.text();
+                 Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: JSON.parse(errorText).error,
+
+                })
+                
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+        }
+
+    }
 
     async function activateAccount({ currentPassword, newPassword, confirmPassword }) {
         try {
@@ -105,7 +182,7 @@ export function AuthProvider({ children }) {
 
             if (response.ok) {
                 localStorage.setItem('isACCountActive', true);
-                isAuthenticated = true
+                setIsAuthenticated(true)
                 const responseText = await response.text();
                 return (JSON.parse(responseText).message)
             } else {
@@ -146,8 +223,7 @@ export function AuthProvider({ children }) {
 
 
 
-    return ( <AuthContext.Provider value = {
-            { user, isAuthenticated, signIn, signOut, sendResetEmail, activateAccount, resetPassword }
-        } > { children } </AuthContext.Provider>
-    )
-}
+    return ( < AuthContext.Provider value = {
+
+            { user, isAuthenticated,checkTwoFactorCode, signIn, signOut, sendResetEmail, sendTwoFactorEmail, activateAccount, resetPassword } } > { children } </AuthContext.Provider>)
+    }

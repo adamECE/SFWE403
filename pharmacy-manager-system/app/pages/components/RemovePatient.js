@@ -9,6 +9,7 @@ import {BsTrash, BsPencilSquare} from 'react-icons/bs';
 import {GiMedicinePills} from 'react-icons/gi';
 import Swal from 'sweetalert2';
 export default function RemovePatient({patientList, setPatientList}) {
+
   const inputStyle =
     'shadow appearance-none border rounded text-sm  w-full py-2 px-2 text-gray-700 mb-2 leading-tight focus:outline-none focus:shadow-outline';
 
