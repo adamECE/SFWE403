@@ -8,13 +8,32 @@ export function AuthProvider({ children }) {
 
     const router = useRouter();
     const [user, setUser] = useState(null)
-    let isAuthenticated
+    const [isAuthenticated, setIsAuthenticated]= useState(false)
 
     async function signOut() {
-        setUser(null)
-        destroyCookie(null, 'pharmacyauth.token')
-        isAuthenticated = false
-        router.push('/');
+       destroyCookie({}, 'pharmacyauth.token')
+        try {
+          
+            // Make a POST request to your login endpoint
+            const response = await fetch('http://127.0.0.1:3030/pharmacy-0x2/api/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',    
+                },
+                body: JSON.stringify({ email:localStorage.getItem('email')}),          
+            });
+
+            if (response.ok) {   
+                localStorage.removeItem('token');
+                localStorage.removeItem('email');
+                localStorage.removeItem('role')
+                //localStorage.removeItem('isACCountActive');
+                router.refresh();
+
+            }
+        } catch (error) {
+            console.error('Logout error:', error);
+        }
     }
     async function signIn({ email, password }) {
         try {
@@ -36,7 +55,9 @@ export function AuthProvider({ children }) {
                     isACCountActive: data.isACCountActive,
                     role: data.role,
                 });
+
                 return data;
+
 
             } else {
 
@@ -161,7 +182,7 @@ export function AuthProvider({ children }) {
 
             if (response.ok) {
                 localStorage.setItem('isACCountActive', true);
-                isAuthenticated = true
+                setIsAuthenticated(true)
                 const responseText = await response.text();
                 return (JSON.parse(responseText).message)
             } else {
@@ -203,5 +224,6 @@ export function AuthProvider({ children }) {
 
 
     return ( < AuthContext.Provider value = {
+
             { user, isAuthenticated,checkTwoFactorCode, signIn, signOut, sendResetEmail, sendTwoFactorEmail, activateAccount, resetPassword } } > { children } </AuthContext.Provider>)
     }

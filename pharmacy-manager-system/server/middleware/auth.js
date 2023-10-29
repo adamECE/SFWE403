@@ -23,6 +23,7 @@ exports.protect = asyncHandler(async(req, res, next) => {
             next()
         } catch (error) {
             res.status(401).json({ error: error })
+            console.log(error)
         }
     }
     if (!token) {
@@ -68,4 +69,8 @@ exports.isPharmacist = asyncHandler(async(req, res, next) => {
         res.status(401).json({ error: 'Not authorized: user is not a pharmacist' })
 
     }
+})
+
+exports.isAuthenticated = asyncHandler(async(req, res, next) => {
+    req.isAuthenticated = true
 })

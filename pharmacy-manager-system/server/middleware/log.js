@@ -3,7 +3,11 @@
 //this file contains the middleware functions to log transaction activities
 
 const asyncHandler = require("express-async-handler");
-const { PrescriptionLog, InventoryUpdateLog } = require("../models/activityLog");
+const {
+    PrescriptionLog,
+    InventoryUpdateLog,
+    AuthLog
+} = require("../models/activityLog");
 var dotenv = require("dotenv");
 dotenv.config({ path: "../config/.env" });
 const { ROLES } = require("../config/pharmacy0x2Const");

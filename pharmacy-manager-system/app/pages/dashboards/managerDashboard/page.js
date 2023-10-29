@@ -19,9 +19,11 @@ export default function ManagerDashboard() {
     left: '10%',
   };
   useEffect(() => {
-    if (localStorage.getItem('role') != 'pharmacy manager') {
+    if (localStorage.getItem('role') != 'pharmacy manager' && localStorage.getItem("isACCountActive") == "true") {
       router.push('/pages/');
     }
+    else if (localStorage.getItem("isACCountActive") == null)
+      {router.push('/');}
   });
   return (
     <div>
@@ -44,6 +46,12 @@ export default function ManagerDashboard() {
         >
           Notifications{' '}
         </Link>{' '}
+         <Link
+          className="user-button"
+          href="./managerDashboard/logs"
+        >
+          Transactions Logs
+        </Link>
       </div>{' '}
     </div>
   );
