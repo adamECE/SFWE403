@@ -1,20 +1,20 @@
-'use client';
-import {useState, useEffect} from 'react';
-import {useRouter} from 'next/navigation';
-
+"use client";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 export default function InputPrescriptionInfo() {
   const router = useRouter();
-  const blockStyle = 'm-5  p-5 flex flex-col justify-center items-center';
-  const centerStyle = 'text-center text-white';
+  const blockStyle = "m-5  p-5 flex flex-col justify-center items-center";
+  const centerStyle = "text-center text-white";
   const inputStyle =
-    'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline';
+    "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline";
   const submitButtonStyle =
-    'bgCor border rounded w-full my-5 py-2  text-white appearance-none focus:outline-none focus:shadow-outline';
-  const labelSyle = 'block text-white text-sm font-bold mb-2';
+    "bgCor border rounded w-full my-5 py-2  text-white appearance-none focus:outline-none focus:shadow-outline";
+  const labelSyle = "block text-white text-sm font-bold mb-2";
   const inputStyleForm1 =
-    '  relative m-0 -mr-0.5 block w-[1px] min-w-0 flex-auto rounded-l border py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline';
+    "  relative m-0 -mr-0.5 block w-[1px] min-w-0 flex-auto rounded-l border py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline";
   const submitButton1Style =
-    'z-[4] bgCor inline-block rounded-r bg-cyan-100 px-6 pb-2 pt-2.5  font-medium uppercase leading-normal text-white focus:outline-none focus:shadow-outline';
+    "z-[4] bgCor inline-block rounded-r bg-cyan-100 px-6 pb-2 pt-2.5  font-medium uppercase leading-normal text-white focus:outline-none focus:shadow-outline";
 
   const [inventoryItems, setInventoryItems] = useState([]);
   const [inventoryUpdated, setInventoryUpdated] = useState(false);
@@ -26,18 +26,18 @@ export default function InputPrescriptionInfo() {
   }, []);
 
   useEffect(() => {
-    const token = localStorage.getItem('token'); // get auth token from localStorage
+    const token = localStorage.getItem("token"); // get auth token from localStorage
 
-    fetch('http://127.0.0.1:3030/pharmacy-0x2/api/inventory/', {
-      method: 'GET',
+    fetch("http://127.0.0.1:3030/pharmacy-0x2/api/inventory/", {
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`, // include bearer token in the Autho header
       },
     })
       .then((res) => {
         if (!res.ok) {
-          throw new Error('Network response error');
+          throw new Error("Network response error");
         }
         return res.json();
       })
@@ -45,49 +45,59 @@ export default function InputPrescriptionInfo() {
         setInventoryItems(data);
       })
       .catch((error) => {
-        console.error('Fetch error:', error);
+        console.error("Fetch error:", error);
       });
   }, [inventoryUpdated]);
 
   const initialState = {
-    email: '',
-    userID: '',
-    doctorName: '',
-    medicationID: '',
-    quantity: '',
-    dosage: '',
-    deliveredBy: '',
-    refills: '',
-    allowRefill: 'No',
-    dueDate: '',
+    email: "",
+    userID: "",
+    doctorName: "",
+    medicationID: "",
+    quantity: "",
+    dosage: "",
+    deliveredBy: "",
+    refills: "",
+    allowRefill: "No",
+    dueDate: "",
   };
   const [formData, setFormData] = useState(initialState);
 
   const handleChange = (e) => {
     //alert(e.target.value )
-    setFormData({...formData, [e.target.name]: e.target.value});
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (formData.allowRefill == 'Yes' && Number(formData.refills) == 0) {
-        alert('If refills is allowed, Number of refills should not be zero');
+      if (formData.allowRefill == "Yes" && Number(formData.refills) == 0) {
+        Swal.fire(
+          `If refills is allowed, Number of refills should not be zero`,
+          "",
+          "error"
+        );
+        // alert('If refills is allowed, Number of refills should not be zero');
         return;
       }
 
-      if (formData.allowRefill == 'No' && Number(formData.refills) > 0) {
-        alert('If refills is not allowed, Number of refills should be zero');
+      if (formData.allowRefill == "No" && Number(formData.refills) > 0) {
+        Swal.fire(
+          `If refills is not allowed, Number of refills should be zero`,
+          "",
+          "error"
+        );
+        // alert("If refills is not allowed, Number of refills should be zero");
         return;
       }
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
 
       const response = await fetch(
-        'http://127.0.0.1:3030/pharmacy-0x2/api/patientHistory/add-prescription',
+        "http://127.0.0.1:3030/pharmacy-0x2/api/patientHistory/add-prescription",
         {
-          method: 'PUT',
+          method: "PUT",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
             // Include the bearer token in the Authorization header
             Authorization: `Bearer ${token}`,
           },
@@ -101,7 +111,7 @@ export default function InputPrescriptionInfo() {
             deliveredBy: formData.deliveredBy,
             refillPolicy: {
               refills: Number(formData.refills),
-              allowRefill: formData.allowRefill == 'No' ? false : true,
+              allowRefill: formData.allowRefill == "No" ? false : true,
               dueDate: new Date(formData.dueDate),
             },
           }),
@@ -111,16 +121,18 @@ export default function InputPrescriptionInfo() {
       if (response.ok) {
         setFormData(initialState);
         const responseText = await response.text();
-        alert(JSON.parse(responseText).message);
+        //alert(JSON.parse(responseText).message);
+        Swal.fire(`${JSON.parse(responseText).message}`, "", "success");
         setFindUser(false);
         router.refresh();
       } else {
         setFormData(initialState);
         const errorText = await response.text();
-        alert(JSON.parse(errorText).error);
+        Swal.fire(`${JSON.parse(errorText).error}`, "", "error");
+        //alert(JSON.parse(errorText).error);
       }
     } catch (error) {
-      console.error('error:', error);
+      console.error("error:", error);
     }
   };
 
@@ -128,15 +140,15 @@ export default function InputPrescriptionInfo() {
     e.preventDefault();
 
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       const email = formData.email;
 
       const response = await fetch(
         `http://127.0.0.1:3030/pharmacy-0x2/api/a-patient/${email}`,
         {
-          method: 'GET',
+          method: "GET",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         }
@@ -153,30 +165,31 @@ export default function InputPrescriptionInfo() {
       } else {
         setFormData(initialState);
         const errorText = await response.text();
-        alert(JSON.parse(errorText).error);
+        //alert(JSON.parse(errorText).error);
+        Swal.fire(`${JSON.parse(errorText).error}`, "", "error");
       }
     } catch (error) {
-      console.error('error:', error);
+      console.error("error:", error);
     }
   };
 
   useEffect(() => {
-    if (!localStorage.getItem('isACCountActive')) {
-      router.push('/pages/');
+    if (!localStorage.getItem("isACCountActive")) {
+      router.push("/pages/");
     }
   });
 
   return (
     <div>
-      <h2 className={centerStyle}>Input Prescription Info</h2>
+      <h2 className={centerStyle}> Input Prescription Info </h2>{" "}
       <div className={blockStyle}>
+        {" "}
         {!findUser ? (
           <form
             onSubmit={handleSearchSubmit}
             className="max-w-[800px] w-full mx-auto bg-transparent p-4 rounded "
           >
-            <h3> Patient Email</h3>
-            <hr className="mb-2" />
+            <h3> Patient Email </h3> <hr className="mb-2" />
             <div className="  relative mb-4 flex flex-wrap items-stretch">
               <input
                 type="email"
@@ -189,10 +202,10 @@ export default function InputPrescriptionInfo() {
                 required
               />
               <button className={submitButton1Style} type="submit">
-                {' '}
-                Search
-              </button>
-            </div>
+                {" "}
+                Search{" "}
+              </button>{" "}
+            </div>{" "}
           </form>
         ) : (
           <form
@@ -201,14 +214,12 @@ export default function InputPrescriptionInfo() {
           >
             <hr className="mb-2" />
             <h3 className="text-left mb-4">
-              New Prescription Item for: {`${User.fullName} (${User.email})`}
-            </h3>
-            <hr className="mb-4" />
-            {/* <h3> Prescription Info </h3> */}
-
+              New Prescription Item for: {`${User.fullName} (${User.email})`}{" "}
+            </h3>{" "}
+            <hr className="mb-4" /> {/* <h3> Prescription Info </h3> */}
             <div className="w-full md:flex">
               <div className="w-full mx-2">
-                <label className={labelSyle}>Doctor Name</label>
+                <label className={labelSyle}> Doctor Name </label>{" "}
                 <input
                   type="text"
                   placeholder="Doctor Name"
@@ -219,9 +230,9 @@ export default function InputPrescriptionInfo() {
                   onChange={handleChange}
                   required
                 />
-              </div>
+              </div>{" "}
               <div className="w-full mx-2">
-                <label className={labelSyle}>Medication</label>
+                <label className={labelSyle}> Medication </label>{" "}
                 <select
                   className={inputStyle}
                   id="medicationID"
@@ -230,21 +241,21 @@ export default function InputPrescriptionInfo() {
                   onChange={handleChange}
                   required
                 >
-                  <option value=""> -- select an option -- </option>
-
+                  <option value=""> --select an option-- </option>
                   {inventoryItems
-                    .filter((item) => item.category === 'prescription')
+                    .filter((item) => item.category === "prescription")
                     .map((item) => (
                       <option key={item._id} value={item._id}>
-                        {item.name}
+                        {" "}
+                        {item.name}{" "}
                       </option>
-                    ))}
-                </select>
-              </div>
-            </div>
+                    ))}{" "}
+                </select>{" "}
+              </div>{" "}
+            </div>{" "}
             <div className="w-full md:flex">
               <div className="w-full mx-2">
-                <label className={labelSyle}>Quantity</label>
+                <label className={labelSyle}> Quantity </label>{" "}
                 <input
                   type="number"
                   min="1"
@@ -256,9 +267,9 @@ export default function InputPrescriptionInfo() {
                   onChange={handleChange}
                   required
                 />
-              </div>
+              </div>{" "}
               <div className="w-full mx-2">
-                <label className={labelSyle}>Dosage</label>
+                <label className={labelSyle}> Dosage </label>{" "}
                 <input
                   type="text"
                   placeholder="Dosage"
@@ -269,9 +280,9 @@ export default function InputPrescriptionInfo() {
                   onChange={handleChange}
                   required
                 />
-              </div>
+              </div>{" "}
               <div className="w-full mx-2">
-                <label className={labelSyle}>Delivered By</label>
+                <label className={labelSyle}> Delivered By </label>{" "}
                 <select
                   placeholder="Delivered By"
                   className={inputStyle}
@@ -281,20 +292,19 @@ export default function InputPrescriptionInfo() {
                   onChange={handleChange}
                   required
                 >
-                  <option value="" style={{display: 'none'}}>
-                    {' '}
-                    -- select an option --{' '}
-                  </option>
-                  <option value="patient">Patient</option>
-                  <option value="doctor's office">Doctor's Office</option>
-                </select>
-              </div>
-            </div>
-            <h3> Refill Policy </h3>
-            <hr className="mb-2" />
+                  <option value="" style={{ display: "none" }}>
+                    {" "}
+                    --select an option--{" "}
+                  </option>{" "}
+                  <option value="patient"> Patient </option>{" "}
+                  <option value="doctor's office"> Doctor 's Office</option>{" "}
+                </select>{" "}
+              </div>{" "}
+            </div>{" "}
+            <h3> Refill Policy </h3> <hr className="mb-2" />
             <div className="w-full flex-1 md:flex ">
               <div className="w-full mx-2">
-                <label className={labelSyle}> # Refills</label>
+                <label className={labelSyle}> #Refills </label>{" "}
                 <input
                   type="number"
                   min="0"
@@ -304,45 +314,51 @@ export default function InputPrescriptionInfo() {
                   value={formData.refills}
                   onChange={handleChange}
                   className={inputStyle}
-                />
-              </div>
+                />{" "}
+              </div>{" "}
               <div className="w-full mx-2">
-                <label className={labelSyle}> Allow Refill </label>
+                <label className={labelSyle}> Allow Refill </label>{" "}
                 <div
                   style={{
-                    background: 'white',
-                    border: '3px solid white',
-                    padding: '4.1px',
-                    borderRadius: '5px',
-                    display: 'flex',
-                    justifyContent: 'space-around',
+                    background: "white",
+                    border: "3px solid white",
+                    padding: "4.1px",
+                    borderRadius: "5px",
+                    display: "flex",
+                    justifyContent: "space-around",
                   }}
                 >
-                  <label style={{color: 'gray', fontSize: '1.1em'}}>Yes</label>
+                  <label style={{ color: "gray", fontSize: "1.1em" }}>
+                    {" "}
+                    Yes{" "}
+                  </label>{" "}
                   <input
                     type="radio"
                     id="allowRefillYes"
                     name="allowRefill"
                     value="Yes"
-                    checked={formData.allowRefill === 'Yes'}
+                    checked={formData.allowRefill === "Yes"}
                     onChange={handleChange}
-                    style={{width: '2em'}}
-                  />
-                  <label style={{color: 'gray', fontSize: '1.1em'}}>No</label>
+                    style={{ width: "2em" }}
+                  />{" "}
+                  <label style={{ color: "gray", fontSize: "1.1em" }}>
+                    {" "}
+                    No{" "}
+                  </label>{" "}
                   <input
                     type="radio"
                     id="allowRefillNo"
                     name="allowRefill"
                     value="No"
-                    checked={formData.allowRefill === 'No'}
+                    checked={formData.allowRefill === "No"}
                     onChange={handleChange}
-                    style={{width: '2em'}}
-                  />
-                  <br></br>
-                </div>
-              </div>
+                    style={{ width: "2em" }}
+                  />{" "}
+                  <br> </br>{" "}
+                </div>{" "}
+              </div>{" "}
               <div className="w-full mx-2">
-                <label className={labelSyle}> Due Date </label>
+                <label className={labelSyle}> Due Date </label>{" "}
                 <input
                   type="date"
                   id="dueDate"
@@ -350,16 +366,15 @@ export default function InputPrescriptionInfo() {
                   value={formData.dueDate}
                   onChange={handleChange}
                   className={inputStyle}
-                />
-              </div>
+                />{" "}
+              </div>{" "}
             </div>
-
             <button className={submitButtonStyle} type="submit">
-              Submit Prescription
-            </button>
+              Submit Prescription{" "}
+            </button>{" "}
           </form>
-        )}
-      </div>
+        )}{" "}
+      </div>{" "}
     </div>
   );
 }

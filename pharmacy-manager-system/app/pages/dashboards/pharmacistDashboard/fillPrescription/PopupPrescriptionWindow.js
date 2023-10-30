@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-
+import Swal from "sweetalert2";
 export default function PopupPrescriptionItemWindow({
   popupWindowContent,
   setPopupWindow,
@@ -58,7 +58,7 @@ export default function PopupPrescriptionItemWindow({
         setItem(data[0]);
       } else {
         const errorText = await response.text();
-        alert(JSON.parse(errorText).error);
+        Swal.fire(`${JSON.parse(errorText).error}`, "", "error");
         return;
       }
     } catch (error) {
@@ -121,13 +121,15 @@ export default function PopupPrescriptionItemWindow({
         if (response.ok) {
           setFormData(initialState);
           const responseText = await response.text();
-          alert(JSON.parse(responseText).message);
+          // alert(JSON.parse(responseText).message);
+          Swal.fire(`${JSON.parse(responseText).message}`, "", "success");
           setConfirmFillWindow(false);
         } else {
           setFormData(initialState);
           setConfirmFillWindow(false);
           const errorText = await response.text();
-          alert(JSON.parse(errorText).error);
+          //alert(JSON.parse(errorText).error);
+          Swal.fire(`${JSON.parse(errorText).error}`, "", "error");
         }
       }
     } catch (error) {
@@ -146,7 +148,7 @@ export default function PopupPrescriptionItemWindow({
             className="top-0 right-0 m-2 px-4 py-2 bg-blue-500 text-white rounded absolute"
             onClick={handleCloseModalBtn}
           >
-            &times;{" "}
+            & times;{" "}
           </button>{" "}
           <h3 className="text-black"> {popupWindowContent.name} </h3>{" "}
           <div className="font-bold"> Description: </div>{" "}
@@ -167,9 +169,9 @@ export default function PopupPrescriptionItemWindow({
                   month: "2-digit",
                   day: "2-digit",
                 }
-              )}
-            </div>
-          </div>
+              )}{" "}
+            </div>{" "}
+          </div>{" "}
           <div className="flex">
             <div className="px-4 py-2 flex-1">
               <b> Delivered By: </b> {popupWindowContent.deliveredBy}{" "}
@@ -177,7 +179,7 @@ export default function PopupPrescriptionItemWindow({
             <div className="px-4 py-2 flex-1">
               <b> Doctor Name: </b> {popupWindowContent.doctorName}{" "}
             </div>{" "}
-          </div>
+          </div>{" "}
           <div className="flex">
             <div className="px-4 py-2">
               <b> Dosage: </b> {popupWindowContent.dosage}{" "}
@@ -185,7 +187,7 @@ export default function PopupPrescriptionItemWindow({
             <div className="px-4 py-2">
               <b> Quantity: </b> {popupWindowContent.quantity}{" "}
             </div>{" "}
-          </div>
+          </div>{" "}
           <div className="flex">
             <div className="px-2 py-2 flex-1">
               <b> #Refills Left: </b> {popupWindowContent.refills}{" "}
@@ -207,7 +209,7 @@ export default function PopupPrescriptionItemWindow({
                   })
                 : "--"}{" "}
             </div>{" "}
-          </div>
+          </div>{" "}
           {itemExpired && (
             <div className="text-red-500 font-bold">
               Cannot fill, medication has issues{" "}
@@ -220,12 +222,12 @@ export default function PopupPrescriptionItemWindow({
                   className="bottom-0 right-0 m-2 px-4 py-2 bg-blue-500 text-white rounded"
                   type="submit"
                 >
-                  Check Availability
+                  Check Availability{" "}
                 </button>{" "}
-              </form>
+              </form>{" "}
             </div>
-
             <div className="flex-1">
+              {" "}
               {itemNotAvailable && (
                 <button
                   type="button"
@@ -233,7 +235,7 @@ export default function PopupPrescriptionItemWindow({
                 >
                   Not enough stock is available{" "}
                 </button>
-              )}
+              )}{" "}
               {itemAvailable && (
                 <button
                   type="button"
@@ -242,31 +244,32 @@ export default function PopupPrescriptionItemWindow({
                   Stock is available{" "}
                 </button>
               )}{" "}
-            </div>
-          </div>
-          <hr className="px-4 py-2 text-black" />
+            </div>{" "}
+          </div>{" "}
+          <hr className="px-4 py-2 text-black" />{" "}
           {itemAvailable && (
             <>
               <form onSubmit={handleFillItem}>
                 <>
+                  {" "}
                   {showBatchInfo && (
                     <>
                       <div className="bgCor flex">
                         <p className=" py-2 text-black">
-                          <b>Selected Batch Info:</b>
-                        </p>
+                          <b> Selected Batch Info: </b>{" "}
+                        </p>{" "}
                         <hr className=" text-black" />
                         <p className="flex-1">
-                          Available Quantity: {batchInfo.quantity}
-                        </p>
+                          Available Quantity: {batchInfo.quantity}{" "}
+                        </p>{" "}
                         <p className="flex-1">
-                          Expiration Date: {batchInfo.expDate}
-                        </p>
-                      </div>
+                          Expiration Date: {batchInfo.expDate}{" "}
+                        </p>{" "}
+                      </div>{" "}
                     </>
-                  )}
+                  )}{" "}
                   <hr className="bg-black" />
-                  <label className={labelSyle}> Batch Barcode</label>
+                  <label className={labelSyle}> Batch Barcode </label>{" "}
                   <select
                     className={inputStyle}
                     id="barcode"
@@ -275,14 +278,15 @@ export default function PopupPrescriptionItemWindow({
                     onChange={handleChange}
                     required
                   >
-                    <option value=""> -- select a Batch -- </option>
+                    <option value=""> --select a Batch-- </option>{" "}
                     {itemAvailable &&
                       item.batches.map((batch) => (
                         <option key={batch.barcode} value={item.barcode}>
-                          {batch.barcode}
+                          {" "}
+                          {batch.barcode}{" "}
                         </option>
-                      ))}
-                  </select>
+                      ))}{" "}
+                  </select>{" "}
                   {confirmFillWindow && (
                     <div className="text-red-500">
                       Click again to confirm perscription fill.{" "}
@@ -294,12 +298,12 @@ export default function PopupPrescriptionItemWindow({
                   >
                     Fill Prescription{" "}
                   </button>{" "}
-                </>
-              </form>
+                </>{" "}
+              </form>{" "}
             </>
           )}{" "}
         </div>{" "}
-      </div>
+      </div>{" "}
     </>
   );
 }
