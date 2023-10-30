@@ -20,10 +20,11 @@ export default function PrescriptionLogs({
     {
       name: "Pharmacist",
       selector: (row) => {
-        const name = row.filledBy.pharmacistName;
+        const name = row.pharmacistName;
         return (
           <>
-            {name} <br /> {row.filledBy.pharmacistEmail}{" "}
+            {" "}
+            {name} <br /> {row.pharmacistEmail}{" "}
           </>
         );
       },
@@ -34,6 +35,7 @@ export default function PrescriptionLogs({
       selector: (row) => {
         return (
           <>
+            {" "}
             {row.patientName} <br /> {row.patientEmail}{" "}
           </>
         );
