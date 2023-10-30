@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import PrescriptionRow from "./PrescriptionRow";
 import PopupPrescriptionItemWindow from "./PopupPrescriptionWindow";
-
+import Swal from "sweetalert2";
 export default function Prescription() {
   const [prescriptionItems, setPrescriptionItems] = useState([]);
   const [popupWindow, setPopupWindow] = useState(false);
@@ -45,7 +45,8 @@ export default function Prescription() {
 
       if (!response.ok) {
         setFindUser(!findUser);
-        alert(" User not found");
+        //alert(" User not found");
+        Swal.fire(`User not found`, "", "error");
         return;
       }
 
@@ -93,7 +94,7 @@ export default function Prescription() {
   const blockStyle = "m-5 p-5 flex flex-col justify-center items-center ";
   return (
     <div className={blockStyle}>
-      <h3> Fill Patient Prescription</h3>
+      <h3> Fill Patient Prescription </h3>{" "}
       <form
         onSubmit={handleCheckSubmit}
         className="max-w-[800px] w-full mx-auto bg-transparent p-4 rounded border border-blue-500"
@@ -121,7 +122,7 @@ export default function Prescription() {
       {findUser ? (
         <>
           {" "}
-          <h3> Prescriptions </h3>
+          <h3> Prescriptions </h3>{" "}
           {popupWindow && (
             <PopupPrescriptionItemWindow
               popupWindowContent={popupWindowContent}
@@ -147,16 +148,17 @@ export default function Prescription() {
                 </th>{" "}
                 <th scope="col" className={thStyle}>
                   Refill Due Date{" "}
-                </th>
+                </th>{" "}
                 <th scope="col" className={thStyle}>
-                  Refills Left
-                </th>
+                  Refills Left{" "}
+                </th>{" "}
                 <th scope="col" className={thStyle}>
-                  isValid
-                </th>
-              </tr>
-            </thead>
+                  isValid{" "}
+                </th>{" "}
+              </tr>{" "}
+            </thead>{" "}
             <tbody>
+              {" "}
               {prescriptionItems.map((item) => (
                 <PrescriptionRow
                   key={item._id}
@@ -186,7 +188,7 @@ export default function Prescription() {
         </>
       ) : (
         ""
-      )}
+      )}{" "}
     </div>
   );
 }
