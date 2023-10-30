@@ -15,7 +15,8 @@ export default function orderPayment() {
     "bg-blue-500 hover:bg-blue-700  border rounded w-full my-5 py-2  text-white appearance-none focus:outline-none focus:shadow-outline";
   const labelSyle = "block text-white text-sm font-bold mb-2";
   const labelStyle = "block text-white text-sm font-bold mb-2";
-  const test = "";
+  const labelChoices = "block text-white text-sm font-bold mb-2";
+ 
   
 
   const initialState = {
@@ -97,7 +98,7 @@ export default function orderPayment() {
       <div className={blockStyle}>
         <div>
             <label className={labelStyle}>Select Payment Method:</label>
-            <div>
+            <div style={{ display: 'flex', alignItems: 'center'}}>
             <input
               type="radio"
               id="cash"
@@ -105,10 +106,12 @@ export default function orderPayment() {
               value="cash"
               checked={paymentMethod === "cash"}
               onChange={handlePaymentMethodChange}
+              style= {{ verticalAlign: 'middle', marginRight: '8px'}}
             />
-            <label htmlFor="cash">Cash</label>
+            <label className={labelChoices}>Cash</label>
+              
           </div>
-          <div>
+          <div style={{ display: 'flex', alignItems: 'center'}}>
             <input
               type="radio"
               id="card"
@@ -116,10 +119,40 @@ export default function orderPayment() {
               value="card"
               checked={paymentMethod === "card"}
               onChange={handlePaymentMethodChange}
+              style= {{ vertical: 'middle', marginRight: '8px'}}
             />
-            <label htmlFor="card">Card</label>
+            <label className={labelChoices}>Card</label>
           </div>
         </div>
+        {paymentMethod === "cash" && (
+        <form
+          onSubmit={handleSubmit}
+          className="max-w-[800px] w-full mx-auto bg-transparent p-4 rounded border border-blue-500"
+        >
+          <div className="w-full  md:flex flex-1">
+            <div className="w-full mx-2">
+              <label className={labelSyle}>Cash Amount</label>
+              <input
+                type="text"
+                placeholder="$0.00"
+                className={inputStyle}
+                id="firstName"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          </div>
+
+          <button className={submitButtonStyle} type="submit">
+            Complete Payment
+          </button>
+          <button className={submitButtonStyle} type="submit">
+            Print Receipt
+          </button>
+        </form>
+        )}
         {paymentMethod === "card" && (
         <form
           onSubmit={handleSubmit}
@@ -127,7 +160,7 @@ export default function orderPayment() {
         >
           <div className="w-full  md:flex flex-1">
             <div className="w-full mx-2">
-              <label className={labelSyle}>First Name</label>
+              <label className={labelSyle}>Cardholder First Name</label>
               <input
                 type="text"
                 placeholder="First Name"
@@ -140,7 +173,7 @@ export default function orderPayment() {
               />
             </div>
             <div className="w-full mx-2">
-              <label className={labelSyle}>Last Name</label>
+              <label className={labelSyle}> Cardholder Last Name</label>
               <input
                 type="text"
                 placeholder="Last Name"
@@ -153,41 +186,12 @@ export default function orderPayment() {
               />
             </div>
           </div>
-          <div className="w-full  md:flex flex-1">
-            <div className="w-full mx-2">
-              <label className={labelSyle}>Email</label>
-              <input
-                type="email"
-                placeholder="Email"
-                className={inputStyle}
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div className="w-full mx-2">
-              <label className={labelSyle}>Phone Number</label>
-              <input
-                type="text"
-                placeholder="Phone Number"
-                className={inputStyle}
-                id="phoneNumber"
-                name="phoneNumber"
-                value={formData.phoneNumber}
-                onChange={handleChange}
-                required
-              />
-            </div>
-          </div>
-
           <div className="w-full md:flex">
             <div className="w-full mx-2">
-              <label className={labelSyle}>Address Line 1</label>
+              <label className={labelSyle}>Credit Card Number</label>
               <input
                 type="text"
-                placeholder="Address Line 1"
+                placeholder="Number"
                 className={inputStyle}
                 id="streetName"
                 name="streetName"
@@ -197,10 +201,10 @@ export default function orderPayment() {
               />
             </div>
             <div className="w-full mx-2">
-              <label className={labelSyle}>City</label>
+              <label className={labelSyle}>Security Code</label>
               <input
                 type="text"
-                placeholder="City"
+                placeholder="Number"
                 className={inputStyle}
                 id="city"
                 name="city"
@@ -212,10 +216,10 @@ export default function orderPayment() {
           </div>
           <div className="w-full md:flex">
             <div className="w-full mx-2">
-              <label className={labelSyle}>State</label>
+              <label className={labelSyle}>Expiration Date</label>
               <input
                 type="text"
-                placeholder="State"
+                placeholder="MM/YY"
                 className={inputStyle}
                 id="state"
                 name="state"
@@ -225,7 +229,7 @@ export default function orderPayment() {
               />
             </div>
             <div className="w-full mx-2">
-              <label className={labelSyle}>Zip</label>
+              <label className={labelSyle}>Zip Code</label>
               <input
                 type="text"
                 placeholder="Zip Code"
@@ -239,40 +243,11 @@ export default function orderPayment() {
             </div>
           </div>
 
-          <div className="w-full flex-1 md:flex ">
-            <div className="w-full mx-2">
-              <label className={labelSyle}>Date of Birth</label>
-              <input
-                type="date"
-                placeholder="Date of Birth"
-                className={`${inputStyle} date-form`}
-                id="dateOfBirth"
-                name="dateOfBirth"
-                value={formData.dateOfBirth}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div className="w-full mx-2">
-              <label className={labelSyle}>Role</label>
-              <select
-                className={selectStyle}
-                id="role"
-                name="role"
-                value={role}
-                onChange={handleRoleChange}
-                required
-              >
-                <option value="">Select Role</option>
-                <option value="pharmacy manager">Pharmacy Manager</option>
-                <option value="pharmacist">Pharmacist</option>
-                <option value="pharmacy technician">Pharmacy Technician</option>
-                <option value="cashier">Cashier</option>
-              </select>
-            </div>
-          </div>
           <button className={submitButtonStyle} type="submit">
-            Create Account
+            Complete Payment
+          </button>
+          <button className={submitButtonStyle} type="submit">
+            Print Receipt
           </button>
         </form>
         )}

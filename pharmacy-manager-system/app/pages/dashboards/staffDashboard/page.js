@@ -47,7 +47,7 @@ export default function PharmacyStaffDashboard() {
         </Link>{" "}
         <Link
           className="user-button"
-          href="./staffDashboard/createOrder"
+          href= "../components/orderPage"
         >
           Create Order{" "}
         </Link>{" "}

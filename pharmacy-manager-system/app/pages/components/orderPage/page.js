@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-export default function PharmacyStaffDashboard() {
+export default function orderPage() {
   //const dashboardNames = ["Test1", "Test2", "Test3"];
   //const dashboardDsts = ["/", "/", "/"]; //TODO: Update with actual paths
 
@@ -35,7 +35,7 @@ export default function PharmacyStaffDashboard() {
       <div style={blockStyle}>
         <Link
           className="user-button"
-          href="./createOrder/orderPayment"
+          href="../components/orderPage/orderPayment"
         >
           Pay{" "}
         </Link>{" "}

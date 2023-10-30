@@ -48,6 +48,12 @@ export default function PharmacistDashboard() {
         >
           Input Prescription Info{' '}
         </Link>{' '}
+        <Link
+          className="user-button"
+          href= "../components/orderPage"
+        >
+          Create Order{" "}
+        </Link>{" "}
       </div>{' '}
     </div>
   );
