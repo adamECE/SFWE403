@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-
+import Swal from "sweetalert2";
 export default function AddToInventoryPage() {
   const initialState = {
     name: "",
@@ -59,12 +59,14 @@ export default function AddToInventoryPage() {
         if (response.ok) {
           setInventoryItemInfo(initialState);
           const responseText = await response.text();
-          alert(JSON.parse(responseText).message);
+          //alert(JSON.parse(responseText).message);
+          Swal.fire(`${JSON.parse(responseText).message}`, "", "success");
           router.refresh();
         } else {
           setInventoryItemInfo(initialState);
           const errorText = await response.text();
-          alert(JSON.parse(errorText).error);
+          // alert(JSON.parse(errorText).error);
+          Swal.fire(`${JSON.parse(errorText).error}`, "", "error");
         }
       } catch (error) {
         console.error("error:", error);
@@ -106,7 +108,7 @@ export default function AddToInventoryPage() {
           <h3> Inventory Info </h3> <hr className="mb-2" />
           <div className="w-full  md:flex flex-1">
             <div className="w-full mx-2">
-              <label className={labelSyle}>Medication Name </label>{" "}
+              <label className={labelSyle}> Medication Name </label>{" "}
               <input
                 type="text"
                 placeholder="name"
@@ -132,7 +134,7 @@ export default function AddToInventoryPage() {
               />{" "}
             </div>{" "}
           </div>{" "}
-          <div className="w-full  md:flex flex-1"></div>{" "}
+          <div className="w-full  md:flex flex-1"> </div>{" "}
           <div className="w-full  md:flex flex-1">
             <div className="w-full mx-2 text-white">
               <label className={labelSyle}> category </label>{" "}
@@ -199,12 +201,12 @@ export default function AddToInventoryPage() {
               />{" "}
             </div>{" "}
           </div>{" "}
-          <div className="w-full  md:flex flex-1"></div>{" "}
+          <div className="w-full  md:flex flex-1"> </div>{" "}
           {true && <div className="mx-2 my-2 text-red-500"> {warningMsg} </div>}{" "}
           <button className={submitButtonStyle} type="submit">
             Place Order{" "}
-          </button>
-        </form>
+          </button>{" "}
+        </form>{" "}
       </div>{" "}
     </div>
   );

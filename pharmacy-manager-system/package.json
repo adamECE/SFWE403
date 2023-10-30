@@ -11,7 +11,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@mui/material": "^5.14.14",
+    "@mui/material": "^5.14.15",
     "bcryptjs": "^2.4.3",
     "cookie": "^0.5.0",
     "cookie-parser": "^1.4.6",
@@ -19,11 +19,14 @@
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "express-async-handler": "^1.2.0",
+    "fs": "^0.0.1-security",
     "generate-api-key": "^1.0.2",
+    "jquery": "^3.7.1",
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^7.5.2",
     "morgan": "^1.10.0",
+    "net": "^1.0.2",
     "next": "^13.5.3",
     "nodemailer": "^6.9.6",
     "nodemon": "^3.0.1",
@@ -32,8 +35,10 @@
     "react-data-table-component": "^7.5.4",
     "react-dom": "18.2.0",
     "react-icons": "^4.11.0",
+    "request": "^2.88.2",
     "styled-components": "^6.1.0",
-    "sweetalert2": "^11.7.32"
+    "sweetalert2": "^11.7.32",
+    "tls": "^0.0.1"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.16",

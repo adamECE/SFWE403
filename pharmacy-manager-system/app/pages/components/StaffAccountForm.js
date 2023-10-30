@@ -1,6 +1,6 @@
 "use client";
-import { useState,useEffect } from "react";
-
+import { useState, useEffect } from "react";
+import Swal from "sweetalert2";
 export default function StaffAccountForm() {
   const [role, setRole] = useState("");
 
@@ -30,52 +30,58 @@ export default function StaffAccountForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-      try {
-         const token = localStorage.getItem('token');
+    try {
+      const token = localStorage.getItem("token");
 
       // Make a POST request to your login endpoint
-      const response = await fetch('http://127.0.0.1:3030/pharmacy-0x2/api/new-staff', {
-        method: 'POST',  
-        headers: {
-        'Content-Type': 'application/json',
-        // Include the bearer token in the Authorization header
-        'Authorization': `Bearer ${token}`,
-      },
-        
-          body: JSON.stringify({    
-            "firstName": formData.firstName,
-            "lastName":formData.lastName,
-            "email": formData.email, 
-            "dateOfBirth":formData.dateOfBirth,
-            "phoneNumber": formData.phoneNumber,
-            "role": role,
-            "address": {
-            "streetName": formData.streetName,
-            "city": formData.city,
-            "state": formData.state,
-            "zipCode": formData.zipCode}
-        }),
-      });
+      const response = await fetch(
+        "http://127.0.0.1:3030/pharmacy-0x2/api/new-staff",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            // Include the bearer token in the Authorization header
+            Authorization: `Bearer ${token}`,
+          },
+
+          body: JSON.stringify({
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            email: formData.email,
+            dateOfBirth: formData.dateOfBirth,
+            phoneNumber: formData.phoneNumber,
+            role: role,
+            address: {
+              streetName: formData.streetName,
+              city: formData.city,
+              state: formData.state,
+              zipCode: formData.zipCode,
+            },
+          }),
+        }
+      );
 
       if (response.ok) {
-         setFormData(initialState);
-          const responseText = await await response.text();
-          alert(JSON.parse(responseText).message)
+        setFormData(initialState);
+        const responseText = await response.text();
+        // alert(JSON.parse(responseText).message)
+        Swal.fire(`${JSON.parse(responseText).message}`, "", "success");
       } else {
-       setFormData(initialState);
+        setFormData(initialState);
         const errorText = await response.text();
-       alert(JSON.parse(errorText).error);  
+        //alert(JSON.parse(errorText).error);
+        Swal.fire(`${JSON.parse(errorText).error}`, "", "error");
       }
     } catch (error) {
-      console.error('error:', error);
+      console.error("error:", error);
     }
   };
 
   useEffect(() => {
-    if (!localStorage.getItem('isACCountActive')) {
-     router.push ("/pages/");
-  }
-  })
+    if (!localStorage.getItem("isACCountActive")) {
+      router.push("/pages/");
+    }
+  });
 
   const handleRoleChange = (e) => {
     setRole(e.target.value);
@@ -86,7 +92,7 @@ export default function StaffAccountForm() {
   };
   return (
     <div>
-      <h2 className={centerStyle}>New User Account</h2>
+      <h2 className={centerStyle}> New User Account </h2>{" "}
       <div className={blockStyle}>
         <form
           onSubmit={handleSubmit}
@@ -94,7 +100,7 @@ export default function StaffAccountForm() {
         >
           <div className="w-full  md:flex flex-1">
             <div className="w-full mx-2">
-              <label className={labelSyle}>First Name</label>
+              <label className={labelSyle}> First Name </label>{" "}
               <input
                 type="text"
                 placeholder="First Name"
@@ -105,9 +111,9 @@ export default function StaffAccountForm() {
                 onChange={handleChange}
                 required
               />
-            </div>
+            </div>{" "}
             <div className="w-full mx-2">
-              <label className={labelSyle}>Last Name</label>
+              <label className={labelSyle}> Last Name </label>{" "}
               <input
                 type="text"
                 placeholder="Last Name"
@@ -118,11 +124,11 @@ export default function StaffAccountForm() {
                 onChange={handleChange}
                 required
               />
-            </div>
-          </div>
+            </div>{" "}
+          </div>{" "}
           <div className="w-full  md:flex flex-1">
             <div className="w-full mx-2">
-              <label className={labelSyle}>Email</label>
+              <label className={labelSyle}> Email </label>{" "}
               <input
                 type="email"
                 placeholder="Email"
@@ -133,9 +139,9 @@ export default function StaffAccountForm() {
                 onChange={handleChange}
                 required
               />
-            </div>
+            </div>{" "}
             <div className="w-full mx-2">
-              <label className={labelSyle}>Phone Number</label>
+              <label className={labelSyle}> Phone Number </label>{" "}
               <input
                 type="text"
                 placeholder="Phone Number"
@@ -146,12 +152,11 @@ export default function StaffAccountForm() {
                 onChange={handleChange}
                 required
               />
-            </div>
+            </div>{" "}
           </div>
-
           <div className="w-full md:flex">
             <div className="w-full mx-2">
-              <label className={labelSyle}>Address Line 1</label>
+              <label className={labelSyle}> Address Line 1 </label>{" "}
               <input
                 type="text"
                 placeholder="Address Line 1"
@@ -162,9 +167,9 @@ export default function StaffAccountForm() {
                 onChange={handleChange}
                 required
               />
-            </div>
+            </div>{" "}
             <div className="w-full mx-2">
-              <label className={labelSyle}>City</label>
+              <label className={labelSyle}> City </label>{" "}
               <input
                 type="text"
                 placeholder="City"
@@ -175,11 +180,11 @@ export default function StaffAccountForm() {
                 onChange={handleChange}
                 required
               />
-            </div>
-          </div>
+            </div>{" "}
+          </div>{" "}
           <div className="w-full md:flex">
             <div className="w-full mx-2">
-              <label className={labelSyle}>State</label>
+              <label className={labelSyle}> State </label>{" "}
               <input
                 type="text"
                 placeholder="State"
@@ -190,9 +195,9 @@ export default function StaffAccountForm() {
                 onChange={handleChange}
                 required
               />
-            </div>
+            </div>{" "}
             <div className="w-full mx-2">
-              <label className={labelSyle}>Zip</label>
+              <label className={labelSyle}> Zip </label>{" "}
               <input
                 type="text"
                 placeholder="Zip Code"
@@ -203,12 +208,11 @@ export default function StaffAccountForm() {
                 onChange={handleChange}
                 required
               />
-            </div>
+            </div>{" "}
           </div>
-
           <div className="w-full flex-1 md:flex ">
             <div className="w-full mx-2">
-              <label className={labelSyle}>Date of Birth</label>
+              <label className={labelSyle}> Date of Birth </label>{" "}
               <input
                 type="date"
                 placeholder="Date of Birth"
@@ -219,9 +223,9 @@ export default function StaffAccountForm() {
                 onChange={handleChange}
                 required
               />
-            </div>
+            </div>{" "}
             <div className="w-full mx-2">
-              <label className={labelSyle}>Role</label>
+              <label className={labelSyle}> Role </label>{" "}
               <select
                 className={selectStyle}
                 id="role"
@@ -230,19 +234,22 @@ export default function StaffAccountForm() {
                 onChange={handleRoleChange}
                 required
               >
-                <option value="">Select Role</option>
-                <option value="pharmacy manager">Pharmacy Manager</option>
-                <option value="pharmacist">Pharmacist</option>
-                <option value="pharmacy technician">Pharmacy Technician</option>
-                <option value="cashier">Cashier</option>
-              </select>
-            </div>
-          </div>
+                <option value=""> Select Role </option>{" "}
+                <option value="pharmacy manager"> Pharmacy Manager </option>{" "}
+                <option value="pharmacist"> Pharmacist </option>{" "}
+                <option value="pharmacy technician">
+                  {" "}
+                  Pharmacy Technician{" "}
+                </option>{" "}
+                <option value="cashier"> Cashier </option>{" "}
+              </select>{" "}
+            </div>{" "}
+          </div>{" "}
           <button className={submitButtonStyle} type="submit">
-            Create Account
-          </button>
-        </form>
-      </div>
+            Create Account{" "}
+          </button>{" "}
+        </form>{" "}
+      </div>{" "}
     </div>
   );
 }

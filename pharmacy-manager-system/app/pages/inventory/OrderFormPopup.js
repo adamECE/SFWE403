@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import Swal from 'sweetalert2'
+import Swal from "sweetalert2";
 export default function OrderFormPopup({
   setSecondPopup,
   orderPopupWindowContent,
@@ -51,19 +51,19 @@ export default function OrderFormPopup({
       if (response.ok) {
         setFormData(initialState);
         const responseText = await response.text();
-         Swal.fire({
-          position: 'top-end',
-          icon: 'success',
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
           title: JSON.parse(responseText).message,
-          showConfirmButton: true
-         
-})
+          showConfirmButton: true,
+        });
         //alert(JSON.parse(responseText).message);
         router.refresh();
       } else {
         setFormData(initialState);
         const errorText = await response.text();
-        alert(JSON.parse(errorText).error);
+        //alert(JSON.parse(errorText).error);
+        Swal.fire(`${JSON.parse(errorText).error}`, "", "error");
       }
     } catch (error) {
       console.error("error:", error);
@@ -84,14 +84,15 @@ export default function OrderFormPopup({
           className="top-0 right-0 m-1 px-2 py-1 bg-blue-500 text-white rounded absolute"
           onClick={handleCloseModalBtn}
         >
-          &times;{" "}
+          & times;{" "}
         </button>{" "}
         <div className="order-form-popup">
           <form onSubmit={handleSubmit}>
             <h3 className="text-black my-3">
+              {" "}
               {` New Order for:  ${orderPopupWindowContent.name}`}{" "}
             </h3>{" "}
-            <div className="font-bold">Description:</div>{" "}
+            <div className="font-bold"> Description: </div>{" "}
             <div className="border-2 px-4 py-2 ">
               {" "}
               {orderPopupWindowContent.description}{" "}
@@ -101,11 +102,11 @@ export default function OrderFormPopup({
                 <div className="px-4 py-2">
                   <b> Category: </b> {orderPopupWindowContent.category}{" "}
                 </div>{" "}
-              </div>
+              </div>{" "}
               <div className="w-full mx-2 px-4 py-2">
                 <b> Price: </b> ${orderPopupWindowContent.price}{" "}
               </div>{" "}
-            </div>
+            </div>{" "}
             <div className="w-full  md:flex flex-1">
               <div className="px-4 py-2 w-full mx-2">
                 <b> Manufacturer: </b> {orderPopupWindowContent.manufacturer}{" "}
@@ -113,13 +114,13 @@ export default function OrderFormPopup({
               <div className="px-4 py-2 w-full mx-2">
                 <b> Location: </b> {orderPopupWindowContent.location}{" "}
               </div>{" "}
-            </div>
+            </div>{" "}
             <hr />
-            <p className="text-black my-3 bg-blue-100">Order Details</p>
+            <p className="text-black my-3 bg-blue-100"> Order Details </p>{" "}
             <hr />
             <div className="w-full  md:flex flex-1">
               <div className=" w-full mx-2">
-                <label className={labelSyle}>Quantity</label>
+                <label className={labelSyle}> Quantity </label>{" "}
                 <input
                   type="number"
                   name="quantity"
@@ -130,9 +131,9 @@ export default function OrderFormPopup({
                   required={true}
                   min="1"
                 />{" "}
-              </div>
+              </div>{" "}
               <div className=" w-full mx-2">
-                <label className={labelSyle}>Supplier</label>
+                <label className={labelSyle}> Supplier </label>{" "}
                 <input
                   type="text"
                   name="supplier"
@@ -142,8 +143,8 @@ export default function OrderFormPopup({
                   placeholder="supplier"
                   required={true}
                 />{" "}
-              </div>
-            </div>
+              </div>{" "}
+            </div>{" "}
             {/* Add more form fields as needed */}{" "}
             <button className={submitButtonStyle} type="submit">
               {" "}
