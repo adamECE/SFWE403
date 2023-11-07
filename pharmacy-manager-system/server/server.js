@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 8080;
 
 //db connection
 connectDB();
-const allowedOrigins = ['http://localhost:3000']; // Add your frontend URL here
+const allowedOrigins = ['http://localhost:3000', ]; // Add your frontend URL here
 
 const allowedHeaders = [
     'Authorization',
