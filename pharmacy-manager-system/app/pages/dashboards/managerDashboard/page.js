@@ -51,12 +51,21 @@ export default function ManagerDashboard() {
           href="./managerDashboard/logs"
         >
           Transactions Logs
+
+        </Link>
+         <Link
+          className="user-button"
+          href= "./managerDashboard/checkout"
+        >
+          Checkout{" "}
+
         </Link> {''}
         <Link
           className="user-button"
           href= "../components/orderPage"
         >
           Create Order{" "}
+
         </Link>{" "}
       </div>{' '}
     </div>

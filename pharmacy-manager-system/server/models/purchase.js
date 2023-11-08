@@ -1,50 +1,87 @@
 const mongoose = require('mongoose');
 
 const purchaseSchema = new mongoose.Schema({
-    timestamp: {
-        type: Date,
-        default: Date.now,
-    },
-    soldBy: {
+  timestamp: {
+    type: Date,
+    default: Date.now,
+  },
+  soldBy: {
+    type: String,
+    required: true,
+  },
+  soldTo: {
+    type: String,
+    required: true,
+  },
+
+  PrescriptionItems: [
+    {
+      prescriptionID: {type: String, required: true},
+      filledInfoID: {type: String, required: true},
+      medicationID: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'Inventory', // Reference to the medication in the Inventory collection
         required: true,
-    },
-    items: [{
-        name: {
-            type: String,
-            required: true,
-        },
-        quantity: {
-            type: Number,
-            required: true,
-        },
-        price: {
-            type: Number,
-            required: true,
-        },
-        isPrescription: {
-            type: Boolean,
-            default: false,
-        },
-    }],
-    totalAmount: {
+      },
+      name: {type: String, required: true},
+      quantity: {
         type: Number,
         required: true,
-    },
-    paymentMethod: {
-        type: String,
-        required: true,
-        enum: ['cash', 'credit card', 'debit card'],
-    },
-    receiptNumber: {
+      },
+      price: {
         type: Number,
-        unique: true,
         required: true,
+      },
     },
-    customerSignature: {
+  ],
+
+  OverTheCounterItems: [
+    {
+      itemID: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Inventory', // Reference to the medication in the Inventory collection
+        required: true,
+      },
+      name: {
         type: String,
+        required: true,
+      },
+      quantity: {
+        type: Number,
+        required: true,
+      },
+      price: {
+        type: Number,
+        required: true,
+      },
+      barcode: {
+        type: String,
+        required: true,
+      },
     },
+  ],
+
+  totalAmount: {
+    type: Number,
+    required: true,
+  },
+  status: {
+    type: String,
+    enum: ['paid', 'unpaid'],
+    default: 'unpaid',
+  },
+  paymentMethod: {
+    type: String,
+    enum: ['cash', 'credit card', 'debit card'],
+  },
+  // receiptNumber: {
+  //   type: Number,
+  //   unique: true,
+  //   required: true,
+  // },
+  customerSignature: {
+    type: String,
+  },
 });
 
 module.exports = mongoose.model('Purchase', purchaseSchema);
