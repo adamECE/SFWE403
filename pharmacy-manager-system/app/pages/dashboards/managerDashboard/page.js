@@ -52,6 +52,12 @@ export default function ManagerDashboard() {
         >
           Transactions Logs
         </Link>
+         <Link
+          className="user-button"
+          href= "./managerDashboard/checkout"
+        >
+          Checkout{" "}
+        </Link>{" "}
       </div>{' '}
     </div>
   );
