@@ -26,7 +26,8 @@ const allowedHeaders = [
   'Content-Language', // Add other required headers here
 ];
 
-app.use(
+//allows connections from whitelisted origins
+/* app.use(
   cors({
     origin: function (origin, callback) {
       if (!origin || allowedOrigins.indexOf(origin) !== -1) {
@@ -35,6 +36,17 @@ app.use(
         callback(new Error('Not allowed by CORS'));
       }
     },
+    methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE'],
+    allowedHeaders: allowedHeaders,
+    credentials: true,
+  })
+);
+*/
+
+//allows connections from any origins
+app.use(
+  cors({
+    origin: '*',
     methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE'],
     allowedHeaders: allowedHeaders,
     credentials: true,
