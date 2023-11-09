@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import {useEffect} from 'react';
+import Link from 'next/link';
+import {useRouter} from 'next/navigation';
 
 export default function PharmacyStaffDashboard() {
   //const dashboardNames = ["Test1", "Test2", "Test3"];
@@ -10,24 +10,24 @@ export default function PharmacyStaffDashboard() {
 
   const router = useRouter();
   const blockStyle = {
-    marign: "10 auto",
+    marign: '10 auto',
 
-    padding: "20px",
-    border: "0 ",
-    width: "80%",
-    justifyContent: "space-between",
-    alignItems: "center",
-    position: "absolute",
-    display: "flex",
-    flexDirection: "column",
-    left: "10%",
+    padding: '20px',
+    border: '0 ',
+    width: '80%',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    position: 'absolute',
+    display: 'flex',
+    flexDirection: 'column',
+    left: '10%',
   };
   useEffect(() => {
     if (
-      localStorage.getItem("role") != "cashier" &&
-      localStorage.getItem("role") != "pharmacy technician"
+      localStorage.getItem('role') != 'cashier' &&
+      localStorage.getItem('role') != 'pharmacy technician'
     ) {
-      router.push("/pages/");
+      router.push('/pages/');
     }
   });
   return (
@@ -37,21 +37,18 @@ export default function PharmacyStaffDashboard() {
           className="user-button"
           href="./staffDashboard/createPatientAccount"
         >
-          Create Patient Accounts{" "}
-        </Link>{" "}
+          Create Patient Accounts{' '}
+        </Link>{' '}
         <Link
           className="user-button"
           href="./staffDashboard/inputPrescriptionInfo"
         >
-          Input Prescription Info{" "}
-        </Link>{" "}
-        <Link
-          className="user-button"
-          href= "../components/orderPage"
-        >
-          Create Order{" "}
-        </Link>{" "}
-      </div>{" "}
+          Input Prescription Info{' '}
+        </Link>{' '}
+        <Link className="user-button" href="./staffDashboard/checkout">
+          Checkout{' '}
+        </Link>{' '}
+      </div>{' '}
     </div>
   );
 }

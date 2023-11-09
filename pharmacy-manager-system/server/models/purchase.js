@@ -73,6 +73,7 @@ const purchaseSchema = new mongoose.Schema({
   paymentMethod: {
     type: String,
     enum: ['cash', 'credit card', 'debit card'],
+    default: 'cash',
   },
   // receiptNumber: {
   //   type: Number,
@@ -81,6 +82,7 @@ const purchaseSchema = new mongoose.Schema({
   // },
   customerSignature: {
     type: String,
+    default: null,
   },
 });
 
