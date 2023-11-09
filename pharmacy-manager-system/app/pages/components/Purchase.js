@@ -314,7 +314,15 @@ export default function Prescription() {
                                   item.quantity
                                 )
                               }
-                              label={`${item.medicationInfo.name} | Qnt: ${item.quantity}  | Filled on: ${filledItem.filledDate} | Price: ${item.medicationInfo.price}`}
+                              label={`${item.medicationInfo.name} | Qnt: ${
+                                item.quantity
+                              }  | Filled on: ${new Date(
+                                filledItem.filledDate
+                              ).toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: '2-digit',
+                                day: '2-digit',
+                              })} | Price: ${item.medicationInfo.price}`}
                             />
                             <hr />
                           </>
