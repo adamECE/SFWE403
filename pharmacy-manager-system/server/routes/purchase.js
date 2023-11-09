@@ -20,4 +20,13 @@ router.post(
   purchaseController.processPurchase
 );
 
+// route to add to activity log
+router.get(
+  '/checkout-info/:receiptID',
+  protect,
+  isStaff,
+  isAccountActive,
+  purchaseController.getPurchase
+);
+
 module.exports = router;

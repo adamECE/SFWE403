@@ -182,7 +182,7 @@ exports.getPrescriptionToProcess = asyncHandler(async (req, res) => {
       res.status(404).json({error: 'User not found in database'});
       return;
     }
-    // renaming medicationID field into medicationInfo
+
     let prescriptionsTopickUP = [];
     for (let i = 0; i < userInfo.prescriptions.length; i++) {
       let newfilledInfo = [];
@@ -199,13 +199,6 @@ exports.getPrescriptionToProcess = asyncHandler(async (req, res) => {
         }
       }
     }
-
-    // .filter((prescription) => {
-    //     if (prescription.filledInfo.length > 0)
-    //         return prescription.filledInfo.filter((item) => {
-    //             return item.pickedUpInfo.status == false;
-    //         });
-    // })
 
     const prescriptionsWithMedicationInfo = prescriptionsTopickUP.map(
       (prescription) => {

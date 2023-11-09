@@ -37,21 +37,15 @@ export default function PopupOverTheCounterItemWindow({
   const [formData, setFormData] = useState(initialState);
 
   const handleCloseModalBtn = (e) => {
-    console.log(overTheCounter);
     e.preventDefault();
     setPopupWindow(false);
-    // Make sure everything else is closed
-    setItemExpired(false);
-    setConfirmFillWindow(false);
-    setItemNotAvailable(false);
-    setItemAvailable(false);
   };
 
   const handleChange = (e) => {
     const i = overTheCounter.findIndex((item) => item._id == selectedItem);
     setSelectedItemIndex(i);
     setFormData({...formData, [e.target.name]: e.target.value});
-    console.log(overTheCounter[i].batches);
+
     const bt = overTheCounter[i].batches.find(function (batch) {
       return batch.barcode == e.target.value;
     });
@@ -100,7 +94,7 @@ export default function PopupOverTheCounterItemWindow({
         total +
           overTheCounter[selectedItemIndex].price * Number(formData['qnt'])
       ),
-        Swal.fire('ok', '', 'success');
+        Swal.fire('Item added on Cart', '', 'success');
     } else {
       Swal.fire(`Qunatity not available on this batch`, '', 'error');
     }
@@ -114,7 +108,7 @@ export default function PopupOverTheCounterItemWindow({
       >
         <div className="modal-content border-2 border-gray-800 border-opacity-100 bg-white p-8 rounded shadow-lg relative overflow-y-auto">
           <button
-            className="top-0 right-0 m-2 px-4 py-2 bg-blue-500 text-white rounded absolute"
+            className="top-0 right-0 m-1 px-2 py-1 bgCor text-white rounded absolute"
             onClick={handleCloseModalBtn}
           >
             &times;{' '}
@@ -122,8 +116,8 @@ export default function PopupOverTheCounterItemWindow({
           <div className="">
             <h3 className="border-2 px-4 py-2 text-black">
               {' '}
-              Available Over-the-counter Items
-            </h3>
+              Available Over - the - counter Items{' '}
+            </h3>{' '}
           </div>{' '}
           <div className="flex w-full">
             <div className="px-4 py-2 flex-1">
@@ -135,9 +129,10 @@ export default function PopupOverTheCounterItemWindow({
                 onChange={handleItemChange}
                 required
               >
-                <option value=""> --select a Batch-- </option>{' '}
+                <option value=""> -- choose the item-- </option>{' '}
                 {overTheCounter.map((item) => (
                   <option key={item._id} value={item._id}>
+                    {' '}
                     {item.name}{' '}
                   </option>
                 ))}{' '}
@@ -166,7 +161,7 @@ export default function PopupOverTheCounterItemWindow({
                   )}{' '}
                 </select>{' '}
               </div>
-            )}
+            )}{' '}
           </div>{' '}
           {showBatchInfo && (
             <>
@@ -185,45 +180,46 @@ export default function PopupOverTheCounterItemWindow({
                     </p>{' '}
                   </div>{' '}
                 </div>{' '}
-              </div>
+              </div>{' '}
               <hr className="px-4 py-2 text-black" />{' '}
               <div className="flex">
                 <form onSubmit={handleAddItem}>
-                  <div className="px-4 py-2 flex-1">
-                    <label className={labelSyle}> Quantity: </label>{' '}
-                    {overTheCounter.quantity}{' '}
-                    <input
-                      type="number"
-                      min="1"
-                      name="qnt"
-                      id="qnt"
-                      className={inputStyle}
-                      onChange={handleQntChange}
-                    ></input>
+                  <div className="flex">
+                    <div className="px-4 py-2 flex-1">
+                      <label className={labelSyle}> Quantity: </label>{' '}
+                      {overTheCounter.quantity}{' '}
+                      <input
+                        type="number"
+                        min="1"
+                        name="qnt"
+                        id="qnt"
+                        className={inputStyle}
+                        onChange={handleQntChange}
+                        required
+                      ></input>{' '}
+                    </div>{' '}
+                    <div className="px-4 py-2 flex-1">
+                      <label className={labelSyle}> Price: </label>{' '}
+                      <p className={inputStyle}>
+                        {' '}
+                        {overTheCounter[selectedItemIndex].price}
+                      </p>{' '}
+                    </div>{' '}
+                    <div className="px-4 py-4 flex-1">
+                      <button
+                        className="bottom-0 right-0 m-2 px-4 py-4 bgCor text-white rounded"
+                        type="submit"
+                      >
+                        Add to cart{' '}
+                      </button>{' '}
+                    </div>
                   </div>{' '}
-                  <div className="px-4 py-2 flex-1">
-                    <button
-                      className="bottom-0 right-0 m-2 px-4 py-2 bg-blue-500 text-white rounded"
-                      type="submit"
-                    >
-                      Add to cart
-                    </button>{' '}
-                  </div>{' '}
-                </form>
+                </form>{' '}
               </div>{' '}
             </>
-          )}
+          )}{' '}
           <div className="flex">
-            <div className="flex-1">
-              {/* <form onSubmit={handleFCheck}>
-                <button
-                  className="bottom-0 right-0 m-2 px-4 py-2 bg-blue-500 text-white rounded"
-                  type="submit"
-                >
-                  Check Availability{' '}
-                </button>{' '}
-              </form>{' '} */}
-            </div>{' '}
+            <div className="flex-1"> </div>{' '}
           </div>{' '}
         </div>{' '}
       </div>{' '}

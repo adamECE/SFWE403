@@ -4,14 +4,15 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
-import Fab from '@mui/material/Fab';
-import AddIcon from '@mui/icons-material/Add';
+import {AiFillPlusCircle} from 'react-icons/ai';
 import Box from '@mui/material/Box';
 import {BsTrash, BsPencilSquare} from 'react-icons/bs';
 import {GiMedicinePills} from 'react-icons/gi';
 import Swal from 'sweetalert2';
 import PopupOverTheCounterItemWindow from './PopupOverTheCounterWindow';
 import DataTable from 'react-data-table-component';
+import {useRouter, useSearchParams} from 'next/navigation';
+
 export default function Prescription() {
   const [selectedPatient, setPatient] = useState([]);
   const [selectedPrescriptions, setSelectedPrescriptions] = useState([]);
@@ -19,11 +20,12 @@ export default function Prescription() {
   const [cartItem, setCartItem] = useState([]);
   const [total, setTotal] = useState(0);
   const [popupWindow, setPopupWindow] = useState(false);
-
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [findUser, setFindUser] = useState(false);
 
   const submitButtonStyle =
-    'z-[4] bgCor inline-block rounded-r bg-cyan-100 px-6 pb-2 pt-2.5  font-medium uppercase leading-normal text-white focus:outline-none focus:shadow-outline';
+    'z-[4] bgCor inline-block rounded bg-cyan-100 px-6 pb-2 pt-2.5 my-5  font-medium uppercase leading-normal text-white focus:outline-none focus:shadow-outline';
 
   const inputStyle =
     'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline';
@@ -51,7 +53,7 @@ export default function Prescription() {
     },
 
     {
-      name: 'Action',
+      name: 'Remove',
       cell: (param) => {
         return (
           <>
@@ -105,7 +107,6 @@ export default function Prescription() {
       console.error('Fetch error:', error);
     }
   };
-
   const handlePayment = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token'); // get auth token from localStorage
@@ -133,7 +134,13 @@ export default function Prescription() {
         return;
       }
       const responseText = await response.text();
-      alert(JSON.parse(responseText).message);
+
+      setCartItem([]);
+      setSelectedPrescriptions([]);
+      setTotal(0);
+      router.push(
+        `./checkout/orderPayment?receiptID=${JSON.parse(responseText).message}`
+      );
     } catch (error) {
       console.error('Fetch error:', error);
     }
@@ -149,7 +156,6 @@ export default function Prescription() {
     quantity
   ) => {
     const checked = e.target.checked;
-
     if (checked) {
       setTotal(total + price);
       // If the checkbox is checked, add to selectedPrescriptions
@@ -164,7 +170,6 @@ export default function Prescription() {
           quantity: quantity,
         },
       ]);
-      console.log(selectedPrescriptions);
     } else {
       // If the checkbox is unchecked, remove from selectedPrescriptions
       setSelectedPrescriptions(
@@ -173,10 +178,8 @@ export default function Prescription() {
         )
       );
       setTotal(total - price);
-      console.log(selectedPrescriptions);
     }
   };
-
   const addOver = async () => {
     setPopupWindow(true);
   };
@@ -197,8 +200,6 @@ export default function Prescription() {
       });
 
       if (!response.ok) {
-        // setFindUser(!findUser);
-        //alert(" User not found");
         Swal.fire(`User not found`, '', 'error');
         return;
       }
@@ -216,7 +217,8 @@ export default function Prescription() {
   const blockStyle = 'm-5 p-5 flex flex-col justify-center items-center ';
   return (
     <div className={blockStyle}>
-      <h3> Fill Patient Prescription </h3> <hr className="mb-2" />
+      <h3> Checkout </h3> <hr className="mb-2" />
+      <hr />
       <div className="w-full  md:flex flex-1">
         {popupWindow && (
           <PopupOverTheCounterItemWindow
@@ -228,47 +230,69 @@ export default function Prescription() {
             setTotal={setTotal}
           />
         )}
-        <div className="w-full mx-2">
-          <form
-            onSubmit={handleCheckSubmit}
-            className="max-w-[800px] w-full mx-auto bg-transparent p-4 rounded "
-          >
-            <noscript>
-              <input type="submit" />
-            </noscript>{' '}
-            <label className={labelStyle}> Enter Patient Email </label>{' '}
-            <input
-              type="text"
-              placeholder="User Email"
-              className={inputStyle}
-              id="userEmail"
-              name="userEmail"
-              value={formData.userEmail}
-              onChange={handleChange}
-              required={!findUser}
-              disabled={findUser}
-            />
-          </form>{' '}
-        </div>
-        <div className="w-full mx-2">
-          <label className={labelStyle}> Total</label>{' '}
-          <input
-            type="text"
-            className={inputStyle}
-            value={new Intl.NumberFormat('en-US', {
-              style: 'currency',
-              currency: 'USD',
-            }).format(total)}
-            disabled
-          />
-          <button onClick={handlePayment}>pay</button>
+        <div className="w-full mx-2 flex">
+          <div className="flex-1">
+            <form
+              onSubmit={handleCheckSubmit}
+              className="max-w-[800px] w-full mx-auto bg-transparent p-4 rounded "
+            >
+              <noscript>
+                <input type="submit" />
+              </noscript>{' '}
+              <label className={labelStyle}> Enter Patient Email </label>{' '}
+              <input
+                type="text"
+                placeholder="User Email"
+                className={inputStyle}
+                id="userEmail"
+                name="userEmail"
+                value={formData.userEmail}
+                onChange={handleChange}
+                required={!findUser}
+                disabled={findUser}
+              />
+            </form>{' '}
+          </div>
+          <div className="w-full mx-2 flex-1">
+            <div class="relative mb-4 flex   flex-wrap my-5 items-stretch top-6">
+              <span class="flex items-center whitespace-nowrap rounded-l  bgCor border border-r-0 border-solid border-neutral-300 px-3  text-center text-base font-normal leading-[1.6] text-white dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200">
+                Total
+              </span>
+              <input
+                value={new Intl.NumberFormat('en-US', {
+                  style: 'currency',
+                  currency: 'USD',
+                }).format(total)}
+                disabled
+                type="text"
+                class="relative m-0 block w-[1px] min-w-0 flex-auto rounded-r  bg-clip-padding py-2 px-3  text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:focus:border-primary"
+                placeholder="Username"
+                aria-label="Username"
+                aria-describedby="basic-addon1"
+              />
+            </div>
+          </div>
+          <div className="w-full mx-2 flex-1 my-6 ">
+            {' '}
+            {total > 0.01 ? (
+              <button
+                className={`${submitButtonStyle} w-full`}
+                onClick={handlePayment}
+              >
+                pay
+              </button>
+            ) : (
+              ''
+            )}
+          </div>
         </div>
       </div>{' '}
       {findUser ? (
         <>
           <div className="w-full  md:flex">
             <div className="w-full mx-2  flex-1">
-              <h3> Prescriptions </h3>
+              <h3 className="my-2 "> Prescriptions </h3>
+              <hr />
               <>
                 <FormGroup>
                   {selectedPatient.length > 0
@@ -299,31 +323,25 @@ export default function Prescription() {
                     : 'No precription'}
                 </FormGroup>
               </>
-
-              <button
-                onClick={(e) => {
-                  console.log(selectedPrescriptions);
-                }}
-              >
-                add
-              </button>
             </div>
             <div className="w-full mx-2  flex-1">
-              <h3>
-                <button onClick={addOver}> Add Over the counter</button>{' '}
+              <h3 onClick={addOver}>
+                <span>Over the counter</span>
+                <AiFillPlusCircle />
+                <hr />
               </h3>
-              {cartItem.length > 0 ? (
-                <DataTable
-                  title="Auth Logs"
-                  columns={columns}
-                  data={cartItem}
-                  pagination
-                  //   progressPending={pending}
-                  //   progressComponent={<CustomLoader />}
-                ></DataTable>
-              ) : (
+
+              {/* {cartItem.length > 0 ? ( */}
+              <DataTable
+                columns={columns}
+                data={cartItem}
+                pagination
+                //   progressPending={pending}
+                //   progressComponent={<CustomLoader />}
+              ></DataTable>
+              {/* ) : (
                 ''
-              )}
+              )} */}
             </div>
           </div>
         </>

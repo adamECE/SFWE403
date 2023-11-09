@@ -107,3 +107,29 @@ exports.processPurchase = asyncHandler(async (req, res, next) => {
     res.status(500).json({error: 'OOOps something went wrong!'});
   }
 });
+
+exports.getPurchase = asyncHandler(async (req, res, next) => {
+  try {
+    // Extract item details from the request body
+    const {receiptID} = req.params;
+    //check if all the required inputs are given
+    if (!receiptID) {
+      res.status(400).json({error: 'Please add all Fields'});
+
+      return;
+    }
+
+    const purchaseData = await Purchase.findById({_id: receiptID}); //attempt to find user
+    if (!purchaseData) {
+      //check if user was found
+      res.status(404).json({error: 'Patient not found in database'});
+      return;
+    }
+    //check if prescription still valid for fill
+    res.status(200).json({purchaseData});
+    return;
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({error: 'OOOps something went wrong!'});
+  }
+});
