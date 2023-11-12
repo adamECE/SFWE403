@@ -133,3 +133,35 @@ exports.getPurchase = asyncHandler(async (req, res, next) => {
     res.status(500).json({error: 'OOOps something went wrong!'});
   }
 });
+exports.processPayment = asyncHandler(async (req, res, next) => {
+  try {
+    const {paymentMethod, purchaseID, cardInfo} = req.body;
+    console.log(cardInfo)
+    if (!paymentMethod | !purchaseID) {
+      res.status(400).json({error: 'Please add all Fields'});
+
+      return;
+    }
+    const purchaseData = await Purchase.findById({_id: purchaseID}); //attempt to find user
+    if (!purchaseData) {
+      res.status(404).json({error: 'purchase not found in database'});
+      return;
+    }
+    purchaseData.paymentMethod = paymentMethod
+    if ( paymentMethod === "cash" ){
+      purchaseData.status = 'paid';
+    
+    }
+    else {
+      purchaseData.status = 'paid';
+      purchaseData.card = cardInfo;
+    }
+    const pchID = await purchaseData.save();
+    res.status(200).json({message: pchID._id});
+    return;
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({error: 'OOOps something went wrong!'});
+  }
+});

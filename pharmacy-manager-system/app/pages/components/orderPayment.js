@@ -42,7 +42,7 @@ export default function OrderPayment() {
 
       // Make a POST request to your login endpoint
       const response = await fetch(
-        'http://127.0.0.1:3030/pharmacy-0x2/api/new-staff',
+        'http://127.0.0.1:3030/pharmacy-0x2/api/purchase/pay',
         {
           method: 'POST',
           headers: {
@@ -52,16 +52,14 @@ export default function OrderPayment() {
           },
 
           body: JSON.stringify({
-            firstName: formData.firstName,
-            lastName: formData.lastName,
-            email: formData.email,
-            dateOfBirth: formData.dateOfBirth,
-            phoneNumber: formData.phoneNumber,
-            role: role,
-            address: {
-              streetName: formData.streetName,
-              city: formData.city,
-              state: formData.state,
+            paymentMethod: paymentMethod,
+            purchaseID: searchParams.get('receiptID'),
+            cardInfo: {
+              firstName: formData.firstName,
+              lastName: formData.lastName,
+              cardNum: formData.cardNum,
+              secCode: formData.secCode,
+              expDate: formData.expDate,
               zipCode: formData.zipCode,
             },
           }),
@@ -245,9 +243,9 @@ export default function OrderPayment() {
                   type="text"
                   placeholder="Number"
                   className={inputStyle}
-                  id="streetName"
-                  name="streetName"
-                  value={formData.streetName}
+                  id="cardNum"
+                  name="cardNum"
+                  value={formData.cardNum}
                   onChange={handleChange}
                   required
                 />
@@ -258,9 +256,9 @@ export default function OrderPayment() {
                   type="text"
                   placeholder="Number"
                   className={inputStyle}
-                  id="city"
-                  name="city"
-                  value={formData.city}
+                  id="secCode"
+                  name="secCode"
+                  value={formData.secCode}
                   onChange={handleChange}
                   required
                 />
@@ -273,9 +271,9 @@ export default function OrderPayment() {
                   type="text"
                   placeholder="MM/YY"
                   className={inputStyle}
-                  id="state"
-                  name="state"
-                  value={formData.state}
+                  id="expDate"
+                  name="expDate"
+                  value={formData.expDate}
                   onChange={handleChange}
                   required
                 />

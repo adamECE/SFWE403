@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const cardSchema = require('./card')
 const purchaseSchema = new mongoose.Schema({
   timestamp: {
     type: Date,
@@ -72,8 +72,12 @@ const purchaseSchema = new mongoose.Schema({
   },
   paymentMethod: {
     type: String,
-    enum: ['cash', 'credit card', 'debit card'],
+    enum: ['cash', 'card'],
     default: 'cash',
+  },
+  card: {
+    type: cardSchema,
+    required: false
   },
   // receiptNumber: {
   //   type: Number,

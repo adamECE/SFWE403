@@ -19,6 +19,13 @@ router.post(
   isAccountActive,
   purchaseController.processPurchase
 );
+router.post(
+  '/pay',
+  protect,
+  isStaff,
+  isAccountActive,
+  purchaseController.processPayment
+);
 
 // route to add to activity log
 router.get(
