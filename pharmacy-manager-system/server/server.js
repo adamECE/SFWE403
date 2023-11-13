@@ -23,7 +23,9 @@ const allowedHeaders = [
   'Content-Type',
   'Accept',
   'Accept-Language',
-  'Content-Language', // Add other required headers here
+  'Content-Language',
+  'Access-Control-Allow-Private-Network'
+  // Add other required headers here
 ];
 
 
