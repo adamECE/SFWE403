@@ -28,7 +28,7 @@ const allowedHeaders = [
   // Add other required headers here
 ];
 
-app.use(cors());
+// app.use(cors());
 
 // app.use(
 //     cors({
