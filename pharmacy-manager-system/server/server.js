@@ -41,7 +41,7 @@ app.use(
         credentials: true,
     })
 );
-*/
+
 
 //allows connections from any origins
 app.use(
