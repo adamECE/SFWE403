@@ -82,9 +82,9 @@ export default function OrderPayment() {
               cardNum: formData.cardNum,
               secCode: formData.secCode,
               expDate: formData.expDate,
-              zipCode: formData.zipCode,
-              customerSignature: url 
+              zipCode: formData.zipCode
             },
+            customerSignature: url 
           }),
         }
       );

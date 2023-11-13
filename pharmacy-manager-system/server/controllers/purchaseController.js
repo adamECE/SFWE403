@@ -133,7 +133,7 @@ exports.getPurchase = asyncHandler(async(req, res, next) => {
 });
 exports.processPayment = asyncHandler(async(req, res, next) => {
     try {
-        const { paymentMethod, purchaseID, cardInfo } = req.body;
+        const { paymentMethod, purchaseID, cardInfo, customerSignature} = req.body;
         console.log(cardInfo);
         if (!paymentMethod | !purchaseID) {
             res.status(400).json({ error: "Please add all Fields" });
@@ -158,6 +158,7 @@ exports.processPayment = asyncHandler(async(req, res, next) => {
         } else {
             purchaseData.status = "paid";
             purchaseData.card = cardInfo;
+            purchaseData.customerSignature = customerSignature; 
             purchaseData.timestamp = new Date();
         }
         const pchID = await purchaseData.save();
