@@ -29,20 +29,20 @@ const allowedHeaders = [
 ];
 
 
-app.use(
-    cors({
-        origin: function(origin, callback) {
-            if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-                callback(null, true);
-            } else {
-                callback(new Error('Not allowed by CORS'));
-            }
-        },
-        methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE'],
-        allowedHeaders: allowedHeaders,
-        credentials: true,
-    })
-);
+// app.use(
+//     cors({
+//         origin: function(origin, callback) {
+//             if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+//                 callback(null, true);
+//             } else {
+//                 callback(new Error('Not allowed by CORS'));
+//             }
+//         },
+//         methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE'],
+//         allowedHeaders: allowedHeaders,
+//         credentials: true,
+//     })
+// );
 
 
 // allows connections from any origins
