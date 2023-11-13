@@ -48,6 +48,9 @@ export default function PharmacistDashboard() {
         >
           Input Prescription Info{' '}
         </Link>{' '}
+        <Link className="user-button" href="./pharmacistDashboard/checkout">
+          Checkout{' '}
+        </Link>{' '}
       </div>{' '}
     </div>
   );

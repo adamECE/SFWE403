@@ -19,11 +19,14 @@ export default function ManagerDashboard() {
     left: '10%',
   };
   useEffect(() => {
-    if (localStorage.getItem('role') != 'pharmacy manager' && localStorage.getItem("isACCountActive") == "true") {
+    if (
+      localStorage.getItem('role') != 'pharmacy manager' &&
+      localStorage.getItem('isACCountActive') == 'true'
+    ) {
       router.push('/pages/');
+    } else if (localStorage.getItem('isACCountActive') == null) {
+      router.push('/');
     }
-    else if (localStorage.getItem("isACCountActive") == null)
-      {router.push('/');}
   });
   return (
     <div>
@@ -40,18 +43,16 @@ export default function ManagerDashboard() {
         >
           Input Prescription Info{' '}
         </Link>{' '}
-        <Link
-          className="user-button"
-          href="./managerDashboard/notifications"
-        >
+        <Link className="user-button" href="./managerDashboard/notifications">
           Notifications{' '}
         </Link>{' '}
-         <Link
-          className="user-button"
-          href="./managerDashboard/logs"
-        >
+        <Link className="user-button" href="./managerDashboard/logs">
           Transactions Logs
         </Link>
+        <Link className="user-button" href="./managerDashboard/checkout">
+          Checkout{' '}
+        </Link>{' '}
+        {''}
       </div>{' '}
     </div>
   );
