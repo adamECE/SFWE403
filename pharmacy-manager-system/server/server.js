@@ -27,7 +27,7 @@ const allowedHeaders = [
 ];
 
 //allows connections from whitelisted origins
-/* app.use(
+app.use(
   cors({
     origin: function (origin, callback) {
       if (!origin || allowedOrigins.indexOf(origin) !== -1) {
@@ -41,7 +41,7 @@ const allowedHeaders = [
     credentials: true,
   })
 );
-*/
+
 
 //allows connections from any origins
 app.use(
