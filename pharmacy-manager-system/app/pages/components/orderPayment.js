@@ -2,12 +2,18 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Swal from "sweetalert2";
+import SignatureBox from "./SignatureBox";
 export default function OrderPayment() {
   const [role, setRole] = useState("");
   const [paid, setPaid] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState(""); // Default to cash
   const [recieptData, setRecieptData] = useState(); // Default to cash
   const [foundData, setFoundData] = useState(false); // Default to cash
+
+  //For Adding Signature 
+  const [sign, setSign]         = useState();
+  const [url, setUrl]           = useState(); // stores signature 
+  const [sigSaved, setSigSaved] = useState(false); 
 
   const blockStyle = "m-5  p-5 flex flex-col justify-center items-center";
   const centerStyle = "text-center text-white";
@@ -33,7 +39,7 @@ export default function OrderPayment() {
     state: "",
     zipCode: "",
     role: "",
-    amount: "",
+    amount: ""
   };
   const [formData, setFormData] = useState(initialState);
 
@@ -41,6 +47,16 @@ export default function OrderPayment() {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
+
+      if (!sigSaved) {
+        Swal.fire({
+          title: 'Error',
+          text: 'Please enter a signature',
+          icon: 'error',
+          confirmButtonTest: 'Return to payment'
+        })
+        return
+      }
 
       // Make a POST request to your login endpoint
       const response = await fetch(
@@ -63,6 +79,7 @@ export default function OrderPayment() {
               secCode: formData.secCode,
               expDate: formData.expDate,
               zipCode: formData.zipCode,
+              signature: url 
             },
           }),
         }
@@ -310,6 +327,13 @@ export default function OrderPayment() {
                 />
               </div>{" "}
             </div>{" "}
+            <SignatureBox 
+              sign={sign} 
+              setSign={setSign}
+              setUrl={setUrl}
+              setSigSaved={setSigSaved}
+              paid={paid}
+            />
             {paid ? (
               <button className={submitButtonStyle} type="button">
                 Print Receipt{" "}
