@@ -57,8 +57,9 @@ export default function OrderPayment() {
         })
         return
       } else {
-        // just to show it works
-        console.log(sign.getTrimmedCanvas().toDataURL('image/png')); 
+        // Uncomment this if you want to see the output on submit in the console
+        // Otherwise u can see the body has the signature in the terminal
+        //console.log(sign.getTrimmedCanvas().toDataURL('image/png')); 
       }
 
       // Make a POST request to your login endpoint
@@ -82,7 +83,7 @@ export default function OrderPayment() {
               secCode: formData.secCode,
               expDate: formData.expDate,
               zipCode: formData.zipCode,
-              signature: url 
+              customerSignature: url 
             },
           }),
         }
