@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 8080;
 
 //db connection
 connectDB();
-const allowedOrigins = ['http://localhost:3000', 'http://ec2-18-217-120-69.us-east-2.compute.amazonaws.com:3000']; // Add your frontend URL here
+const allowedOrigins = ['http://localhost:3000', 'http://ec2-18-217-120-69.us-east-2.compute.amazonaws.com:3000', 'http://ec2-18-217-120-69.us-east-2.compute.amazonaws.com:3030']; // Add your frontend URL here
 
 const allowedHeaders = [
   'Authorization',
@@ -44,14 +44,14 @@ app.use(
 
 
 // allows connections from any origins
-// app.use(
-//   cors({
-//     origin: '*',
-//     methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE'],
-//     allowedHeaders: allowedHeaders,
-//     credentials: true,
-//   })
-// );
+app.use(
+  cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE'],
+    allowedHeaders: allowedHeaders,
+    credentials: true,
+  })
+);
 
 app.use(morgan('dev')); // Enable HTTP request logging with the 'dev' format
 app.use(express.json()); // Parse incoming JSON data
