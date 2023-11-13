@@ -43,15 +43,15 @@ const allowedHeaders = [
 // );
 
 
-//allows connections from any origins
-// app.use(
-//   cors({
-//     origin: '*',
-//     methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE'],
-//     allowedHeaders: allowedHeaders,
-//     credentials: true,
-//   })
-// );
+// allows connections from any origins
+app.use(
+  cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE'],
+    allowedHeaders: allowedHeaders,
+    credentials: true,
+  })
+);
 
 app.use(morgan('dev')); // Enable HTTP request logging with the 'dev' format
 app.use(express.json()); // Parse incoming JSON data
