@@ -56,6 +56,9 @@ export default function OrderPayment() {
           confirmButtonTest: 'Return to payment'
         })
         return
+      } else {
+        // just to show it works
+        console.log(sign.getTrimmedCanvas().toDataURL('image/png')); 
       }
 
       // Make a POST request to your login endpoint
