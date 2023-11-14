@@ -2,12 +2,18 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Swal from "sweetalert2";
+import SignatureBox from "./SignatureBox";
 export default function OrderPayment() {
-  const [role, setRole] = useState("");
+  const [hasPrecription, setHasPrecription] = useState("");
   const [paid, setPaid] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState(""); // Default to cash
   const [recieptData, setRecieptData] = useState(); // Default to cash
   const [foundData, setFoundData] = useState(false); // Default to cash
+
+  //For Adding Signature
+  const [sign, setSign] = useState();
+  const [url, setUrl] = useState(); // stores signature
+  const [sigSaved, setSigSaved] = useState(false);
 
   const blockStyle = "m-5  p-5 flex flex-col justify-center items-center";
   const centerStyle = "text-center text-white";
@@ -42,6 +48,20 @@ export default function OrderPayment() {
     try {
       const token = localStorage.getItem("token");
 
+      if (hasPrecription && !sigSaved) {
+        Swal.fire({
+          title: "Error",
+          text: "Please enter a signature",
+          icon: "error",
+          confirmButtonTest: "Return to payment",
+        });
+        return;
+      } else {
+        // Uncomment this if you want to see the output on submit in the console
+        // Otherwise u can see the body has the signature in the terminal
+        //console.log(sign.getTrimmedCanvas().toDataURL('image/png'));
+      }
+
       // Make a POST request to your login endpoint
       const response = await fetch(
         "http://127.0.0.1:3030/pharmacy-0x2/api/purchase/pay",
@@ -64,6 +84,7 @@ export default function OrderPayment() {
               expDate: formData.expDate,
               zipCode: formData.zipCode,
             },
+            customerSignature: url,
           }),
         }
       );
@@ -74,6 +95,7 @@ export default function OrderPayment() {
         //alert(JSON.parse(responseText).message);
         Swal.fire(`${JSON.parse(responseText).message}`, "", "success");
         setPaid(true);
+        setHasPrecription(false);
       } else {
         if (response.status === 403) {
           setPaid(true);
@@ -112,6 +134,8 @@ export default function OrderPayment() {
       })
       .then((data) => {
         setRecieptData(data.purchaseData);
+        if (data.purchaseData.PrescriptionItems.length > 0)
+          setHasPrecription(true);
         setFoundData(true);
       })
       .catch((error) => {
@@ -186,23 +210,40 @@ export default function OrderPayment() {
             onSubmit={handleSubmit}
             className="max-w-[800px] w-full mx-auto bg-transparent p-4 rounded border border-blue-500"
           >
-            <div className="w-full  md:flex flex-1">
+            <div className="w-full flex-row">
               <div className="w-full mx-2">
                 <label className={labelSyle}> Cash Amount </label>{" "}
                 <input
-                  type="number"
+                  type="text"
                   placeholder="$0.00"
                   className={inputStyle}
                   id="amount"
                   name="amount"
                   step="0.1"
-                  value={foundData ? recieptData.totalAmount : "0.00"}
-                  min={foundData ? recieptData.totalAmount : "0.00"}
+                  value={
+                    foundData
+                      ? new Intl.NumberFormat("en-US", {
+                          style: "currency",
+                          currency: "USD",
+                        }).format(recieptData.totalAmount)
+                      : "0.00"
+                  }
                   onChange={handleChange}
                   required={!paid}
                   disabled={paid}
                 />
               </div>{" "}
+              <div className="w-full mx-2">
+                {hasPrecription && (
+                  <SignatureBox
+                    sign={sign}
+                    setSign={setSign}
+                    setUrl={setUrl}
+                    setSigSaved={setSigSaved}
+                    paid={paid}
+                  />
+                )}
+              </div>
             </div>{" "}
             {paid ? (
               <button className={submitButtonStyle} type="button">
@@ -310,6 +351,15 @@ export default function OrderPayment() {
                 />
               </div>{" "}
             </div>{" "}
+            {hasPrecription && (
+              <SignatureBox
+                sign={sign}
+                setSign={setSign}
+                setUrl={setUrl}
+                setSigSaved={setSigSaved}
+                paid={paid}
+              />
+            )}
             {paid ? (
               <button className={submitButtonStyle} type="button">
                 Print Receipt{" "}

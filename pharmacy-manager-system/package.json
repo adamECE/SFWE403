@@ -36,6 +36,7 @@
     "react-data-table-component": "^7.5.4",
     "react-dom": "18.2.0",
     "react-icons": "^4.11.0",
+    "react-signature-canvas": "^1.0.6",
     "request": "^2.88.2",
     "styled-components": "^6.1.0",
     "sweetalert2": "^11.7.32",
