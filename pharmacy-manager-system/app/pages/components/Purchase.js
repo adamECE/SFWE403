@@ -230,6 +230,14 @@ export default function Prescription() {
   const blockStyle = "m-5 p-5 flex flex-col justify-center items-center ";
   return (
     <div className={blockStyle}>
+      <div className="w-full mx-2 text-white flex">
+        <button
+          className="right-0 m-2 top-5 px-4 py-2  bgCor text-white rounded absolute"
+          onClick={resetCart}
+        >
+          <LuListRestart size="1.5rem" />
+        </button>{" "}
+      </div>
       <h2> Checkout </h2> <hr className="mb-2" />
       <hr />
       <div className="w-full  md:flex flex-1">
