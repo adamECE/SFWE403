@@ -13,6 +13,8 @@ import Swal from "sweetalert2";
 import PopupOverTheCounterItemWindow from "./PopupOverTheCounterWindow";
 import DataTable from "react-data-table-component";
 import { useRouter, useSearchParams } from "next/navigation";
+import Modal from 'react-modal';
+
 
 export default function Prescription() {
   const [selectedPatient, setPatient] = useState([]);
@@ -228,8 +230,68 @@ export default function Prescription() {
   }
   const thStyle = " px-6 py-4";
   const blockStyle = "m-5 p-5 flex flex-col justify-center items-center ";
+
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
+  const customStyles = {
+    content: {
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+    },
+  };
+  const labelSyle = "block text-black text-sm font-bold mb-2";
+
+  const emailReceipt = () => {
+    // TODO
+  };
+
+
+
   return (
     <div className={blockStyle}>
+      <div>
+      <button onClick={openModal} className={submitButtonStyle}>Show Receipt</button>
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        contentLabel="Example Modal"
+        style={customStyles}
+      >
+        <h2 style={{color:"black", margin:"0px 100px 5px"}}>Receipt</h2>
+        <p style={{borderBottom:"solid"}}>Customer Details:</p>
+        <p>Name:{}</p>
+        <p>Address:{}</p>
+        <p>Email:{}</p>
+        <p>Phone:{}</p>
+        <p style={{borderBottom:"solid"}}>Description:</p>
+        <div className="border-2 px-4 py-2 ">
+          {`Description Goes Here`}
+        </div>
+        <p>Price:{}</p>
+        <p>Quantity:{}</p>
+        <p>Total Paid:{}</p>
+        <div style={{margin:"0",position:"absolute",left:"50%",msTransform:"translateX(-50%)",transform:"translateX(-50%)"}}>
+        <button style={{color:"black", margin:"auto"}} className={submitButtonStyle} onClick={emailReceipt}>Email Receipt</button>
+        </div>
+        <br></br>
+        <br></br>
+        <div style={{margin:"0",position:"absolute",left:"50%",msTransform:"translateX(-50%)",transform:"translateX(-50%)"}}>
+        <button style={{color:"black"}} className={submitButtonStyle} onClick={closeModal}>Close</button>
+        </div>
+        <br></br>
+      </Modal>
+    </div>
       <div className="w-full mx-2 text-white flex">
         <button
           className="right-0 m-2 top-5 px-4 py-2  bgCor text-white rounded absolute"
