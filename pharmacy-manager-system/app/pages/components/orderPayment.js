@@ -158,6 +158,16 @@ export default function OrderPayment() {
   };
   return (
     <div>
+      <div>
+      <button onClick={handleOpen}>Open Popup</button>
+      <Modal
+        isOpen={open}
+        onRequestClose={handleClose}
+        contentLabel="My Popup"
+      >
+        <div>This is my popup!</div>
+      </Modal>
+    </div>
       <div className="mx-3 my-3">
         <h3 className="text-white py-3">
           {" "}
