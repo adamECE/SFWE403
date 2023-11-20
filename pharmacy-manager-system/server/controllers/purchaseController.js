@@ -55,6 +55,8 @@ exports.processPurchase = asyncHandler(async (req, res, next) => {
                 OverTheCounterItems[a].quantity;
               inventoryItems[b].quantityInStock -=
                 OverTheCounterItems[a].quantity;
+              inventoryItems[b].batches[c].updated_at = new Date();
+              inventoryItems[b].updated_at = new Date();
               await inventoryItems[b].save();
             }
           }

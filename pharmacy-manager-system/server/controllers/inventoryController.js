@@ -299,7 +299,6 @@ exports.getInventoryLogs = asyncHandler(async (req, res) => {
       model: "Inventory",
       select: "_id name description manufacturer price location",
     });
-    console.log(inventoryLogs);
 
     // Format the date and time for each log entry
     const formattedLogs = inventoryLogs.map((log) => ({
@@ -329,6 +328,134 @@ exports.getInventoryLogs = asyncHandler(async (req, res) => {
     }));
 
     res.json(formattedLogs);
+  } catch {
+    console.error(error);
+    res.status(500).json({ error: "OOOps something went wrong!" });
+  }
+});
+
+exports.getInventoryReport = asyncHandler(async (req, res) => {
+  try {
+    let { from, to } = req.body;
+    from = new Date(from);
+    to = new Date(to);
+    to.setDate(to.getDate() + 1);
+
+    const numberOfItemsRemoved = await InventoryUpdateLog.find({
+      timestamp: { $gte: from, $lt: to },
+      actionType: "removed",
+    })
+      .count()
+      .exec();
+
+    const numberOfItemsAdded = await InventoryUpdateLog.find({
+      timestamp: { $gte: from, $lt: to },
+      actionType: "added",
+    })
+      .count()
+      .exec();
+
+    const inventoryItems = await Inventory.find({
+      updated_at: { $gte: from, $lt: to },
+    }).select("-batches");
+
+    const getOverTheCounterItems = inventoryItems
+      .filter((item) => {
+        return (item.category = "over-the-counter");
+      })
+      .map((item) => ({
+        name: item.name,
+        decription: item.description,
+        price: item.price,
+      }));
+    const getprescriptionItems = inventoryItems
+      .filter((item) => {
+        return (item.category = "prescription");
+      })
+      .map((item) => ({
+        name: item.name,
+        decription: item.description,
+        price: item.price,
+      }));
+
+    const lowInStock = inventoryItems
+      .filter((item) => {
+        return item.quantityInStock <= 120;
+      })
+      .map((item) => ({
+        name: item.name,
+        decription: item.description,
+        category: item.category,
+        quantity: item.quantityInStock,
+      }));
+
+    const inventoryLogs = await InventoryUpdateLog.find({
+      timestamp: { $gte: from, $lt: to },
+    }).populate({
+      path: "medicationID",
+      model: "Inventory",
+      select: "_id name description manufacturer price location",
+    });
+
+    const itemsAdded = inventoryLogs
+      .filter((log) => {
+        return log.actionType == "added";
+      })
+      .map((log) => ({
+        medicationInfo: {
+          id: log.medicationID._id,
+          name: log.medicationID.name,
+          description: log.medicationID.description,
+          manufacturer: log.medicationID.manufacturer,
+        },
+        batch: log.batch,
+        itemType: log.itemType,
+        date: new Date(log.timestamp).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        }),
+        time: new Date(log.timestamp).toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        }),
+      }));
+
+    const itemsRemoved = inventoryLogs
+      .filter((log) => {
+        return log.actionType == "removed";
+      })
+      .map((log) => ({
+        medicationInfo: {
+          id: log.medicationID._id,
+          name: log.medicationID.name,
+          description: log.medicationID.description,
+          manufacturer: log.medicationID.manufacturer,
+        },
+        batch: log.batch,
+        itemType: log.itemType,
+        date: new Date(log.timestamp).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        }),
+        time: new Date(log.timestamp).toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        }),
+      }));
+
+    res.status(200).json({
+      totalExpiredBatches: numberOfItemsRemoved,
+      totalAddedBatches: numberOfItemsAdded,
+      itemsLowInStock: lowInStock,
+      overTheCounterItems: getOverTheCounterItems,
+      prescriptionItems: getprescriptionItems,
+      itemsAdded: itemsAdded,
+      itemsRemoved: itemsRemoved,
+    });
   } catch {
     console.error(error);
     res.status(500).json({ error: "OOOps something went wrong!" });
