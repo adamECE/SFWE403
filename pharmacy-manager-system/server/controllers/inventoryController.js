@@ -337,6 +337,11 @@ exports.getInventoryLogs = asyncHandler(async (req, res) => {
 exports.getInventoryReport = asyncHandler(async (req, res) => {
   try {
     let { from, to } = req.body;
+
+    if (!from || !to) {
+      res.status(400).json({ error: "Please add all Fields" });
+      return;
+    }
     from = new Date(from);
     to = new Date(to);
     to.setDate(to.getDate() + 1);
