@@ -96,6 +96,14 @@ router.get(
   isManager,
   inventoryController.getInventoryLogs
 );
+
+router.post(
+  "/report",
+  protect,
+  isAccountActive,
+  isManager,
+  inventoryController.getInventoryReport
+);
 router.post(
   "/get-item",
   protect,
