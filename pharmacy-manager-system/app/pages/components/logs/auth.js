@@ -3,7 +3,6 @@ import DataTable from "react-data-table-component";
 import LinearProgress from "@mui/material/LinearProgress";
 import Box from "@mui/material/Box";
 
-
 export default function AuthLogs({ authLogstList, setAuthLogstList }) {
   const [pat, setPat] = useState(false);
   const [isAutho, setIsAutho] = useState(false);
@@ -26,7 +25,7 @@ export default function AuthLogs({ authLogstList, setAuthLogstList }) {
       selector: (row) => row.staffName,
       sortable: true,
     },
-     {
+    {
       name: "Action Performed",
       selector: (row) => row.actionType,
       sortable: true,
@@ -39,7 +38,7 @@ export default function AuthLogs({ authLogstList, setAuthLogstList }) {
     },
     {
       name: "Time",
-      selector: (row) =>  row.time,
+      selector: (row) => row.time,
       sortable: true,
     },
   ];
@@ -61,7 +60,6 @@ export default function AuthLogs({ authLogstList, setAuthLogstList }) {
       })
       .then((data) => {
         setAuthLogstList(data);
-        console.log(pat);
         setPat(true);
         setPending(false);
       })
@@ -80,8 +78,8 @@ export default function AuthLogs({ authLogstList, setAuthLogstList }) {
           pagination
           progressPending={pending}
           progressComponent={<CustomLoader />}
-        ></DataTable>
-      </div>
+        ></DataTable>{" "}
+      </div>{" "}
     </>
   );
 }

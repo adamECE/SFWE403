@@ -7,6 +7,7 @@ dotenv.config({ path: "../config/.env" });
 const Inventory = require("../models/inventory");
 const Purchase = require("../models/purchase");
 const { jar } = require("request");
+const { PurchaseLog } = require("../models/activityLog");
 
 exports.processPurchase = asyncHandler(async (req, res, next) => {
   try {
@@ -14,12 +15,16 @@ exports.processPurchase = asyncHandler(async (req, res, next) => {
     const { soldTo, PrescriptionItems, OverTheCounterItems, totalAmount } =
       req.body;
     //check if all the required inputs are given
-    console.log(req.body);
-    // if (soldTo || PrescriptionItems || OverTheCounterItems || totalAmount) {
-    //   res.status(400).json({error: 'Please add all Fields'});
-    //   console.log({error: 'Please add all Fields'});
-    //   return;
-    // }
+    // console.log(req.body);
+    if (
+      !soldTo ||
+      (!PrescriptionItems && !OverTheCounterItems) ||
+      !totalAmount
+    ) {
+      res.status(400).json({ error: "Please add all Fields" });
+      console.log({ error: "Please add all Fields" });
+      return;
+    }
 
     const userData = await User.findOne({ email: soldTo }); //attempt to find user
     if (!userData) {
@@ -100,10 +105,14 @@ exports.processPurchase = asyncHandler(async (req, res, next) => {
     });
 
     const pchID = await newPurchase.save();
+    req.purchaseLogger = {
+      staffEmail: req.user.email,
+      clientEmail: soldTo,
+      receiptID: pchID._id,
+      totalAmount: totalAmount,
+    };
 
-    //check if prescription still valid for fill
-    res.status(200).json({ message: pchID._id });
-    return;
+    next();
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "OOOps something went wrong!" });
@@ -177,6 +186,17 @@ exports.processPayment = asyncHandler(async (req, res, next) => {
     res.status(200).json({ message: "Payment Completed Successfully!" });
     return;
   } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "OOOps something went wrong!" });
+  }
+});
+
+exports.getPurchaseLogs = asyncHandler(async (req, res) => {
+  try {
+    const PurchaseLogs = await PurchaseLog.find();
+
+    res.status(200).json(PurchaseLogs);
+  } catch {
     console.error(error);
     res.status(500).json({ error: "OOOps something went wrong!" });
   }

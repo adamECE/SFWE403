@@ -17,7 +17,7 @@ export default function TabsDefault() {
   const [activeTab, setActiveTab] = useState("auth");
   const [patientList, setPatientList] = useState();
   const [prescriptioLogList, setPrescriptioLogList] = useState();
-    const [purchaseLogList, setPurchaseLogList] = useState();
+  const [purchaseLogList, setPurchaseLogList] = useState();
   const [authLogstList, setAuthLogstList] = useState();
   const handleTabClick = (tabId) => {
     setActiveTab(tabId);
@@ -113,16 +113,14 @@ export default function TabsDefault() {
           aria-labelledby="auth-tab"
           data-te-tab-active
         >
-           < AuthLogs 
+          <AuthLogs
             authLogstList={authLogstList}
             setAuthLogstList={setAuthLogstList}
           />
         </div>
         <div
           className={`${
-            activeTab === "prescription"
-              ? "block"
-              : "hide "
+            activeTab === "prescription" ? "block" : "hide "
           } transition-opacity duration-150 ease-linear data-[te-tab-active]:block`}
           id="prescription"
           role="tabpanel"
@@ -135,9 +133,7 @@ export default function TabsDefault() {
         </div>
         <div
           className={`${
-            activeTab === "inventory"
-              ? "block"
-              : "hide "
+            activeTab === "inventory" ? "block" : "hide "
           } transition-opacity duration-150 ease-linear data-[te-tab-active]:block`}
           id="inventory"
           role="tabpanel"
@@ -150,9 +146,7 @@ export default function TabsDefault() {
         </div>
         <div
           className={`${
-            activeTab === "purchase"
-              ? "block"
-              : "hide "
+            activeTab === "purchase" ? "block" : "hide "
           } transition-opacity duration-150 ease-linear data-[te-tab-active]:block`}
           id="purchase"
           role="tabpanel"
@@ -160,9 +154,8 @@ export default function TabsDefault() {
         >
           <PurchaseLogs
             purchaseLogList={purchaseLogList}
-            setPurchaseList={setPurchaseLogList}
+            setPurchaseLogList={setPurchaseLogList}
           />
-          
         </div>
       </div>
     </>
