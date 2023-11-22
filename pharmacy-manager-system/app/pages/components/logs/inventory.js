@@ -24,7 +24,8 @@ export default function InventoryLogs({ patientList, setPatientList }) {
       selector: (row) => {
         return (
           <>
-            {row.staffName} <br /> {row.staffEmail}
+            {" "}
+            {row.staffName} <br /> {row.staffEmail}{" "}
           </>
         );
       },
@@ -52,7 +53,8 @@ export default function InventoryLogs({ patientList, setPatientList }) {
       selector: (row) => {
         return (
           <>
-            {row.date} <br /> {row.time}
+            {" "}
+            {row.date} <br /> {row.time}{" "}
           </>
         );
       },
@@ -65,38 +67,51 @@ export default function InventoryLogs({ patientList, setPatientList }) {
         <div className="w-auto my-2 flex-1 mx-3">
           <div className=" md:flex">
             <div className="w-auto mx-2 flex-1">
-              <label className={labelSyle}>Batch Information</label> <hr />
+              <label className={labelSyle}> Batch Information </label> <hr />
               <p className={inputStyle}>
-                Barcode: {data.batch.barcode}
+                Barcode: {data.batch.barcode} <br />
+                Expiration Date:{" "}
+                {new Date(data.batch.expirationDate).toLocaleDateString(
+                  "en-US",
+                  {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                  }
+                )}{" "}
                 <br />
-                Expiration Date: {new Date(data.batch.expirationDate).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-            })}
-                <br />
-                Quantity: {data.batch.quantity}
-              </p>
-            </div>
+                Quantity: {data.batch.quantity}{" "}
+              </p>{" "}
+            </div>{" "}
             <div className="w-auto mx-2 flex-1">
-              <label className={labelSyle}>Medication Details</label> <hr />
+              <label className={labelSyle}> Medication Details </label> <hr />
               <p className={inputStyle}>
-                <span  className="mx-3">Name: {data.medicationInfo.name}</span>
+                <span className="mx-3"> Name: {data.medicationInfo.name} </span>{" "}
                 <br />
-                <span  className="mx-3">Description: {data.medicationInfo.description}</span>
-               <br />
-                <span  className="mx-3">Manufactor: {data.medicationInfo.manufacturer}</span> 
-              
-                <span  className="mx-3"> Price: {data.medicationInfo.price}</span>
-              
-                <span  className="mx-3">Location: {data.medicationInfo.location}</span> 
-              </p>
-            </div>
+                <span className="mx-3">
+                  {" "}
+                  Description: {data.medicationInfo.description}{" "}
+                </span>{" "}
+                <br />
+                <span className="mx-3">
+                  {" "}
+                  Manufactor: {data.medicationInfo.manufacturer}{" "}
+                </span>
+                <span className="mx-3">
+                  {" "}
+                  Price: {data.medicationInfo.price}{" "}
+                </span>
+                <span className="mx-3">
+                  {" "}
+                  Location: {data.medicationInfo.location}{" "}
+                </span>{" "}
+              </p>{" "}
+            </div>{" "}
           </div>
 
           <hr />
-        </div>
-      </div>
+        </div>{" "}
+      </div>{" "}
       <hr /> <hr />
     </div>
   );
@@ -118,7 +133,6 @@ export default function InventoryLogs({ patientList, setPatientList }) {
       })
       .then((data) => {
         setPatientList(data);
-        console.log(pat);
         setPat(true);
         setPending(false);
       })

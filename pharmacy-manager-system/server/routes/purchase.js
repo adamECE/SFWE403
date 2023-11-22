@@ -1,39 +1,46 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const patientHistoryController = require('../controllers/patientHistoryController');
-const purchaseController = require('../controllers/purchaseController');
-const {logPrescription} = require('../middleware/log');
+const purchaseController = require("../controllers/purchaseController");
+const { logPurchase } = require("../middleware/log");
 
 const {
   protect,
   isStaff,
-  isPharmacist,
+  isManager,
   isAccountActive,
-} = require('../middleware/auth');
+} = require("../middleware/auth");
 
 // route to add to activity log
 router.post(
-  '/checkout',
+  "/checkout",
   protect,
   isStaff,
   isAccountActive,
-  purchaseController.processPurchase
+  purchaseController.processPurchase,
+  logPurchase
 );
 router.post(
-  '/pay',
+  "/pay",
   protect,
   isStaff,
   isAccountActive,
   purchaseController.processPayment
 );
 
-// route to add to activity log
 router.get(
-  '/checkout-info/:receiptID',
+  "/checkout-info/:receiptID",
   protect,
   isStaff,
   isAccountActive,
   purchaseController.getPurchase
+);
+
+router.get(
+  "/logs",
+  protect,
+  isManager,
+  isAccountActive,
+  purchaseController.getPurchaseLogs
 );
 
 module.exports = router;
