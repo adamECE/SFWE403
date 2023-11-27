@@ -67,6 +67,7 @@ app.use(cookieParser()); // Parse and manage cookies
 app.use('/pharmacy-0x2/api/', authRoutes);
 app.use('/pharmacy-0x2/api/inventory/', require('./routes/inventory'));
 app.use('/pharmacy-0x2/api/pharmacy/', require('./routes/pharmacy'));
+app.use('/pharmacy-0x2/api/reports/', require('./routes/reports'));
 app.use(
   '/pharmacy-0x2/api/patientHistory/',
   require('./routes/patientHistory')
