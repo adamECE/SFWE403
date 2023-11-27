@@ -359,39 +359,34 @@ export default function OrderPayment() {
                       <div className="w-full ">
                         {foundData && (
                           <>
-                            <table className=" font-light mx-4 my-4">
-                              <thead className=" bg-neutral-50 font-medium  dark:text-neutral-800">
-                                <tr>
-                                  <th scope="col" className={thStyle}>
-                                    <b>Item</b>
-                                  </th>
-                                  <th scope="col" className={thStyle}>
-                                    <b>Qnt</b>
-                                  </th>
-                                  <th scope="col" className={thStyle}>
-                                    <b>Price</b>
-                                  </th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {recieptData.PrescriptionItems.map((item) => (
-                                  <ReceiptRow
-                                    key={item._id}
-                                    name={item.name}
-                                    qnt={item.quantity}
-                                    price={item.price}
-                                  />
-                                ))}
-                                {recieptData.OverTheCounterItems.map((item) => (
-                                  <ReceiptRow
-                                    key={item._id}
-                                    name={item.name}
-                                    qnt={item.quantity}
-                                    price={item.price}
-                                  />
-                                ))}
-                              </tbody>
-                            </table>
+                            <div className=" flex bg-neutral-50 font-medium  dark:text-neutral-800">
+                              <div className="px-6 py-2 flex-1">
+                                <b>Item</b>
+                              </div>
+                              <div className="px-6 py-2 flex-1">
+                                <b>Qnt</b>
+                              </div>
+                              <div className="px-6 py-2 flex-1">
+                                <b>Price</b>
+                              </div>
+                            </div>
+
+                            {recieptData.PrescriptionItems.map((item) => (
+                              <ReceiptRow
+                                key={item._id}
+                                name={item.name}
+                                qnt={item.quantity}
+                                price={item.price}
+                              />
+                            ))}
+                            {recieptData.OverTheCounterItems.map((item) => (
+                              <ReceiptRow
+                                key={item._id}
+                                name={item.name}
+                                qnt={item.quantity}
+                                price={item.price}
+                              />
+                            ))}
                           </>
                         )}
                       </div>
