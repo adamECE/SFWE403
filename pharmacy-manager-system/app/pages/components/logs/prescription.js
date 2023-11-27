@@ -85,7 +85,6 @@ export default function PrescriptionLogs({
       })
       .then((data) => {
         setPrescriptioLogList(data);
-        console.log(pat);
         setPat(true);
         setPending(false);
       })
