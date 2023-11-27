@@ -261,8 +261,8 @@ export default function Prescription() {
                 <noscript>
                   <input type="submit" />
                 </noscript>{" "}
-                <div class="relative mb-4 flex   flex-wrap my-5 items-stretch top-6">
-                  <span class="flex items-center whitespace-nowrap rounded-l  bgCor border border-r-0 border-solid border-neutral-300 px-3  text-center text-base font-normal leading-[1.6] text-white dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200">
+                <div className="relative mb-4 flex   flex-wrap my-5 items-stretch top-6">
+                  <span className="flex items-center whitespace-nowrap rounded-l  bgCor border border-r-0 border-solid border-neutral-300 px-3  text-center text-base font-normal leading-[1.6] text-white dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200">
                     User Email
                   </span>
                   <input
@@ -282,8 +282,8 @@ export default function Prescription() {
               </form>{" "}
             </div>
             <div className="w-full mx-0 flex-1">
-              <div class="relative mb-4 flex   flex-wrap my-5 items-stretch top-6">
-                <span class="flex items-center whitespace-nowrap rounded-l  bgCor border border-r-0 border-solid border-neutral-300 px-3  text-center text-base font-normal leading-[1.6] text-white dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200">
+              <div className="relative mb-4 flex   flex-wrap my-5 items-stretch top-6">
+                <span className="flex items-center whitespace-nowrap rounded-l  bgCor border border-r-0 border-solid border-neutral-300 px-3  text-center text-base font-normal leading-[1.6] text-white dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200">
                   Total
                 </span>
                 <input
