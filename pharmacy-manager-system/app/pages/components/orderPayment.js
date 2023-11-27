@@ -177,7 +177,6 @@ export default function OrderPayment() {
   }, []);
 
   async function getPatient(email) {
-    alert(email);
     try {
       const token = localStorage.getItem("token");
 
