@@ -228,6 +228,9 @@ export default function Prescription() {
   }
   const thStyle = " px-6 py-4";
   const blockStyle = "m-5 p-5 flex flex-col justify-center items-center ";
+
+  const labelSyle = "block text-black text-sm font-bold mb-2";
+
   return (
     <div className={blockStyle}>
       <div className="w-full mx-2 text-white flex">
