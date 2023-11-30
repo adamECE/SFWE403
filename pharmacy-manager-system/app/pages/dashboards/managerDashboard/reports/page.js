@@ -1,18 +1,23 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import DatePicker from "react-datepicker"
 import {Bar} from 'react-chartjs-2';
 import { CategoryScale, Chart, LinearScale, BarElement } from "chart.js";
 
 import "react-datepicker/dist/react-datepicker.css";
+import "chartjs-plugin-datalabels";
 
 export default function Reports() {
-
+    
     const [transactionData,  setTransactionData]  = useState();
     const [overCounterData,  setOverCounterData]  = useState();
     const [prescriptionData, setPrescriptionData] = useState();
-    const [overCounterObj,   setOverCounterObj]   = useState();
-    const [prescriptionObj,  setPrescriptionObj]  = useState();
+    const [overCounterObj,   setOverCounterObj]   = useState(); // helpful if we want to add functionality 
+    const [prescriptionObj,  setPrescriptionObj]  = useState(); // helpful if we want to add functionality
+    const [popupStyle,     setPopupStyle] = useState({});
+    const [dataPopupValue, setDataPopupValue] = useState();
+    const [popupInit, setPopupInit] = useState(false); 
+    const popupRef = useRef();
     const [avgSales, setAvgSales] = useState(0); 
     const [state, setState] = useState({
       labels: [],
@@ -23,10 +28,21 @@ export default function Reports() {
     Chart.register(LinearScale);
     Chart.register(BarElement);
 
+    const quarterMonths = [1, 3, 6, 9, 12];
+    const quarterSets = [[1,3], [3,6], [6,9], [9,12]];
     const currentDate = new Date(); 
-    currentDate.setMonth(currentDate.getMonth()-3);
+    const otherDate = new Date(); 
+    let monthIndex = 0; 
+    for (let i = 0; i < quarterSets.length; i++) {
+      if (currentDate.getMonth() > quarterSets[i][0] && 
+          currentDate.getMonth() < quarterSets[i][1]) {
+        monthIndex = i; 
+      }
+    }
+    currentDate.setMonth(quarterSets[monthIndex][0]);
     const [startDate1, setStartDate1] = useState(currentDate);
-    const [startDate2, setStartDate2] = useState(new Date());
+    otherDate.setMonth(quarterSets[monthIndex][1]-1);
+    const [startDate2, setStartDate2] = useState(otherDate);
 
     // Needed in useEffect
     function dateRange(startDate, endDate) {
@@ -103,7 +119,6 @@ export default function Reports() {
             const transactionDateStr = String(transactionDate.getMonth()) + '/' 
                                      + String(transactionDate.getFullYear());
             if ( transactionDate >= startDate1 && transactionDate <= startDate2) {
-                console.log(transactionDateStr)
                 overCounterGraphDataArray[monthYearDict[transactionDateStr]]  += overCounterDataArray[i];
                 prescriptionGraphDataArray[monthYearDict[transactionDateStr]] += prescriptionDataArray[i];
                 totalSalesForAverage[monthYearDict[transactionDateStr]] += overCounterDataArray[i] + prescriptionDataArray[i]; 
@@ -132,7 +147,8 @@ export default function Reports() {
               }
             ]
           })
-          console.log(monthYearDict)       
+          // For debugging 
+          // console.log(monthYearDict)       
         })
         .catch((error) => {
           console.error("Fetch error:", error);
@@ -147,7 +163,6 @@ export default function Reports() {
         const start = !dateNum ? newDate : startDate1; 
         const end   = dateNum  ? newDate : startDate2; 
         const dateRangeArr = dateRange(start.toLocaleDateString(), end.toLocaleDateString()); 
-        console.log(dateRangeArr)
         for(var i = 0; i < dateRangeArr.length; i++){
           monthYearDict[dateRangeArr[i]] = i;
           overCounterGraphDataArray.push(0);
@@ -188,9 +203,12 @@ export default function Reports() {
           ]
         })
       }
-
+      
   return (
     <div>
+        {popupInit && (<div className="absolute bg-white border border-black bg-sky-500 rounded p-1 text-black" style={popupStyle}>
+          ${dataPopupValue}
+        </div>)}{" "}
         {/* Select Date */}
         <div className="grid place-items-center">
             <div className="center m-2 p-2 text-white">
@@ -203,6 +221,7 @@ export default function Reports() {
               <div className="m-2 p-2">
                   <DatePicker selected={startDate1} 
                               onChange={(date) => {
+                                setPopupInit(false);
                                 setStartDate1(date);
                                 updateGraph(date, 0);
                                 }} />
@@ -213,6 +232,7 @@ export default function Reports() {
               <div className="m-2 p-2">
                   <DatePicker selected={startDate2} 
                               onChange={(date) => {
+                                setPopupInit(false);
                                 setStartDate2(date);
                                 updateGraph(date, 1);
                                 }} />
@@ -224,7 +244,10 @@ export default function Reports() {
           <div className="center m-2 p-2 text-white">
               <b>Average Sales in Timeframe: {avgSales}</b>
           </div>
-          <div className="bg-white flex border" 
+          <div className="center m-2 p-2 text-white">
+              <b>Click on an element to see it's value</b>
+          </div>
+          <div className="bg-white flex border" ref={popupRef}
           style={{height:'500px', width:'1000px', right:'20px', border: 'solid-2px-black'}}
           >
               <Bar 
@@ -236,9 +259,28 @@ export default function Reports() {
                       fontSize:20
                     },
                     legend:{
-                      display:true,
-                      position:'top'
+                      display:false
                     },
+                    onClick: (e, elements) => {
+                      // console.log(elements)
+                      var x = e.x;
+                      var y = e.y;
+                      let tempStyles = {
+                        position: 'absolute', 
+                        left:`${x+popupRef.current.offsetLeft-25}px`, 
+                        top:`${y+popupRef.current.offsetTop-40}px`,
+                        
+                      };
+                      console.log(e)
+                      // This if statement is mainly to avoid some weird errors 
+                      if (elements.length > 0) {
+                        if (elements[0].hasOwnProperty("element")) {
+                          setPopupStyle(tempStyles); 
+                          setDataPopupValue(Math.round(elements[0].element.$context.raw * 100) / 100);
+                          setPopupInit(true); 
+                        }
+                      }
+                    }
                   }}
               />
           </div>
@@ -257,7 +299,6 @@ export default function Reports() {
             <div className="center m-2 p-2 text-white border" style={{backgroundColor:'#ff721e'}}></div>
           </div>
         </div>
-
         </div>
         
   );

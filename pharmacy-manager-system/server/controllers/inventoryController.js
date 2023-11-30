@@ -389,9 +389,10 @@ exports.getInventoryReport = asyncHandler(async (req, res) => {
       })
       .map((item) => ({
         name: item.name,
-        decription: item.description,
+        description: item.description,
         category: item.category,
         quantity: item.quantityInStock,
+        lastUpdate: item.updated_at,
       }));
 
     const inventoryLogs = await InventoryUpdateLog.find({
