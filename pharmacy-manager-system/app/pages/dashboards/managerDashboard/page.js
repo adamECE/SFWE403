@@ -52,6 +52,9 @@ export default function ManagerDashboard() {
         <Link className="user-button" href="./managerDashboard/checkout">
           Checkout{' '}
         </Link>{' '}
+        <Link className="user-button" href="./managerDashboard/financialReports">
+          Financial Reports{' '}
+        </Link>{' '}
         <Link className="user-button" href="./managerDashboard/inventoryReports">
           Inventory Reports{' '}
         </Link>{' '}
