@@ -40,8 +40,10 @@ export default function Reports() {
       }
     }
     currentDate.setMonth(quarterSets[monthIndex][0]);
+    currentDate.setDate(1); // first day of quarter 
     const [startDate1, setStartDate1] = useState(currentDate);
     otherDate.setMonth(quarterSets[monthIndex][1]-1);
+    otherDate.setDate(31); // last day of quarter 
     const [startDate2, setStartDate2] = useState(otherDate);
 
     // Needed in useEffect
@@ -115,8 +117,8 @@ export default function Reports() {
             totalSalesForAverage.push(0); 
           }
           for(let i = 0; i < tempTransactionData.length; i++){
-            const transactionDate = new Date(tempTransactionData[i].timestamp);
-            const transactionDateStr = String(transactionDate.getMonth()) + '/' 
+            const transactionDate = new Date(tempTransactionData[i].timestamp.replace('T', ' ').replace('Z', ''));
+            const transactionDateStr = String(transactionDate.getMonth()+1) + '/' 
                                      + String(transactionDate.getFullYear());
             if ( transactionDate >= startDate1 && transactionDate <= startDate2) {
                 overCounterGraphDataArray[monthYearDict[transactionDateStr]]  += overCounterDataArray[i];
@@ -153,56 +155,7 @@ export default function Reports() {
         .catch((error) => {
           console.error("Fetch error:", error);
         });
-      }, []);
-
-      const updateGraph = (newDate, dateNum) => {
-        let overCounterGraphDataArray  = []; 
-        let prescriptionGraphDataArray = [];
-        let totalSalesForAverage       = [];
-        let monthYearDict = {}; 
-        const start = !dateNum ? newDate : startDate1; 
-        const end   = dateNum  ? newDate : startDate2; 
-        const dateRangeArr = dateRange(start.toLocaleDateString(), end.toLocaleDateString()); 
-        for(var i = 0; i < dateRangeArr.length; i++){
-          monthYearDict[dateRangeArr[i]] = i;
-          overCounterGraphDataArray.push(0);
-          prescriptionGraphDataArray.push(0);
-          totalSalesForAverage.push(0); 
-        }
-        for(let i = 0; i < transactionData.length; i++){
-          const transactionDate = new Date(transactionData[i].timestamp);
-          const transactionDateStr = String(transactionDate.getMonth()) + '/' 
-                                   + String(transactionDate.getFullYear());
-          if ( transactionDate >= startDate1 && transactionDate <= startDate2) {
-              overCounterGraphDataArray[monthYearDict[transactionDateStr]] +=  overCounterData[i];
-              prescriptionGraphDataArray[monthYearDict[transactionDateStr]] += prescriptionData[i];
-              totalSalesForAverage[monthYearDict[transactionDateStr]] += prescriptionData[i] + overCounterData[i]; 
-          }
-        }
-        
-        const average = array => array.reduce((a, b) => a + b) / array.length;
-        setAvgSales(Math.round(average(totalSalesForAverage) * 100) / 100);
-
-        setState({
-          labels: dateRangeArr,
-          datasets: [
-            {
-              label: 'OverTheCounterItems',
-              backgroundColor: '#1478BD',
-              borderColor: 'rgba(0,0,0,1)',
-              borderWidth: 2,
-              data: overCounterGraphDataArray
-            },
-            {
-              label: 'PrescriptionItems',
-              backgroundColor: '#ff721e',
-              borderColor: 'rgba(0,0,0,1)',
-              borderWidth: 2,
-              data: prescriptionGraphDataArray
-            }
-          ]
-        })
-      }
+      }, [startDate1, startDate2]);
       
   return (
     <div>
@@ -223,7 +176,7 @@ export default function Reports() {
                               onChange={(date) => {
                                 setPopupInit(false);
                                 setStartDate1(date);
-                                updateGraph(date, 0);
+                                // updateGraph(date, 0);
                                 }} />
               </div>
               <div className="center m-2 p-2 text-white">
@@ -234,7 +187,7 @@ export default function Reports() {
                               onChange={(date) => {
                                 setPopupInit(false);
                                 setStartDate2(date);
-                                updateGraph(date, 1);
+                                // updateGraph(date, 1);
                                 }} />
               </div>
           </div>
@@ -271,7 +224,7 @@ export default function Reports() {
                         top:`${y+popupRef.current.offsetTop-40}px`,
                         
                       };
-                      console.log(e)
+                      // console.log(e)
                       // This if statement is mainly to avoid some weird errors 
                       if (elements.length > 0) {
                         if (elements[0].hasOwnProperty("element")) {

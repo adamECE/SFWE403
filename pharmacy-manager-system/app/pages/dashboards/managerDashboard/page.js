@@ -52,13 +52,11 @@ export default function ManagerDashboard() {
         <Link className="user-button" href="./managerDashboard/checkout">
           Checkout{' '}
         </Link>{' '}
-<<<<<<< HEAD
-        <Link className="user-button" href="./managerDashboard/reports">
-          Reports{' '}
-=======
+        <Link className="user-button" href="./managerDashboard/financialReports">
+          Financial Reports{' '}
+        </Link>{' '}
         <Link className="user-button" href="./managerDashboard/inventoryReports">
           Inventory Reports{' '}
->>>>>>> 9e5da8c79d49f7a2429bd34a095b995209b814c0
         </Link>{' '}
         {''}
       </div>{' '}
