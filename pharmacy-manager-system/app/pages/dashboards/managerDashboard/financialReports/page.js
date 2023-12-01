@@ -117,7 +117,7 @@ export default function Reports() {
             totalSalesForAverage.push(0); 
           }
           for(let i = 0; i < tempTransactionData.length; i++){
-            const transactionDate = new Date(tempTransactionData[i].timestamp.replace('T', ' ').replace('Z', ''));
+            const transactionDate = new Date(tempTransactionData[i].timestamp);
             const transactionDateStr = String(transactionDate.getMonth()+1) + '/' 
                                      + String(transactionDate.getFullYear());
             if ( transactionDate >= startDate1 && transactionDate <= startDate2) {
