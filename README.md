@@ -22,13 +22,3 @@ Open two terminals
     Close the Windows PowerShell
    
 If something isn't working contact any of the team
-
-
-
-Login Info
-Pharmacy Manager:
-
-Pharmacist:
-
-Cashier:
-
