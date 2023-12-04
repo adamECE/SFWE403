@@ -20,7 +20,7 @@ export default function OrderPayment() {
   const [sign, setSign] = useState();
   const [url, setUrl] = useState(); // stores signature
   const [sigSaved, setSigSaved] = useState(false);
-  
+
   const blockStyle = "m-5  p-5 flex flex-col justify-center items-center";
   const centerStyle = "text-center text-white";
   const inputStyle =
@@ -301,8 +301,8 @@ export default function OrderPayment() {
             onSubmit={handleSubmit}
             className="max-w-[800px] w-full mx-auto bg-transparent p-4 rounded border border-blue-500"
           >
-            <div className="w-full  md:flex flex-1">
-              <div className="w-full mx-2">
+            <div className="w-full ">
+              <div className="w-full mx-2 ">
                 <label className={labelSyle}> Cash Amount </label>{" "}
                 <input
                   type="number"
@@ -319,7 +319,8 @@ export default function OrderPayment() {
                 />{" "}
               </div>{" "}
               <div className="w-full mx-2">
-                {hasPrecription && (
+                {" "}
+                {hasPrecription && !paid && (
                   <SignatureBox
                     sign={sign}
                     setSign={setSign}
@@ -327,8 +328,8 @@ export default function OrderPayment() {
                     setSigSaved={setSigSaved}
                     paid={paid}
                   />
-                )}
-              </div>
+                )}{" "}
+              </div>{" "}
             </div>{" "}
             {paid ? (
               <>
@@ -350,62 +351,72 @@ export default function OrderPayment() {
                       className="top-0 right-0 m-1 px-2 py-1 bgCor text-white rounded absolute"
                       onClick={closeModal}
                     >
-                      &times;
-                    </button>
+                      & times;{" "}
+                    </button>{" "}
                     <div ref={targetRef}>
                       <h2 style={{ color: "black", margin: "0px 100px 5px" }}>
-                        Receipt
+                        Receipt{" "}
                       </h2>{" "}
                       <div>
                         <span className="text-sm font-light">
-                          {pharmacyInfo.name}
-                        </span>
-                        {" | "}
+                          {" "}
+                          {pharmacyInfo.name}{" "}
+                        </span>{" "}
+                        {" | "}{" "}
                         <span className="text-sm font-light">
+                          {" "}
                           {pharmacyInfo.address.streetName}.{" "}
                           {pharmacyInfo.address.city},{" "}
                           {pharmacyInfo.address.state}{" "}
-                          {pharmacyInfo.address.zipCode}
-                        </span>
-                        {" | "}
+                          {pharmacyInfo.address.zipCode}{" "}
+                        </span>{" "}
+                        {" | "}{" "}
                         <span className="text-sm font-light">
-                          {pharmacyInfo.phoneNumber}
-                        </span>
-                        {" | "}
+                          {" "}
+                          {pharmacyInfo.phoneNumber}{" "}
+                        </span>{" "}
+                        {" | "}{" "}
                         <span className="text-sm font-light">
-                          {pharmacyInfo.website}
-                        </span>
-                      </div>
+                          {" "}
+                          {pharmacyInfo.website}{" "}
+                        </span>{" "}
+                      </div>{" "}
                       <br />
                       <p style={{ borderBottom: "solid", padding: "5px 5px" }}>
                         Customer Details:{" "}
-                      </p>
+                      </p>{" "}
                       <p className="text-sm font-light">
                         Name: {User.fullName}{" "}
                       </p>{" "}
                       <p className="text-sm font-light">
                         Address: {User.address}{" "}
-                      </p>
-                      <p className="text-sm font-light">Email: {User.email} </p>{" "}
-                      <p className="text-sm font-light">Phone: {User.phone} </p>
+                      </p>{" "}
+                      <p className="text-sm font-light">
+                        {" "}
+                        Email: {User.email}{" "}
+                      </p>{" "}
+                      <p className="text-sm font-light">
+                        {" "}
+                        Phone: {User.phone}{" "}
+                      </p>{" "}
                       <p style={{ borderBottom: "solid", padding: "5px 5px" }}>
                         Description:{" "}
-                      </p>
+                      </p>{" "}
                       <div className="w-full ">
+                        {" "}
                         {foundData && (
                           <>
                             <div className=" flex bg-neutral-50 font-medium  dark:text-neutral-800">
                               <div className="px-6 py-2 flex-1">
-                                <b>Item</b>
-                              </div>
+                                <b> Item </b>{" "}
+                              </div>{" "}
                               <div className="px-6 py-2 flex-1">
-                                <b>Qnt</b>
-                              </div>
+                                <b> Qnt </b>{" "}
+                              </div>{" "}
                               <div className="px-6 py-2 flex-1">
-                                <b>Price</b>
-                              </div>
+                                <b> Price </b>{" "}
+                              </div>{" "}
                             </div>
-
                             {recieptData.PrescriptionItems.map((item) => (
                               <ReceiptRow
                                 key={item._id}
@@ -413,7 +424,7 @@ export default function OrderPayment() {
                                 qnt={item.quantity}
                                 price={item.price}
                               />
-                            ))}
+                            ))}{" "}
                             {recieptData.OverTheCounterItems.map((item) => (
                               <ReceiptRow
                                 key={item._id}
@@ -421,23 +432,23 @@ export default function OrderPayment() {
                                 qnt={item.quantity}
                                 price={item.price}
                               />
-                            ))}
+                            ))}{" "}
                           </>
-                        )}
-                      </div>
+                        )}{" "}
+                      </div>{" "}
                       <div className="right-0 m-1">
                         <p style={{ padding: "5px 5px" }}>
-                          <b>Total Paid: {recieptData.totalAmount} </b>
+                          <b> Total Paid: {recieptData.totalAmount} </b>{" "}
                         </p>{" "}
-                      </div>
-                    </div>
+                      </div>{" "}
+                    </div>{" "}
                     <div>
                       <button className={submitButtonStyle} onClick={toPDF}>
-                        Print Receipt
-                      </button>
-                    </div>
-                  </Modal>
-                </div>
+                        Print Receipt{" "}
+                      </button>{" "}
+                    </div>{" "}
+                  </Modal>{" "}
+                </div>{" "}
               </>
             ) : (
               <button className={submitButtonStyle} type="submit">
@@ -525,7 +536,7 @@ export default function OrderPayment() {
                   required={!paid}
                   disabled={paid}
                 />{" "}
-              </div>
+              </div>{" "}
               <div className="w-full mx-2">
                 <label className={labelSyle}> Zip Code </label>{" "}
                 <input
@@ -541,7 +552,7 @@ export default function OrderPayment() {
                 />{" "}
               </div>{" "}
             </div>{" "}
-            {hasPrecription && (
+            {hasPrecription && !paid && (
               <SignatureBox
                 sign={sign}
                 setSign={setSign}
@@ -549,7 +560,7 @@ export default function OrderPayment() {
                 setSigSaved={setSigSaved}
                 paid={paid}
               />
-            )}
+            )}{" "}
             {paid ? (
               <>
                 <div>
@@ -570,62 +581,72 @@ export default function OrderPayment() {
                       className="top-0 right-0 m-1 px-2 py-1 bgCor text-white rounded absolute"
                       onClick={closeModal}
                     >
-                      &times;
-                    </button>
+                      &times;{" "}
+                    </button>{" "}
                     <div ref={targetRef}>
                       <h2 style={{ color: "black", margin: "0px 100px 5px" }}>
-                        Receipt
+                        Receipt{" "}
                       </h2>{" "}
                       <div>
                         <span className="text-sm font-light">
-                          {pharmacyInfo.name}
-                        </span>
-                        {" | "}
+                          {" "}
+                          {pharmacyInfo.name}{" "}
+                        </span>{" "}
+                        {" | "}{" "}
                         <span className="text-sm font-light">
+                          {" "}
                           {pharmacyInfo.address.streetName}.{" "}
                           {pharmacyInfo.address.city},{" "}
                           {pharmacyInfo.address.state}{" "}
-                          {pharmacyInfo.address.zipCode}
-                        </span>
-                        {" | "}
+                          {pharmacyInfo.address.zipCode}{" "}
+                        </span>{" "}
+                        {" | "}{" "}
                         <span className="text-sm font-light">
-                          {pharmacyInfo.phoneNumber}
-                        </span>
-                        {" | "}
+                          {" "}
+                          {pharmacyInfo.phoneNumber}{" "}
+                        </span>{" "}
+                        {" | "}{" "}
                         <span className="text-sm font-light">
-                          {pharmacyInfo.website}
-                        </span>
-                      </div>
+                          {" "}
+                          {pharmacyInfo.website}{" "}
+                        </span>{" "}
+                      </div>{" "}
                       <br />
                       <p style={{ borderBottom: "solid", padding: "5px 5px" }}>
                         Customer Details:{" "}
-                      </p>
+                      </p>{" "}
                       <p className="text-sm font-light">
                         Name: {User.fullName}{" "}
                       </p>{" "}
                       <p className="text-sm font-light">
                         Address: {User.address}{" "}
-                      </p>
-                      <p className="text-sm font-light">Email: {User.email} </p>{" "}
-                      <p className="text-sm font-light">Phone: {User.phone} </p>
+                      </p>{" "}
+                      <p className="text-sm font-light">
+                        {" "}
+                        Email: {User.email}{" "}
+                      </p>{" "}
+                      <p className="text-sm font-light">
+                        {" "}
+                        Phone: {User.phone}{" "}
+                      </p>{" "}
                       <p style={{ borderBottom: "solid", padding: "5px 5px" }}>
                         Description:{" "}
-                      </p>
+                      </p>{" "}
                       <div className="w-full ">
+                        {" "}
                         {foundData && (
                           <>
                             <div className=" flex bg-neutral-50 font-medium  dark:text-neutral-800">
                               <div className="px-6 py-2 flex-1">
-                                <b>Item</b>
-                              </div>
+                                <b> Item </b>{" "}
+                              </div>{" "}
                               <div className="px-6 py-2 flex-1">
-                                <b>Qnt</b>
-                              </div>
+                                <b> Qnt </b>{" "}
+                              </div>{" "}
                               <div className="px-6 py-2 flex-1">
-                                <b>Price</b>
-                              </div>
+                                <b> Price </b>{" "}
+                              </div>{" "}
                             </div>
-
                             {recieptData.PrescriptionItems.map((item) => (
                               <ReceiptRow
                                 key={item._id}
@@ -633,7 +654,7 @@ export default function OrderPayment() {
                                 qnt={item.quantity}
                                 price={item.price}
                               />
-                            ))}
+                            ))}{" "}
                             {recieptData.OverTheCounterItems.map((item) => (
                               <ReceiptRow
                                 key={item._id}
@@ -641,23 +662,23 @@ export default function OrderPayment() {
                                 qnt={item.quantity}
                                 price={item.price}
                               />
-                            ))}
+                            ))}{" "}
                           </>
-                        )}
-                      </div>
+                        )}{" "}
+                      </div>{" "}
                       <div className="right-0 m-1">
                         <p style={{ padding: "5px 5px" }}>
-                          <b>Total Paid: {recieptData.totalAmount} </b>
+                          <b> Total Paid: {recieptData.totalAmount} </b>{" "}
                         </p>{" "}
-                      </div>
-                    </div>
+                      </div>{" "}
+                    </div>{" "}
                     <div>
                       <button className={submitButtonStyle} onClick={toPDF}>
-                        Print Receipt
-                      </button>
-                    </div>
-                  </Modal>
-                </div>
+                        Print Receipt{" "}
+                      </button>{" "}
+                    </div>{" "}
+                  </Modal>{" "}
+                </div>{" "}
               </>
             ) : (
               <button className={submitButtonStyle} type="submit">
