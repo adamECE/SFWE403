@@ -3,16 +3,24 @@ import { useState, useEffect } from "react";
 import { Margin, usePDF } from "react-to-pdf";
 import { useRouter, useSearchParams } from "next/navigation";
 import ReceiptRow from "./ReceiptRow";
+import SignatureBox from "./SignatureBox";
 import Swal from "sweetalert2";
 import Modal from "react-modal";
 export default function OrderPayment() {
   const [pharmacyInfo, setPharmacyInfo] = useState();
   const [paid, setPaid] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState(""); // Default to cash
+  const [hasPrecription, setHasPrecription] = useState("");
   const [recieptData, setRecieptData] = useState({}); // Default to cash
   const [foundData, setFoundData] = useState(false); // Default to cash
   const [User, setUser] = useState({});
   const [findUser, setFindUser] = useState(false);
+
+  //For Adding Signature
+  const [sign, setSign] = useState();
+  const [url, setUrl] = useState(); // stores signature
+  const [sigSaved, setSigSaved] = useState(false);
+  
   const blockStyle = "m-5  p-5 flex flex-col justify-center items-center";
   const centerStyle = "text-center text-white";
   const inputStyle =
@@ -65,6 +73,19 @@ export default function OrderPayment() {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
+      if (hasPrecription && !sigSaved) {
+        Swal.fire({
+          title: "Error",
+          text: "Please enter a signature",
+          icon: "error",
+          confirmButtonTest: "Return to payment",
+        });
+        return;
+      } else {
+        // Uncomment this if you want to see the output on submit in the console
+        // Otherwise u can see the body has the signature in the terminal
+        //console.log(sign.getTrimmedCanvas().toDataURL('image/png'));
+      }
 
       // Make a POST request to your login endpoint
       const response = await fetch(
@@ -88,6 +109,7 @@ export default function OrderPayment() {
               expDate: formData.expDate,
               zipCode: formData.zipCode,
             },
+            customerSignature: url,
           }),
         }
       );
@@ -98,6 +120,7 @@ export default function OrderPayment() {
         //alert(JSON.parse(responseText).message);
         Swal.fire(`${JSON.parse(responseText).message}`, "", "success");
         setPaid(true);
+        setHasPrecription(false);
       } else {
         if (response.status === 403) {
           setPaid(true);
@@ -138,7 +161,8 @@ export default function OrderPayment() {
       .then(async (data) => {
         console.log(data.purchaseData);
         setRecieptData(data.purchaseData);
-
+        if (data.purchaseData.PrescriptionItems.length > 0)
+          setHasPrecription(true);
         setFoundData(true);
       })
       .catch((error) => {
@@ -294,6 +318,17 @@ export default function OrderPayment() {
                   disabled={paid}
                 />{" "}
               </div>{" "}
+              <div className="w-full mx-2">
+                {hasPrecription && (
+                  <SignatureBox
+                    sign={sign}
+                    setSign={setSign}
+                    setUrl={setUrl}
+                    setSigSaved={setSigSaved}
+                    paid={paid}
+                  />
+                )}
+              </div>
             </div>{" "}
             {paid ? (
               <>
@@ -506,10 +541,124 @@ export default function OrderPayment() {
                 />{" "}
               </div>{" "}
             </div>{" "}
+            {hasPrecription && (
+              <SignatureBox
+                sign={sign}
+                setSign={setSign}
+                setUrl={setUrl}
+                setSigSaved={setSigSaved}
+                paid={paid}
+              />
+            )}
             {paid ? (
-              <button className={submitButtonStyle} type="button">
-                Print Receipt{" "}
-              </button>
+              <>
+                <div>
+                  <button
+                    onClick={openModal}
+                    className={submitButtonStyle}
+                    type="button"
+                  >
+                    View Receipt{" "}
+                  </button>{" "}
+                  <Modal
+                    isOpen={modalIsOpen}
+                    onRequestClose={closeModal}
+                    contentLabel="Example Modal"
+                    style={customStyles}
+                  >
+                    <button
+                      className="top-0 right-0 m-1 px-2 py-1 bgCor text-white rounded absolute"
+                      onClick={closeModal}
+                    >
+                      &times;
+                    </button>
+                    <div ref={targetRef}>
+                      <h2 style={{ color: "black", margin: "0px 100px 5px" }}>
+                        Receipt
+                      </h2>{" "}
+                      <div>
+                        <span className="text-sm font-light">
+                          {pharmacyInfo.name}
+                        </span>
+                        {" | "}
+                        <span className="text-sm font-light">
+                          {pharmacyInfo.address.streetName}.{" "}
+                          {pharmacyInfo.address.city},{" "}
+                          {pharmacyInfo.address.state}{" "}
+                          {pharmacyInfo.address.zipCode}
+                        </span>
+                        {" | "}
+                        <span className="text-sm font-light">
+                          {pharmacyInfo.phoneNumber}
+                        </span>
+                        {" | "}
+                        <span className="text-sm font-light">
+                          {pharmacyInfo.website}
+                        </span>
+                      </div>
+                      <br />
+                      <p style={{ borderBottom: "solid", padding: "5px 5px" }}>
+                        Customer Details:{" "}
+                      </p>
+                      <p className="text-sm font-light">
+                        Name: {User.fullName}{" "}
+                      </p>{" "}
+                      <p className="text-sm font-light">
+                        Address: {User.address}{" "}
+                      </p>
+                      <p className="text-sm font-light">Email: {User.email} </p>{" "}
+                      <p className="text-sm font-light">Phone: {User.phone} </p>
+                      <p style={{ borderBottom: "solid", padding: "5px 5px" }}>
+                        Description:{" "}
+                      </p>
+                      <div className="w-full ">
+                        {foundData && (
+                          <>
+                            <div className=" flex bg-neutral-50 font-medium  dark:text-neutral-800">
+                              <div className="px-6 py-2 flex-1">
+                                <b>Item</b>
+                              </div>
+                              <div className="px-6 py-2 flex-1">
+                                <b>Qnt</b>
+                              </div>
+                              <div className="px-6 py-2 flex-1">
+                                <b>Price</b>
+                              </div>
+                            </div>
+
+                            {recieptData.PrescriptionItems.map((item) => (
+                              <ReceiptRow
+                                key={item._id}
+                                name={item.name}
+                                qnt={item.quantity}
+                                price={item.price}
+                              />
+                            ))}
+                            {recieptData.OverTheCounterItems.map((item) => (
+                              <ReceiptRow
+                                key={item._id}
+                                name={item.name}
+                                qnt={item.quantity}
+                                price={item.price}
+                              />
+                            ))}
+                          </>
+                        )}
+                      </div>
+                      <div className="right-0 m-1">
+                        <p style={{ padding: "5px 5px" }}>
+                          <b>Total Paid: {recieptData.totalAmount} </b>
+                        </p>{" "}
+                      </div>
+                    </div>
+                    <div>
+                      <button className={submitButtonStyle} onClick={toPDF}>
+                        Print Receipt
+                      </button>
+                    </div>
+                  </Modal>
+                </div>
+              </>
             ) : (
               <button className={submitButtonStyle} type="submit">
                 Complete Payment{" "}
