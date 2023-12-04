@@ -351,7 +351,7 @@ export default function OrderPayment() {
                       className="top-0 right-0 m-1 px-2 py-1 bgCor text-white rounded absolute"
                       onClick={closeModal}
                     >
-                      & times;{" "}
+                      &times;{" "}
                     </button>{" "}
                     <div ref={targetRef}>
                       <h2 style={{ color: "black", margin: "0px 100px 5px" }}>
