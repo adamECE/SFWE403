@@ -148,7 +148,7 @@ export default function PopupPrescriptionItemWindow({
             className="top-0 right-0 m-2 px-4 py-2 bg-blue-500 text-white rounded absolute"
             onClick={handleCloseModalBtn}
           >
-            & times;{" "}
+            &times;{" "}
           </button>{" "}
           <h3 className="text-black"> {popupWindowContent.name} </h3>{" "}
           <div className="font-bold"> Description: </div>{" "}

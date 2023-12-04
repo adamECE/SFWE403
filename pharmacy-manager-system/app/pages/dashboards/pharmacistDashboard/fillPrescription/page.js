@@ -29,40 +29,8 @@ export default function Prescription() {
   const handleCheckSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token"); // get auth token from localStorage
-
-    try {
-      // First API call
-      const getPatStr =
-        "http://127.0.0.1:3030/pharmacy-0x2/api/a-patient/" +
-        formData.userEmail;
-      const response = await fetch(getPatStr, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        setFindUser(!findUser);
-        //alert(" User not found");
-        Swal.fire(`User not found`, "", "error");
-        return;
-      }
-
-      const patientData = await response.json();
-      setPatient(patientData);
-      setFindUser(!findUser);
-    } catch (error) {
-      console.error("Fetch error:", error);
-    }
-  };
-
-  useEffect(() => {
-    const token = localStorage.getItem("token"); // get auth token from localStorage
-
     fetch(
-      "http://127.0.0.1:3030/pharmacy-0x2/api/patientHistory/get-patient-prescription-info",
+      "http://127.0.0.1:3030/pharmacy-0x2/api/patientHistory/get-patient-prescription-info-by-email",
       {
         method: "POST",
         headers: {
@@ -70,25 +38,31 @@ export default function Prescription() {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          userId: selectedPatient._id,
+          email: formData.userEmail,
         }),
       }
     )
       .then((res) => {
         if (!res.ok) {
           setPrescriptionUpdated(!prescriptionUpdated);
+          setFindUser(!findUser);
+          //alert(" User not found");
+          Swal.fire(`User not found`, "", "error");
+
           throw new Error("Network response error");
         }
         return res.json();
       })
       .then((data) => {
-        setPrescriptionItems(data);
+        setPrescriptionItems(data.prescription);
         setPrescriptionUpdated(!prescriptionUpdated);
+        setPatient(data.userInfo);
+        setFindUser(!findUser);
       })
       .catch((error) => {
         console.error("Fetch error:", error);
       });
-  }, [findUser]);
+  };
 
   const thStyle = " px-6 py-4";
   const blockStyle = "m-5 p-5 flex flex-col justify-center items-center ";
@@ -159,30 +133,32 @@ export default function Prescription() {
             </thead>{" "}
             <tbody>
               {" "}
-              {prescriptionItems.map((item) => (
-                <PrescriptionRow
-                  key={item._id}
-                  _id={item._id}
-                  popupWindow={popupWindow}
-                  setPopupWindow={setPopupWindow}
-                  setPopupWindowContent={setPopupWindowContent}
-                  deliveredBy={item.deliveredBy}
-                  doctorName={item.doctorName}
-                  dosage={item.dosage}
-                  medicationID={item.medicationInfo._id}
-                  isValid={item.isValid}
-                  quantity={item.quantity}
-                  price={item.medicationInfo.price}
-                  medicationName={item.medicationInfo.name}
-                  medicationDescription={item.medicationInfo.description}
-                  medicationManufacturer={item.medicationInfo.manufacturer}
-                  filledInfo={item.filledInfo}
-                  refillPolicy={item.refillPolicy.allowRefill}
-                  refillDueDate={item.refillPolicy.dueDate}
-                  refills={item.refillPolicy.refills}
-                  patient={selectedPatient}
-                />
-              ))}{" "}
+              {prescriptionUpdated == true
+                ? prescriptionItems.map((item) => (
+                    <PrescriptionRow
+                      key={item._id}
+                      _id={item._id}
+                      popupWindow={popupWindow}
+                      setPopupWindow={setPopupWindow}
+                      setPopupWindowContent={setPopupWindowContent}
+                      deliveredBy={item.deliveredBy}
+                      doctorName={item.doctorName}
+                      dosage={item.dosage}
+                      medicationID={item.medicationInfo._id}
+                      isValid={item.isValid}
+                      quantity={item.quantity}
+                      price={item.medicationInfo.price}
+                      medicationName={item.medicationInfo.name}
+                      medicationDescription={item.medicationInfo.description}
+                      medicationManufacturer={item.medicationInfo.manufacturer}
+                      filledInfo={item.filledInfo}
+                      refillPolicy={item.refillPolicy.allowRefill}
+                      refillDueDate={item.refillPolicy.dueDate}
+                      refills={item.refillPolicy.refills}
+                      patient={selectedPatient}
+                    />
+                  ))
+                : ""}
             </tbody>{" "}
           </table>{" "}
         </>

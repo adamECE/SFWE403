@@ -1,11 +1,14 @@
-const asyncHandler = require('express-async-handler');
-const User = require('../models/user');
-const {ROLES} = require('../config/pharmacy0x2Const');
-const Inventory = require('../models/inventory');
-var dotenv = require('dotenv');
-dotenv.config({path: '../config/.env'});
+const asyncHandler = require("express-async-handler");
+const User = require("../models/user");
+const { ROLES } = require("../config/pharmacy0x2Const");
+const Inventory = require("../models/inventory");
+var dotenv = require("dotenv");
+dotenv.config({ path: "../config/.env" });
 //const PrescritpionLog = require("../models/activityLog");
-const {PrescriptionLog, InventoryUpdateLog} = require('../models/activityLog');
+const {
+  PrescriptionLog,
+  InventoryUpdateLog,
+} = require("../models/activityLog");
 
 exports.addPrescription = asyncHandler(async (req, res) => {
   try {
@@ -30,7 +33,7 @@ exports.addPrescription = asyncHandler(async (req, res) => {
       !deliveredBy ||
       !refillPolicy
     ) {
-      res.status(400).json({error: 'Please add all Fields'});
+      res.status(400).json({ error: "Please add all Fields" });
       return;
     }
 
@@ -38,26 +41,26 @@ exports.addPrescription = asyncHandler(async (req, res) => {
 
     if (!userData) {
       // If the userId is not found in the Inventory
-      res.status(404).json({error: 'User not found in database'});
+      res.status(404).json({ error: "User not found in database" });
       return;
     } else {
       if (userData.role != ROLES.PATIENT) {
         //check if user is not a patient
-        res.status(401).json({error: 'User is not a patient'});
+        res.status(401).json({ error: "User is not a patient" });
         return;
       }
       const inventoryItem = await Inventory.findById(medicationID);
       if (!inventoryItem) {
         //check if medication is available
-        res.status(404).json({error: 'Medication not found in inventory'});
+        res.status(404).json({ error: "Medication not found in inventory" });
         return;
       }
 
-      if (inventoryItem.category != 'prescription') {
+      if (inventoryItem.category != "prescription") {
         //check if medication requires precription
         res
           .status(401)
-          .json({error: 'Medication does not require prescription'});
+          .json({ error: "Medication does not require prescription" });
         return;
       }
 
@@ -73,11 +76,11 @@ exports.addPrescription = asyncHandler(async (req, res) => {
       userData.prescriptions.push(newPerscription);
       await userData.save();
 
-      res.status(200).json({message: 'new perscription item added'});
+      res.status(200).json({ message: "new perscription item added" });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({error: 'OOOps something went wrong!'});
+    res.status(500).json({ error: "OOOps something went wrong!" });
   }
 });
 
@@ -94,46 +97,46 @@ exports.getPrescriptionLogs = asyncHandler(async (req, res) => {
       patientEmail: log.patientEmail,
       itemType: log.itemType,
       quantity: log.quantity,
-      date: new Date(log.timestamp).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
+      date: new Date(log.timestamp).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
       }),
-      time: new Date(log.timestamp).toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
+      time: new Date(log.timestamp).toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
       }),
     }));
 
     res.json(formattedLogs);
   } catch {
     console.error(error);
-    res.status(500).json({error: 'OOOps something went wrong!'});
+    res.status(500).json({ error: "OOOps something went wrong!" });
   }
 });
 
 exports.getPrescription = asyncHandler(async (req, res) => {
   try {
-    const {userId} = req.body;
+    const { userId } = req.body;
 
     if (!userId) {
       // If the userId is not found in the Inventory
-      res.status(400).json({error: 'userId is required'});
+      res.status(400).json({ error: "userId is required" });
       return;
     }
 
     const userInfo = await User.findById(userId).populate({
-      path: 'prescriptions',
+      path: "prescriptions",
       populate: {
-        path: 'medicationID',
-        model: 'Inventory',
-        select: '_id name description manufacturer price location',
+        path: "medicationID",
+        model: "Inventory",
+        select: "_id name description manufacturer price location",
       },
     });
 
     if (!userInfo) {
-      res.status(404).json({error: 'User not found in database'});
+      res.status(404).json({ error: "User not found in database" });
       return;
     }
     // renaming medicationID field into medicationInfo
@@ -141,7 +144,7 @@ exports.getPrescription = asyncHandler(async (req, res) => {
     const prescriptionsWithMedicationInfo = userInfo.prescriptions.map(
       (prescription) => {
         prescription = prescription.toObject();
-        prescription['medicationInfo'] = prescription.medicationID;
+        prescription["medicationInfo"] = prescription.medicationID;
         delete prescription.medicationID;
         return prescription;
       }
@@ -156,30 +159,78 @@ exports.getPrescription = asyncHandler(async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({error: 'OOOps something went wrong!'});
+    res.status(500).json({ error: "OOOps something went wrong!" });
+  }
+});
+
+exports.getPrescriptionByEmail = asyncHandler(async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      // If the userId is not found in the Inventory
+      res.status(400).json({ error: "userId is required" });
+      return;
+    }
+
+    const userInfo = await User.findOne({ email }).populate({
+      path: "prescriptions",
+      populate: {
+        path: "medicationID",
+        model: "Inventory",
+        select: "name description manufacturer price location",
+      },
+    });
+
+    if (!userInfo) {
+      res.status(404).json({ error: "User not found in database" });
+      return;
+    }
+    // renaming medicationID field into medicationInfo
+
+    const prescriptionsWithMedicationInfo = userInfo.prescriptions.map(
+      (prescription) => {
+        prescription = prescription.toObject();
+        prescription["medicationInfo"] = prescription.medicationID;
+        delete prescription.medicationID;
+        return prescription;
+      }
+    );
+
+    res.status(200).json({
+      userInfo: {
+        name: `${userInfo.firstName} ${userInfo.lastName}`,
+        email: userInfo.email,
+        _id: userInfo._id,
+      },
+      prescription: prescriptionsWithMedicationInfo,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "OOOps something went wrong!" });
   }
 });
 
 exports.getPrescriptionToProcess = asyncHandler(async (req, res) => {
   try {
-    const {email} = req.params;
+    const { email } = req.params;
 
     if (!email) {
       // If the userId is not found in the Inventory
-      res.status(400).json({error: 'userId is required'});
+      res.status(400).json({ error: "userId is required" });
       return;
     }
-    const userInfo = await User.findOne({email}).populate({
-      path: 'prescriptions',
+    const userInfo = await User.findOne({ email }).populate({
+      path: "prescriptions",
       populate: {
-        path: 'medicationID',
-        model: 'Inventory',
-        select: '_id name description manufacturer price location',
+        path: "medicationID",
+        model: "Inventory",
+        select: "_id name description manufacturer price location",
       },
     });
 
     if (!userInfo) {
-      res.status(404).json({error: 'User not found in database'});
+      res.status(404).json({ error: "User not found in database" });
       return;
     }
 
@@ -203,7 +254,7 @@ exports.getPrescriptionToProcess = asyncHandler(async (req, res) => {
     const prescriptionsWithMedicationInfo = prescriptionsTopickUP.map(
       (prescription) => {
         prescription = prescription.toObject();
-        prescription['medicationInfo'] = prescription.medicationID;
+        prescription["medicationInfo"] = prescription.medicationID;
         delete prescription.medicationID;
         return prescription;
       }
@@ -218,6 +269,6 @@ exports.getPrescriptionToProcess = asyncHandler(async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({error: 'OOOps something went wrong!'});
+    res.status(500).json({ error: "OOOps something went wrong!" });
   }
 });
